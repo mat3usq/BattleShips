@@ -1,9 +1,14 @@
 package kck.battleship;
 
+import kck.battleship.model.Position;
+
+import java.awt.*;
 import java.util.Scanner;
 
 public class BattleShips {
     public static void main(String[] args) throws InterruptedException {
-        Scanner input = new Scanner(System.in);
+
+
+        System.out.println(Position.decode('A'));
     }
 }
