@@ -36,4 +36,9 @@ public class Ship {
     public void setDirection(Direction direction) {
         this.direction = direction;
     }
+
+    public String toGraphicLength() {
+        return ("" + Board.SHIP).repeat(length);
+    }
+
 }

@@ -39,4 +39,11 @@ public class Position {
     public String toStringEncode(Position position) {
         return "(" + (char)('a' + position.getRow()) + "," + (position.getColumn() + 1) + ")";
     }
+
+    public static boolean isInRange(char row, int column, Board board) throws PositionException {
+        int decodeRow = decode(row);
+        if (decodeRow >= board.getLength() || column > board.getLength() || decodeRow < 0 || column < 0)
+            throw new PositionException("Błąd, dozwolone wartości od A1 do " + Position.encode(board.getLength() - 1) + board.getLength());
+        else return true;
+    }
 }

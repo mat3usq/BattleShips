@@ -33,4 +33,14 @@ public enum ShipT {
         for (ShipT type: ShipT.values()) sum += type.numberOfShips;
         return sum;
     }
+
+    public static String toEnglishName(ShipT type){
+        return switch (type) {
+            case BATTLESHIP -> "BATTLESHIP";
+            case DESTROYER -> "DESTROYER";
+            case CRUISER -> "CRUISER";
+            case SUBMARINE -> "SUBMARINE";
+            case CARRIER -> "CARRIER";
+        };
+    }
 }
