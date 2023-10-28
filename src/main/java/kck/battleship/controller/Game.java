@@ -4,23 +4,28 @@ import kck.battleship.exceptions.BoardException;
 import kck.battleship.exceptions.PositionException;
 import kck.battleship.model.clases.Player;
 import kck.battleship.model.clases.Position;
+import kck.battleship.model.clases.Ranking;
 import kck.battleship.view.Display;
 import kck.battleship.view.Input;
 
+import java.util.Date;
 import java.util.Scanner;
 
 public class Game {
     private final Player firstPlayer;
     private final Player secondPlayer;
+    private final Ranking firstPlayerRank;
 
     public Game(String name) {
         firstPlayer = new Player(name);
+        firstPlayerRank = new Ranking(firstPlayer, 0);
         secondPlayer = new Player("COMPUTER", true);
     }
 
     public Game() {
         firstPlayer = new Player("COMPUTER" + "1", true);
         secondPlayer = new Player("COMPUTER" + "2", true);
+        firstPlayerRank = null;
     }
 
     private boolean turn(Player attack, Player defend, Boolean reverse) throws PositionException {
@@ -37,7 +42,15 @@ public class Game {
                 }
             } while (!isAddHit);
             isHit = defend.getBoard().thereIsHit(shoot);
-            if (isHit) attack.registerShoot(shoot);
+
+            if (isHit) {
+                attack.registerShoot(shoot);
+                if (!attack.isAI()) {
+                    long diff = (new Date().getTime() - attack.getLastShootTime().getTime()) / 1000;
+                    firstPlayerRank.setPoints((int) (100 / diff));
+                    attack.setLastShootTime(new Date());
+                }
+            }
 
             Display.printShot(attack, shoot, isHit);
             try {
@@ -73,8 +86,8 @@ public class Game {
     }
 
     private void printResultGame() {
-        if (firstPlayer.shipsLeft() > secondPlayer.shipsLeft()) Display.printWinner(firstPlayer);
-        else Display.printWinner(secondPlayer);
+        if (firstPlayer.shipsLeft() > secondPlayer.shipsLeft()) Display.printWinner(firstPlayer, firstPlayerRank);
+        else Display.printWinner(secondPlayer, firstPlayerRank);
     }
 
     public void run() throws PositionException {
@@ -86,5 +99,6 @@ public class Game {
             while (turn(firstPlayer, secondPlayer, false) && turn(secondPlayer, firstPlayer, false)) {
             }
         printResultGame();
+        firstPlayerRank.save();
     }
 }

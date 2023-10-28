@@ -37,9 +37,13 @@ public class BattleShips {
                     case 3 -> {
                         Display.printRules();
                     }
+                    case 4 -> {
+                        Display.printRanking();
+                    }
                 }
             } while (opt != 0);
-        } catch (InputMismatchException | PositionException e) { }
+        } catch (InputMismatchException | PositionException e) {
+        }
         Display.printCredits();
     }
 }

@@ -1,13 +1,14 @@
 package kck.battleship.view;
 
 import kck.battleship.exceptions.PositionException;
-import kck.battleship.model.clases.Board;
-import kck.battleship.model.clases.Ship;
+import kck.battleship.model.clases.*;
 import kck.battleship.model.enum_.ShipT;
-import kck.battleship.model.clases.Position;
-import kck.battleship.model.clases.Player;
 
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.*;
 
 public class Display {
 
@@ -27,6 +28,7 @@ public class Display {
         System.out.println("\n(1) - Rozpocznij grę");
         System.out.println("(2) - Symuluj grę");
         System.out.println("(3) - Zasady i legenda");
+        System.out.println("(4) - Ranking");
         System.out.println("(0) - Wyjście\n");
         return Input.readOption(new Scanner(System.in), "Odpowiedź: ");
     }
@@ -86,8 +88,9 @@ public class Display {
     }
 
 
-    public static void printWinner(Player player) {
+    public static void printWinner(Player player, Ranking rank) {
         System.out.println(DisplayColors.ANSI_BLUE + "\n✔ " + player.getName() + " wygrał(a)!" + DisplayColors.ANSI_RESET + "\n");
+        System.out.println(DisplayColors.ANSI_YELLOW + "Twoj Wynik: " + rank.getPoints() + DisplayColors.ANSI_RESET + "\n");
         System.out.print("\nNaciśnij dowolny klawisz, aby kontynuować...");
         new Scanner(System.in).nextLine();
     }
@@ -106,6 +109,7 @@ public class Display {
     public static String toStringAdjacentBoard(Player pOne, Player pTwo) throws PositionException {
         Board firstBoard = pOne.getBoard();
         Board secondBoard = pTwo.getBoard().getBoardHideShips();
+//        Board secondBoard = pTwo.getBoard();
         String letters = "abcdefghij";
         String s = "\n――――――――――――――――――――――――――――――――――\n";
         s += "\n    ";
@@ -185,5 +189,47 @@ public class Display {
         return s;
     }
 
+    public static void printRanking() {
+        String fileName = "/Users/mateusz/Desktop/_BattleShips/src/main/java/kck/battleship/model/data/ranking.txt"; // Nazwa pliku, w którym zapisywane są wyniki
 
+        List<Ranking> rankings = new ArrayList<>();
+
+        try {
+            File plik = new File(fileName);
+            FileReader fileReader = new FileReader(plik);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+            String linia;
+            while ((linia = bufferedReader.readLine()) != null) {
+                String[] parts = linia.split(" ");
+                if (parts.length == 2) {
+                    try {
+                        int punkty = Integer.parseInt(parts[0]);
+                        String playerName = parts[1];
+                        Player player = new Player(playerName);
+                        rankings.add(new Ranking(player, punkty));
+                    } catch (NumberFormatException e) {
+                        System.err.println("Błąd parsowania punktów w linii: " + linia);
+                    }
+                }
+            }
+
+            bufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Collections.sort(rankings, Collections.reverseOrder(Comparator.comparingInt(Ranking::getPoints)));
+        System.out.println("\n              " + DisplayColors.ANSI_BLUE + "Ranking" + DisplayColors.ANSI_RESET);
+        System.out.println(DisplayColors.ANSI_BLUE+"Position" + DisplayColors.ANSI_CYAN + "    Points        " + DisplayColors.ANSI_GREEN + "Name" + DisplayColors.ANSI_RESET);
+        int i = 0;
+        for (Ranking ranking : rankings) {
+            i++;
+            System.out.println("    " + i + "          " + ranking.getPoints() + "          " + ranking.getPlayer().getName());
+        }
+
+
+        System.out.print("\nNaciśnij dowolny klawisz, aby kontynuować...");
+        new Scanner(System.in).nextLine();
+    }
 }

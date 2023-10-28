@@ -7,7 +7,9 @@ import kck.battleship.model.enum_.ShipT;
 import kck.battleship.view.Display;
 import kck.battleship.view.Input;
 
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -17,10 +19,13 @@ public class Player {
     private final ArrayList<Position> shoots = new ArrayList<>();
     private ArrayList<Position> nextTargets = new ArrayList<>();
     private boolean isAI;
+    private Date lastShootTime;
+
 
     public Player(String name) {
         this.name = name;
         isAI = false;
+        lastShootTime = new Date();
     }
 
     public Player(String name, boolean isAI) {
@@ -60,6 +65,14 @@ public class Player {
 
     public boolean isAI() {
         return isAI;
+    }
+
+    public Date getLastShootTime() {
+        return lastShootTime;
+    }
+
+    public void setLastShootTime(Date lastShootTime) {
+        this.lastShootTime = lastShootTime;
     }
 
     public void addAllShips() {
