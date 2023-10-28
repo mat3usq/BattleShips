@@ -1,21 +1,21 @@
 package kck.battleship.view;
 
 import kck.battleship.exceptions.PositionException;
-import kck.battleship.model.Board;
-import kck.battleship.model.Ship;
-import kck.battleship.model.ShipT;
-import kck.battleship.model.Position;
-import kck.battleship.model.Player;
+import kck.battleship.model.clases.Board;
+import kck.battleship.model.clases.Ship;
+import kck.battleship.model.enum_.ShipT;
+import kck.battleship.model.clases.Position;
+import kck.battleship.model.clases.Player;
 
 import java.util.Scanner;
 
 public class Display {
 
-    public static void printTitle(){
+    public static void printTitle() {
 
         System.out.println("" +
                 "\n" +
-                "____    _  _____ _____ _     _____   ____  _   _ ___ ____  ____ \n" +
+                " ____    _  _____ _____ _     _____   ____  _   _ ___ ____  ____ \n" +
                 "| __ )  / \\|_   _|_   _| |   | ____| / ___|| | | |_ _|  _ \\/ ___| \n" +
                 "|  _ \\ / _ \\ | |   | | | |   |  _|   \\___ \\| |_| || || |_) \\___ \\\n" +
                 "| |_) / ___ \\| |   | | | |___| |___   ___) |  _  || ||  __/ ___) |\n" +
@@ -75,7 +75,7 @@ public class Display {
     }
 
 
-    public static void printError(String message){
+    public static void printError(String message) {
         System.out.println(DisplayColors.ANSI_RED + message + DisplayColors.ANSI_RESET);
     }
 
@@ -93,7 +93,7 @@ public class Display {
     }
 
 
-    public static void printCurrentShip(Ship ship, int numShipLeft){
+    public static void printCurrentShip(Ship ship, int numShipLeft) {
         System.out.println("☛ " + ship.getName() + " (" +
                 DisplayColors.ANSI_YELLOW + ship.toGraphicLength() + DisplayColors.ANSI_RESET +
                 ") x" + numShipLeft);
@@ -106,74 +106,79 @@ public class Display {
     public static String toStringAdjacentBoard(Player pOne, Player pTwo) throws PositionException {
         Board firstBoard = pOne.getBoard();
         Board secondBoard = pTwo.getBoard().getBoardHideShips();
-        String numbers  = "⒈⒉⒊⒋⒌⒍⒎⒏⒐⒑";
-        String letters = "ͣᵇͨͩͤᶠᶢͪͥʲ";
+        String letters = "abcdefghij";
         String s = "\n――――――――――――――――――――――――――――――――――\n";
-        s += "\n     ";
+        s += "\n    ";
 
-        for (int i = 0; i < firstBoard.getLength(); i++) s += " " + numbers.charAt(i) + "    ";
-        s += "          ";
-        for (int i = 0; i < secondBoard.getLength(); i++) s += " " + numbers.charAt(i) + "    ";
+        for (int i = 1; i <= 10; i++)
+            s += i + "   ";
 
+        s += "      ";
+
+        for (int i = 1; i <= 10; i++)
+            s += i + "   ";
 
         s += "\n";
-        for (int i = 0; i < firstBoard.getLength(); i++){
+        for (int i = 0; i < firstBoard.getLength(); i++) {
             s += DisplayColors.ANSI_WHITE;
-            if (i == 5) s += " " + letters.charAt(i) + "    "; //f
-            else if (i == 6) s += letters.charAt(i) + "    "; //g
-            else s += letters.charAt(i) + "  ";
+            s += letters.charAt(i) + "   ";
             s += DisplayColors.ANSI_RESET;
 
-            for (int j = 0; j < firstBoard.getLength(); j++){
-                if (firstBoard.getBoard()[i][j] == Board.WATER) s += DisplayColors.ANSI_BLUE + " " + Board.WATER + " " + " " + DisplayColors.ANSI_RESET;
-                else if (firstBoard.getBoard()[i][j] == Board.HIT) s += DisplayColors.ANSI_RED + Board.HIT + " " + DisplayColors.ANSI_RESET;
-                else if (firstBoard.getBoard()[i][j] == Board.MISS) s += Board.MISS + " " + DisplayColors.ANSI_RESET;
-                else s += DisplayColors.ANSI_YELLOW + firstBoard.getBoard()[i][j] + " " + DisplayColors.ANSI_RESET;
+            for (int j = 0; j < firstBoard.getLength(); j++) {
+                if (firstBoard.getBoard()[i][j] == Board.WATER)
+                    s += DisplayColors.ANSI_BLUE + Board.WATER + "   " + DisplayColors.ANSI_RESET;
+                else if (firstBoard.getBoard()[i][j] == Board.HIT)
+                    s += DisplayColors.ANSI_RED + Board.HIT + "   " + DisplayColors.ANSI_RESET;
+                else if (firstBoard.getBoard()[i][j] == Board.MISS) s += Board.MISS + "   " + DisplayColors.ANSI_RESET;
+                else s += DisplayColors.ANSI_YELLOW + firstBoard.getBoard()[i][j] + "   " + DisplayColors.ANSI_RESET;
             }
 
             s += "   ";
 
             s += DisplayColors.ANSI_WHITE;
-            if (i == 5) s += " " + letters.charAt(i) + "    "; //f
-            else if (i == 6) s += letters.charAt(i) + "    "; //g
-            else s += letters.charAt(i) + "  ";
+            s += DisplayColors.ANSI_WHITE;
+            s += letters.charAt(i) + "   ";
             s += DisplayColors.ANSI_RESET;
 
-            for (int j = 0; j < secondBoard.getLength(); j++){
-                if (secondBoard.getBoard()[i][j] == Board.WATER) s += DisplayColors.ANSI_BLUE + " " + Board.WATER + " " + " " + DisplayColors.ANSI_RESET;
-                else if (secondBoard.getBoard()[i][j] == Board.HIT) s += DisplayColors.ANSI_RED + Board.HIT + " " + DisplayColors.ANSI_RESET;
-                else if (secondBoard.getBoard()[i][j] == Board.MISS) s += Board.MISS + " " + DisplayColors.ANSI_RESET;
-                else s += DisplayColors.ANSI_YELLOW + secondBoard.getBoard()[i][j] + " " + DisplayColors.ANSI_RESET;
+            for (int j = 0; j < secondBoard.getLength(); j++) {
+                if (secondBoard.getBoard()[i][j] == Board.WATER)
+                    s += DisplayColors.ANSI_BLUE + Board.WATER + "   " + DisplayColors.ANSI_RESET;
+                else if (secondBoard.getBoard()[i][j] == Board.HIT)
+                    s += DisplayColors.ANSI_RED + Board.HIT + "   " + DisplayColors.ANSI_RESET;
+                else if (secondBoard.getBoard()[i][j] == Board.MISS) s += Board.MISS + "   " + DisplayColors.ANSI_RESET;
+                else s += DisplayColors.ANSI_YELLOW + secondBoard.getBoard()[i][j] + "   " + DisplayColors.ANSI_RESET;
             }
 
             s += "\n";
         }
-        //s += "  " + pOne.getName() + "\t\t\t\t\t    " + pTwo.getName();
         s += "\n――――――――――――――――――――――――――――――――――\n";
         return s;
     }
 
-    public static void printBoard(Board board){
+    public static void printBoard(Board board) {
         System.out.println(toStringBoard(board));
     }
 
-    public static String toStringBoard(Board board){
-        String numbers  = "⒈⒉⒊⒋⒌⒍⒎⒏⒐⒑";
-        String letters = "ͣᵇͨͩͤᶠᶢͪͥʲ";
-        String s = "\n     ";
-        for (int i = 0; i < board.getLength(); i++) s += " " + numbers.charAt(i) + "    ";
-        s += "\n";
-        for (int i = 0; i < board.getLength(); i++){
-            s += DisplayColors.ANSI_WHITE;
-            if (i == 5) s += " " + letters.charAt(i) + "    "; //f
-            else if (i == 6) s += letters.charAt(i) + "    "; //g
-            else s += letters.charAt(i) + "  ";
+    public static String toStringBoard(Board board) {
+        String letters = "abcdefghij";
+        String s = "\n    ";
 
-            for (int j = 0; j < board.getLength(); j++){
-                if (board.getBoard()[i][j] == Board.WATER) s += DisplayColors.ANSI_BLUE + " " + Board.WATER + " " + " " + DisplayColors.ANSI_RESET;
-                else if (board.getBoard()[i][j] == Board.HIT) s += DisplayColors.ANSI_RED + Board.HIT + " " + DisplayColors.ANSI_RESET;
-                else if (board.getBoard()[i][j] == Board.MISS) s += DisplayColors.ANSI_WHITE + Board.MISS + " " + DisplayColors.ANSI_RESET;
-                else s += DisplayColors.ANSI_YELLOW + board.getBoard()[i][j] + " " + DisplayColors.ANSI_RESET;
+        for (int i = 1; i <= 10; i++)
+            s += i + "   ";
+
+        s += "\n";
+        for (int i = 0; i < board.getLength(); i++) {
+            s += DisplayColors.ANSI_WHITE;
+            s += letters.charAt(i) + "   ";
+
+            for (int j = 0; j < board.getLength(); j++) {
+                if (board.getBoard()[i][j] == Board.WATER)
+                    s += DisplayColors.ANSI_BLUE + Board.WATER + "   " + DisplayColors.ANSI_RESET;
+                else if (board.getBoard()[i][j] == Board.HIT)
+                    s += DisplayColors.ANSI_RED + Board.HIT + "   " + DisplayColors.ANSI_RESET;
+                else if (board.getBoard()[i][j] == Board.MISS)
+                    s += DisplayColors.ANSI_WHITE + Board.MISS + "   " + DisplayColors.ANSI_RESET;
+                else s += DisplayColors.ANSI_YELLOW + board.getBoard()[i][j] + "   " + DisplayColors.ANSI_RESET;
             }
             s += "\n";
         }

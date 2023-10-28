@@ -26,6 +26,7 @@ public class BattleShips {
                             name = sc.next();
                             hasName = true;
                         }
+
                         game = new Game(name);
                         game.run();
                     }

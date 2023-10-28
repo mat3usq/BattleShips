@@ -1,4 +1,4 @@
-package kck.battleship.model;
+package kck.battleship.model.enum_;
 
 public enum ShipT {
     SUBMARINE(3, 2),
@@ -19,7 +19,7 @@ public enum ShipT {
     public int getShipLength() {
         return shipLength;
     }
-    public int getNumShips() {
+    public int getNumberShips() {
         return numberOfShips;
     }
 

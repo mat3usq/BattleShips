@@ -1,4 +1,6 @@
-package kck.battleship.model;
+package kck.battleship.model.clases;
+
+import kck.battleship.model.enum_.Direction;
 
 public class Ship {
     private final String name;

@@ -1,7 +1,8 @@
-package kck.battleship.model;
+package kck.battleship.model.clases;
 
 import kck.battleship.exceptions.BoardException;
 import kck.battleship.exceptions.PositionException;
+import kck.battleship.model.enum_.Direction;
 
 import java.util.ArrayList;
 import java.util.Arrays;

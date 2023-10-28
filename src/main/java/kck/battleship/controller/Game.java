@@ -2,30 +2,33 @@ package kck.battleship.controller;
 
 import kck.battleship.exceptions.BoardException;
 import kck.battleship.exceptions.PositionException;
-import kck.battleship.model.Player;
-import kck.battleship.model.Position;
+import kck.battleship.model.clases.Player;
+import kck.battleship.model.clases.Position;
 import kck.battleship.view.Display;
+import kck.battleship.view.Input;
+
+import java.util.Scanner;
 
 public class Game {
-    private final Player pOne;
-    private final Player pTwo;
+    private final Player firstPlayer;
+    private final Player secondPlayer;
     private final String COMPUTER = "AI";
 
 
-    public Game(String name){
-        pOne = new Player(name);
-        pTwo = new Player(COMPUTER, true);
+    public Game(String name) {
+        firstPlayer = new Player(name);
+        secondPlayer = new Player(COMPUTER, true);
     }
 
-    public Game(){
-        pOne = new Player(COMPUTER+"1",true);
-        pTwo = new Player(COMPUTER+"2", true);
+    public Game() {
+        firstPlayer = new Player(COMPUTER + "1", true);
+        secondPlayer = new Player(COMPUTER + "2", true);
     }
 
     private boolean turn(Player attack, Player defend) throws PositionException {
         Position shoot = null;
         boolean isHit, isAddHit;
-        if (attack.hasShipsLive()){
+        if (attack.hasShipsLive()) {
             do {
                 try {
                     shoot = attack.shoot(defend.getBoard().getBoardHideShips());
@@ -37,30 +40,47 @@ public class Game {
             } while (!isAddHit);
             isHit = defend.getBoard().thereIsHit(shoot);
             if (isHit) attack.registerShoot(shoot);
+
             Display.printShot(attack, shoot, isHit);
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+            }
 
             if (attack.isAI() && defend.isAI()) Display.printAdjacentBoard(attack, defend);
             else if (!attack.isAI()) Display.printAdjacentBoard(attack, defend);
             else if (!defend.isAI()) Display.printAdjacentBoard(defend, attack);
 
-            if (!attack.isAI() && !defend.isAI()) try { Thread.sleep(1000); } catch (InterruptedException e) { }
+            if (!attack.isAI() && !defend.isAI()) try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+            }
             return true;
         } else return false;
     }
 
-    private void addAllShips(){
-        pOne.addAllShips();
-        pTwo.addAllShips();
+    private void addAllShips() {
+
+        if (Input.randAddShips(new Scanner(System.in), "\nCzy chcesz losowo rozmiescic swoje statki(y/n): "))
+        {
+            firstPlayer.randAddAllShips();
+            Display.printBoard(firstPlayer.getBoard());
+        }
+        else
+            firstPlayer.addAllShips();
+
+        secondPlayer.addAllShips();
     }
 
-    private void printResultGame(){
-        if (pOne.shipsLeft() > pTwo.shipsLeft()) Display.printWinner(pOne);
-        else Display.printWinner(pTwo);
+    private void printResultGame() {
+        if (firstPlayer.shipsLeft() > secondPlayer.shipsLeft()) Display.printWinner(firstPlayer);
+        else Display.printWinner(secondPlayer);
     }
 
     public void run() throws PositionException {
         addAllShips();
-        while (turn(pOne, pTwo) && turn(pTwo, pOne)) { }
+        while (turn(firstPlayer, secondPlayer) && turn(secondPlayer, firstPlayer)) {
+        }
         printResultGame();
     }
 }

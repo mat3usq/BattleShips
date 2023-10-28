@@ -1,4 +1,4 @@
-package kck.battleship.model;
+package kck.battleship.model.clases;
 
 import kck.battleship.exceptions.PositionException;
 

@@ -1,4 +1,4 @@
-package kck.battleship.model;
+package kck.battleship.model.enum_;
 
 import kck.battleship.exceptions.DirectionException;
 

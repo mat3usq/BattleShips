@@ -1,7 +1,9 @@
-package kck.battleship.model;
+package kck.battleship.model.clases;
 
 import kck.battleship.exceptions.BoardException;
 import kck.battleship.exceptions.PositionException;
+import kck.battleship.model.enum_.Direction;
+import kck.battleship.model.enum_.ShipT;
 import kck.battleship.view.Display;
 import kck.battleship.view.Input;
 
@@ -16,12 +18,6 @@ public class Player {
     private ArrayList<Position> nextTargets = new ArrayList<>();
     private boolean isAI;
 
-
-    public Player() {
-        name = randName();
-        isAI = true;
-    }
-
     public Player(String name) {
         this.name = name;
         isAI = false;
@@ -32,31 +28,14 @@ public class Player {
         this.isAI = isAI;
     }
 
-    public Player(boolean isAI) {
-        this.name = randName();
-        this.isAI = isAI;
-    }
-
     private ArrayList<Ship> initShips() {
         ArrayList<Ship> list = new ArrayList<>();
         for (ShipT type : ShipT.values()) {
-            for (int i = 0; i < type.getNumShips(); i++) {
+            for (int i = 0; i < type.getNumberShips(); i++) {
                 list.add(new Ship(ShipT.toEnglishName(type), type.getShipLength()));
             }
         }
         return list;
-    }
-
-    private String randName() {
-        Random rand = new Random();
-        String letters = "abcdefghiljkmnopqrstuvwxyz";
-        String name = "";
-        int maxLung = 10, minLung = 3;
-        int l = rand.nextInt(maxLung - minLung) + minLung;
-        for (int i = 0; i < l; i++) {
-            name += letters.charAt(rand.nextInt(letters.length()));
-        }
-        return name;
     }
 
     public void setName(String name) {
@@ -89,7 +68,7 @@ public class Player {
             Position position;
             Direction direction;
             String messageInputPosition = "- Wprowadź współrzędną (np. A1): ";
-            String messageInputDirection = "- Wprowadź kierunek (h/o): ";
+            String messageInputDirection = "- Wprowadź kierunek (h/v): ";
             Scanner sc = new Scanner(System.in);
             ArrayList<Ship> list = initShips();
             for (int i = 0; i < list.size(); i++) {
@@ -117,7 +96,7 @@ public class Player {
         } else randAddAllShips();
     }
 
-    private void randAddAllShips() {
+    public void randAddAllShips() {
         Random random = new Random();
         ArrayList<Ship> list = initShips();
 
