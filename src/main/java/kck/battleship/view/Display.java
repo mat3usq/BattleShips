@@ -38,7 +38,7 @@ public class Display {
                 "- Każdy gracz ma pole bitwy reprezentowane przez siatkę 10x10 (domyślną), na której rozmieszcza " + ShipT.sizeAllShips() + " statków, ukrytych przed przeciwnikiem.\n" +
                 "- Celem gry jest zatopienie wszystkich statków przeciwnika! Statek zostaje zatopiony, gdy zostanie trafiony raz w każdy obszar, który zajmuje.\n" +
                 "- Innymi słowy, statek typu " + ShipT.values()[0] + ", który zajmuje " + ShipT.values()[0].getShipLength() + " pól, zostaje zatopiony po dwóch trafieniach.\n" +
-                "- Wszystkie " + ShipT.sizeAllShips() + " statki zajmują łącznie " + ShipT.lengthAllShips() + " pól, więc pierwszy gracz, który odnotuje 25 trafień, wygrywa!" +
+                "- Wszystkie " + ShipT.sizeAllShips() + " statki zajmują łącznie " + ShipT.lengthAllShips() + " pól, więc pierwszy gracz, który odnotuje " + ShipT.lengthAllShips() + " trafień, wygrywa!" +
                 DisplayColors.ANSI_RESET);
 
         System.out.println(DisplayColors.ANSI_YELLOW + "\nRozgrywka:" + DisplayColors.ANSI_RESET);
@@ -51,7 +51,7 @@ public class Display {
                 "- Wiersze są oznaczane literami A-J, a kolumny liczbami 1-10 (na planszy 10x10).\n" +
                 "- Dopuszczalne współrzędne obejmują literę wiersza, a następnie numer kolumny, np. A1, B7, J10 itp.\n" +
                 "- Zostaniesz poinformowany, czy trafiłeś w statek, czy nie.\n" +
-                "- Zatop wszystkie 8 statków komputera, aby wygrać!" +
+                "- Zatop wszystkie " + ShipT.sizeAllShips() + " statków komputera, aby wygrać!" +
                 DisplayColors.ANSI_RESET);
 
         System.out.println(DisplayColors.ANSI_YELLOW + "\nLegenda:" + DisplayColors.ANSI_RESET);

@@ -12,20 +12,18 @@ import java.util.Scanner;
 public class Game {
     private final Player firstPlayer;
     private final Player secondPlayer;
-    private final String COMPUTER = "AI";
-
 
     public Game(String name) {
         firstPlayer = new Player(name);
-        secondPlayer = new Player(COMPUTER, true);
+        secondPlayer = new Player("COMPUTER", true);
     }
 
     public Game() {
-        firstPlayer = new Player(COMPUTER + "1", true);
-        secondPlayer = new Player(COMPUTER + "2", true);
+        firstPlayer = new Player("COMPUTER" + "1", true);
+        secondPlayer = new Player("COMPUTER" + "2", true);
     }
 
-    private boolean turn(Player attack, Player defend) throws PositionException {
+    private boolean turn(Player attack, Player defend, Boolean reverse) throws PositionException {
         Position shoot = null;
         boolean isHit, isAddHit;
         if (attack.hasShipsLive()) {
@@ -34,7 +32,7 @@ public class Game {
                     shoot = attack.shoot(defend.getBoard().getBoardHideShips());
                     isAddHit = defend.addShoot(shoot);
                 } catch (BoardException e) {
-                    if (!attack.isAI()) Display.printError("Błąd, już strzelałeś w tą pozycji!");
+                    if (!attack.isAI()) Display.printError("Błąd, już strzelałeś w tą pozycję!");
                     isAddHit = false;
                 }
             } while (!isAddHit);
@@ -47,7 +45,8 @@ public class Game {
             } catch (InterruptedException e) {
             }
 
-            if (attack.isAI() && defend.isAI()) Display.printAdjacentBoard(attack, defend);
+            if (attack.isAI() && defend.isAI() && !reverse) Display.printAdjacentBoard(attack, defend);
+            else if (attack.isAI() && defend.isAI() && reverse) Display.printAdjacentBoard(defend, attack);
             else if (!attack.isAI()) Display.printAdjacentBoard(attack, defend);
             else if (!defend.isAI()) Display.printAdjacentBoard(defend, attack);
 
@@ -59,17 +58,18 @@ public class Game {
         } else return false;
     }
 
-    private void addAllShips() {
-
-        if (Input.randAddShips(new Scanner(System.in), "\nCzy chcesz losowo rozmiescic swoje statki(y/n): "))
-        {
-            firstPlayer.randAddAllShips();
-            Display.printBoard(firstPlayer.getBoard());
-        }
-        else
+    private void addAllShips() throws PositionException {
+        if (firstPlayer.isAI() && secondPlayer.isAI()) {
             firstPlayer.addAllShips();
-
-        secondPlayer.addAllShips();
+            secondPlayer.addAllShips();
+        } else if (Input.randAddShips(new Scanner(System.in), "\nCzy chcesz losowo rozmiescic swoje statki(y/n): ")) {
+            firstPlayer.randAddAllShips();
+            secondPlayer.addAllShips();
+            Display.printAdjacentBoard(firstPlayer, secondPlayer);
+        } else {
+            firstPlayer.addAllShips();
+            secondPlayer.addAllShips();
+        }
     }
 
     private void printResultGame() {
@@ -79,8 +79,12 @@ public class Game {
 
     public void run() throws PositionException {
         addAllShips();
-        while (turn(firstPlayer, secondPlayer) && turn(secondPlayer, firstPlayer)) {
-        }
+        if (firstPlayer.isAI() && secondPlayer.isAI()) {
+            while (turn(firstPlayer, secondPlayer, false) && turn(secondPlayer, firstPlayer, true)) {
+            }
+        } else
+            while (turn(firstPlayer, secondPlayer, false) && turn(secondPlayer, firstPlayer, false)) {
+            }
         printResultGame();
     }
 }
