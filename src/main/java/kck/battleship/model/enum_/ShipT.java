@@ -33,13 +33,13 @@ public enum ShipT {
         return sum;
     }
 
-    public static String toEnglishName(ShipT type){
+    public static String toPolishName(ShipT type){
         return switch (type) {
-            case BATTLESHIP -> "BATTLESHIP";
-            case DESTROYER -> "DESTROYER";
-            case CRUISER -> "CRUISER";
-            case SUBMARINE -> "SUBMARINE";
-            case CARRIER -> "CARRIER";
+            case BATTLESHIP -> "OKRĘT WOJENNY";
+            case DESTROYER -> "NISZCZYCIEL";
+            case CRUISER -> "KRĄŻOWNIK";
+            case SUBMARINE -> "ŁÓDŹ PODWODNA";
+            case CARRIER -> "PRZEWOŹNIK";
         };
     }
 }

@@ -37,7 +37,7 @@ public class Player {
         ArrayList<Ship> list = new ArrayList<>();
         for (ShipT type : ShipT.values()) {
             for (int i = 0; i < type.getNumberShips(); i++) {
-                list.add(new Ship(ShipT.toEnglishName(type), type.getShipLength()));
+                list.add(new Ship(ShipT.toPolishName(type), type.getShipLength()));
             }
         }
         return list;
