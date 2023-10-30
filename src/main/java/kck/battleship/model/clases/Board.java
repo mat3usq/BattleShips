@@ -171,7 +171,7 @@ public class Board {
             numberShips--;
             return set(HIT, position);
         } else if (thereIsWater(position)) return set(MISS, position);
-        else throw new BoardException("Błąd, już strzelałeś w tej pozycji");
+        else throw new BoardException("Błąd, już strzelałeś w tą pozycję");
     }
 
     public Board getBoardHideShips() throws PositionException {

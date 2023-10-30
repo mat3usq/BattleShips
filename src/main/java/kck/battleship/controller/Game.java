@@ -1,5 +1,7 @@
 package kck.battleship.controller;
 
+import com.googlecode.lanterna.screen.Screen;
+import com.googlecode.lanterna.terminal.Terminal;
 import kck.battleship.exceptions.BoardException;
 import kck.battleship.exceptions.PositionException;
 import kck.battleship.model.clases.Player;
@@ -8,6 +10,7 @@ import kck.battleship.model.clases.Ranking;
 import kck.battleship.view.Display;
 import kck.battleship.view.Input;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -15,6 +18,8 @@ public class Game {
     private final Player firstPlayer;
     private final Player secondPlayer;
     private final Ranking firstPlayerRank;
+    private Screen screen;
+    private Terminal terminal;
 
     public Game(String name) {
         firstPlayer = new Player(name);
@@ -28,13 +33,13 @@ public class Game {
         firstPlayerRank = null;
     }
 
-    private boolean turn(Player attack, Player defend, Boolean reverse) throws PositionException {
+    private boolean turn(Player attack, Player defend, Boolean reverse) throws PositionException, IOException {
         Position shoot = null;
         boolean isHit, isAddHit;
         if (attack.hasShipsLive()) {
             do {
                 try {
-                    shoot = attack.shoot(defend.getBoard().getBoardHideShips());
+                    shoot = attack.shoot(screen, terminal, defend.getBoard().getBoardHideShips());
                     isAddHit = defend.addShoot(shoot);
                 } catch (BoardException e) {
                     if (!attack.isAI()) Display.printError("Błąd, już strzelałeś w tą pozycję!");
@@ -63,25 +68,22 @@ public class Game {
             else if (!attack.isAI()) Display.printAdjacentBoard(attack, defend);
             else if (!defend.isAI()) Display.printAdjacentBoard(defend, attack);
 
-            if (!attack.isAI() && !defend.isAI()) try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-            }
             return true;
         } else return false;
     }
 
-    private void addAllShips() throws PositionException {
+    private void addAllShips() throws PositionException, IOException, InterruptedException {
         if (firstPlayer.isAI() && secondPlayer.isAI()) {
-            firstPlayer.addAllShips();
-            secondPlayer.addAllShips();
-        } else if (Input.randAddShips(new Scanner(System.in), "\nCzy chcesz losowo rozmiescic swoje statki(y/n): ")) {
+            firstPlayer.addAllShips(screen, terminal);
+            secondPlayer.addAllShips(screen, terminal);
+            Display.printAdjacentBoard(firstPlayer, secondPlayer);
+        } else if (Input.randAddShips(screen, terminal, "Czy chcesz losowo rozmiescic swoje statki(y/n): ")) {
             firstPlayer.randAddAllShips();
-            secondPlayer.addAllShips();
+            secondPlayer.addAllShips(screen, terminal);
             Display.printAdjacentBoard(firstPlayer, secondPlayer);
         } else {
-            firstPlayer.addAllShips();
-            secondPlayer.addAllShips();
+            firstPlayer.addAllShips(screen, terminal);
+            secondPlayer.addAllShips(screen, terminal);
         }
     }
 
@@ -90,7 +92,9 @@ public class Game {
         else Display.printWinner(secondPlayer, firstPlayerRank);
     }
 
-    public void run() throws PositionException {
+    public void run(Screen screen, Terminal terminal) throws PositionException, IOException, InterruptedException {
+        this.screen = screen;
+        this.terminal = terminal;
         addAllShips();
         if (firstPlayer.isAI() && secondPlayer.isAI()) {
             while (turn(firstPlayer, secondPlayer, false) && turn(secondPlayer, firstPlayer, true)) {
@@ -100,5 +104,7 @@ public class Game {
             }
         printResultGame();
         firstPlayerRank.save();
+        Display.printMenuPage(0);
+        Display.chooseOption(terminal, 0);
     }
 }

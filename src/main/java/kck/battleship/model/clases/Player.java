@@ -1,5 +1,7 @@
 package kck.battleship.model.clases;
 
+import com.googlecode.lanterna.screen.Screen;
+import com.googlecode.lanterna.terminal.Terminal;
 import kck.battleship.exceptions.BoardException;
 import kck.battleship.exceptions.PositionException;
 import kck.battleship.model.enum_.Direction;
@@ -7,6 +9,7 @@ import kck.battleship.model.enum_.ShipT;
 import kck.battleship.view.Display;
 import kck.battleship.view.Input;
 
+import java.io.IOException;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
@@ -75,14 +78,13 @@ public class Player {
         this.lastShootTime = lastShootTime;
     }
 
-    public void addAllShips() {
+    public void addAllShips(Screen screen, Terminal terminal) throws IOException, InterruptedException {
         if (!isAI) {
             boolean isAdded;
             Position position;
             Direction direction;
-            String messageInputPosition = "- Wprowadź współrzędną (np. A1): ";
-            String messageInputDirection = "- Wprowadź kierunek (h/v): ";
-            Scanner sc = new Scanner(System.in);
+            String messageInputPosition = "Wprowadź współrzędną (np. A1): ";
+            String messageInputDirection = "Wprowadź kierunek (h/v): ";
             ArrayList<Ship> list = initShips();
             for (int i = 0; i < list.size(); i++) {
                 Ship ship = list.get(i);
@@ -90,8 +92,8 @@ public class Player {
                     Display.printBoard(board);
                     Display.printCurrentShip(ship, countShip(list, ship.getLength()));
 
-                    position = Input.readPosition(sc, board, messageInputPosition);
-                    direction = Input.readDirection(sc, messageInputDirection);
+                    position = Input.readPosition(screen, terminal, board, messageInputPosition);
+                    direction = Input.readDirection(screen, terminal, messageInputDirection);
                     ship.setPosition(position);
                     ship.setDirection(direction);
 
@@ -100,6 +102,7 @@ public class Player {
                     } catch (BoardException | PositionException e) {
                         Display.printError(e.toString());
                         isAdded = false;
+                        Thread.sleep(2000); // Dodaj opóźnienie na 2 sekundy
                     }
                 } while (!isAdded);
                 list.remove(i);
@@ -181,11 +184,10 @@ public class Player {
         }
     }
 
-    public Position shoot(Board boardEnemy) throws PositionException {
+    public Position shoot(Screen screen, Terminal terminal, Board boardEnemy) throws PositionException {
         if (isAI) return shootAI(boardEnemy);
         else {
-            Scanner sc = new Scanner(System.in);
-            return Input.readPosition(sc, board, "- " + name + ", gdzie chcesz strzelić? ");
+            return Input.readPosition(screen, terminal, board, name + ", gdzie chcesz strzelić? ");
         }
     }
 

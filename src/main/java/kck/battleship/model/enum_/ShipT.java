@@ -1,11 +1,11 @@
 package kck.battleship.model.enum_;
 
 public enum ShipT {
-    SUBMARINE(1, 2),
-    CRUISER(2, 3),
-    DESTROYER(2, 4),
-    BATTLESHIP(1, 5),
-    CARRIER(1, 5);
+    SUBMARINE(1, 2);
+//    CRUISER(2, 3),
+//    DESTROYER(2, 4),
+//    BATTLESHIP(1, 5),
+//    CARRIER(1, 5);
 
     private final int numberOfShips;
     private final int shipLength;
@@ -35,11 +35,11 @@ public enum ShipT {
 
     public static String toPolishName(ShipT type){
         return switch (type) {
-            case BATTLESHIP -> "OKRĘT WOJENNY";
-            case DESTROYER -> "NISZCZYCIEL";
-            case CRUISER -> "KRĄŻOWNIK";
+//            case BATTLESHIP -> "OKRĘT WOJENNY";
+//            case DESTROYER -> "NISZCZYCIEL";
+//            case CRUISER -> "KRĄŻOWNIK";
             case SUBMARINE -> "ŁÓDŹ PODWODNA";
-            case CARRIER -> "PRZEWOŹNIK";
+//            case CARRIER -> "PRZEWOŹNIK";
         };
     }
 }

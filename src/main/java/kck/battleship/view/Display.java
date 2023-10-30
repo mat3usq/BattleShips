@@ -7,10 +7,12 @@ import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
 import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
 import com.googlecode.lanterna.input.KeyStroke;
+import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
+import kck.battleship.controller.Game;
 import kck.battleship.exceptions.PositionException;
 import kck.battleship.model.clases.*;
 import kck.battleship.model.enum_.ShipT;
@@ -24,13 +26,13 @@ import java.util.*;
 public class Display {
     private static Screen screen;
 
-    private final List<String> menuList = new ArrayList<>(Arrays.asList("Rozpocznij Grę", "Symuluj Grę", "Zasady Gry", "Ranking", "Wyjście"));
+    private static final List<String> menuList = new ArrayList<>(Arrays.asList("Rozpocznij Grę", "Symuluj Grę", "Zasady Gry", "Ranking", "Wyjście"));
 
     public Display(Screen screen) {
         this.screen = screen;
     }
 
-    public void printHomePage() {
+    public static void printHomePage() {
         TextGraphics tg = screen.newTextGraphics();
 
         printTitle();
@@ -46,7 +48,7 @@ public class Display {
         }
     }
 
-    private void printTitle() {
+    private static void printTitle() {
         TextGraphics tg = screen.newTextGraphics();
         tg.putString(6, 4, "  ____    _  _____ _____ _     _____   ____  _   _ ___ ____  ____");
         tg.putString(6, 5, " | __ )  / \\|_   _|_   _| |   | ____| / ___|| | | |_ _|  _ \\/ ___|");
@@ -55,7 +57,7 @@ public class Display {
         tg.putString(6, 8, " |____/_/   \\_\\_|   |_| |_____|_____| |____/|_| |_|___|_|   |____/ \n");
     }
 
-    private void printMenu() {
+    private static void printMenu() {
         TextGraphics tg = screen.newTextGraphics();
         tg.putString(24, 10, " __  __  ____  _  _  __  __ \n");
         tg.putString(24, 11, "(  \\/  )( ___)( \\( )(  )(  )\n");
@@ -63,7 +65,7 @@ public class Display {
         tg.putString(24, 13, "(_/\\/\\_)(____)(_)\\_)(______)\n");
     }
 
-    public void waitForKeyHomePage(Terminal terminal) throws IOException {
+    public static void waitForKeyHomePage(Terminal terminal) throws IOException {
         Boolean b = true;
         while (b) {
             KeyStroke k = terminal.pollInput();
@@ -82,7 +84,7 @@ public class Display {
         }
     }
 
-    private void printMenuPage(int selected) {
+    public static void printMenuPage(int selected) {
         screen.clear();
 
         printTitle();
@@ -112,7 +114,7 @@ public class Display {
         }
     }
 
-    private void printExit() {
+    private static void printExit() {
         TextGraphics tg = screen.newTextGraphics();
         screen.clear();
 
@@ -130,7 +132,7 @@ public class Display {
         }
     }
 
-    public void chooseOption(Terminal terminal, int selected) throws IOException {
+    public static void chooseOption(Terminal terminal, int selected) throws IOException, PositionException, InterruptedException {
         Boolean b = true;
         while (b) {
             KeyStroke k = terminal.pollInput();
@@ -157,21 +159,24 @@ public class Display {
         }
     }
 
-    private void option(int selected, Terminal terminal) throws IOException {
+    private static void option(int selected, Terminal terminal) throws IOException, PositionException, InterruptedException {
         for (int i = 0; i < menuList.size(); i++) {
             if (i == selected)
                 switch (menuList.get(i)) {
                     case "Rozpocznij Grę" -> {
-
+                        String name = Input.getUserInput(screen, terminal);
+                        Game game = new Game(name);
+                        game.run(screen, terminal);
                     }
                     case "Symuluj Grę" -> {
-
+                        Game game = new Game();
+                        game.run(screen, terminal);
                     }
                     case "Zasady Gry" -> {
                         printRules(terminal);
                     }
                     case "Ranking" -> {
-
+                        printRanking();
                     }
                     case "Wyjście" -> {
                         printExit();
@@ -180,7 +185,7 @@ public class Display {
         }
     }
 
-    private void printRules(Terminal terminal) throws IOException {
+    private static void printRules(Terminal terminal) throws IOException, PositionException, InterruptedException {
         printInfoRules(1);
 
         Boolean b = true;
@@ -203,7 +208,7 @@ public class Display {
         }
     }
 
-    private void printInfoRules(int x) {
+    private static void printInfoRules(int x) {
         TextGraphics tg = screen.newTextGraphics();
         screen.clear();
 
@@ -281,113 +286,192 @@ public class Display {
     }
 
     public static void printError(String message) {
-        System.out.println(DisplayColors.ANSI_RED + message + DisplayColors.ANSI_RESET);
+        TextGraphics tg = screen.newTextGraphics();
+        tg.setForegroundColor(TextColor.ANSI.RED);
+        tg.putString(2, 22, message);
+        try {
+            screen.refresh();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void printShot(Player player, Position position, boolean isHit) {
-        System.out.println("- " + player.getName() + " strzelił w " + position.toStringEncode(position) + ": " +
-                (isHit ? DisplayColors.ANSI_BLUE + "Trafiony!" + DisplayColors.ANSI_RESET :
-                        DisplayColors.ANSI_RED + "Nietrafiony!" + DisplayColors.ANSI_RESET));
+        TextGraphics tg = screen.newTextGraphics();
+
+        if (player.getName().equals("COMPUTER")) {
+            tg.putString(46, 15, player.getName() + " strzelił w " + position.toStringEncode(position));
+            tg.setForegroundColor(TextColor.ANSI.BLUE);
+            if (isHit) {
+                tg.setForegroundColor(TextColor.ANSI.BLUE);
+                tg.putString(50, 16, "Trafiony!");
+            } else {
+                tg.setForegroundColor(TextColor.ANSI.RED);
+                tg.putString(50, 16, "NieTrafiony!");
+            }
+            tg.setForegroundColor(TextColor.ANSI.WHITE);
+
+        } else {
+            tg.putString(6, 15, player.getName() + " strzelił w " + position.toStringEncode(position));
+            if (isHit) {
+                tg.setForegroundColor(TextColor.ANSI.BLUE);
+                tg.putString(10, 16, "Trafiony!");
+            } else {
+                tg.setForegroundColor(TextColor.ANSI.RED);
+                tg.putString(10, 16, "NieTrafiony!");
+            }
+            tg.setForegroundColor(TextColor.ANSI.WHITE);
+        }
+
+        try {
+            screen.refresh();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void printWinner(Player player, Ranking rank) {
-        System.out.println(DisplayColors.ANSI_BLUE + "\n✔ " + player.getName() + " wygrał(a)!" + DisplayColors.ANSI_RESET + "\n");
-        System.out.println(DisplayColors.ANSI_YELLOW + "Twoj Wynik: " + rank.getPoints() + DisplayColors.ANSI_RESET + "\n");
-        System.out.print("\nNaciśnij dowolny klawisz, aby kontynuować...");
-        new Scanner(System.in).nextLine();
+        screen.clear();
+        TextGraphics tg = screen.newTextGraphics();
+        tg.setForegroundColor(TextColor.ANSI.GREEN_BRIGHT);
+        tg.putString(24, 15, "✔ " + player.getName() + " wygrał(a)!");
+        tg.setForegroundColor(TextColor.ANSI.YELLOW_BRIGHT);
+        tg.putString(24, 16, "Twoj Wynik: " + rank.getPoints());
+        try {
+            Thread.sleep(3000);
+            screen.refresh();
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public static void printCurrentShip(Ship ship, int numShipLeft) {
-        System.out.println("☛ " + ship.getName() + " (" +
-                DisplayColors.ANSI_YELLOW + ship.toGraphicLength() + DisplayColors.ANSI_RESET +
-                ") x" + numShipLeft);
+    public static void printCurrentShip(Ship ship, int numShipLeft) throws IOException {
+        TextGraphics tg = screen.newTextGraphics();
+
+        tg.putString(2, 15, "☛ " + ship.getName());
+        tg.putString(2, 16, numShipLeft + " x ");
+
+        tg.setForegroundColor(TextColor.ANSI.YELLOW);
+        tg.putString(6, 16, ship.toGraphicLength());
+        tg.setForegroundColor(TextColor.ANSI.WHITE);
+
+        screen.refresh();
     }
 
     public static void printAdjacentBoard(Player pOne, Player pTwo) throws PositionException {
-        System.out.println(toStringAdjacentBoard(pOne, pTwo));
-    }
-
-    public static String toStringAdjacentBoard(Player pOne, Player pTwo) throws PositionException {
         Board firstBoard = pOne.getBoard();
-        Board secondBoard = pTwo.getBoard().getBoardHideShips();
-//        Board secondBoard = pTwo.getBoard();
+//        Board secondBoard = pTwo.getBoard().getBoardHideShips();
+        Board secondBoard = pTwo.getBoard();
+
+        TextGraphics tg = screen.newTextGraphics();
         String letters = "abcdefghij";
-        String s = "\n――――――――――――――――――――――――――――――――――\n";
-        s += "\n    ";
 
-        for (int i = 1; i <= 10; i++)
-            s += i + "   ";
+        screen.clear();
 
-        s += "      ";
+        for (int i = 1; i <= 10; i++) {
+            tg.setForegroundColor(TextColor.ANSI.WHITE);
+            tg.putString(2 + i * 3, 2, i + "   ");
+        }
 
-        for (int i = 1; i <= 10; i++)
-            s += i + "   ";
+        for (int i = 1; i <= 10; i++) {
+            tg.setForegroundColor(TextColor.ANSI.WHITE);
+            tg.putString(40 + i * 3, 2, i + "   ");
+        }
 
-        s += "\n";
         for (int i = 0; i < firstBoard.getLength(); i++) {
-            s += DisplayColors.ANSI_WHITE;
-            s += letters.charAt(i) + "   ";
-            s += DisplayColors.ANSI_RESET;
+            tg.setForegroundColor(TextColor.ANSI.WHITE);
+            tg.putString(2, 3 + i, letters.charAt(i) + " ");
 
             for (int j = 0; j < firstBoard.getLength(); j++) {
-                if (firstBoard.getBoard()[i][j] == Board.WATER)
-                    s += DisplayColors.ANSI_BLUE + Board.WATER + "   " + DisplayColors.ANSI_RESET;
-                else if (firstBoard.getBoard()[i][j] == Board.HIT)
-                    s += DisplayColors.ANSI_RED + Board.HIT + "   " + DisplayColors.ANSI_RESET;
-                else if (firstBoard.getBoard()[i][j] == Board.MISS) s += Board.MISS + "   " + DisplayColors.ANSI_RESET;
-                else s += DisplayColors.ANSI_YELLOW + firstBoard.getBoard()[i][j] + "   " + DisplayColors.ANSI_RESET;
+                if (firstBoard.getBoard()[i][j] == Board.WATER) {
+                    tg.setForegroundColor(TextColor.ANSI.BLUE);
+                    tg.putString(5 + j * 3, 3 + i, Board.WATER + " ");
+                    tg.setForegroundColor(TextColor.ANSI.WHITE);
+                } else if (firstBoard.getBoard()[i][j] == Board.HIT) {
+                    tg.setForegroundColor(TextColor.ANSI.RED);
+                    tg.putString(5 + j * 3, 3 + i, Board.HIT + " ");
+                    tg.setForegroundColor(TextColor.ANSI.WHITE);
+                } else if (firstBoard.getBoard()[i][j] == Board.MISS) {
+                    tg.setForegroundColor(TextColor.ANSI.WHITE);
+                    tg.putString(5 + j * 3, 3 + i, Board.MISS + " ");
+                    tg.setForegroundColor(TextColor.ANSI.WHITE);
+                } else {
+                    tg.setForegroundColor(TextColor.ANSI.YELLOW);
+                    tg.putString(5 + j * 3, 3 + i, firstBoard.getBoard()[i][j] + " ");
+                    tg.setForegroundColor(TextColor.ANSI.WHITE);
+                }
             }
 
-            s += "   ";
-
-            s += DisplayColors.ANSI_WHITE;
-            s += DisplayColors.ANSI_WHITE;
-            s += letters.charAt(i) + "   ";
-            s += DisplayColors.ANSI_RESET;
+            tg.setForegroundColor(TextColor.ANSI.WHITE);
+            tg.putString(40, 3 + i, letters.charAt(i) + "   ");
 
             for (int j = 0; j < secondBoard.getLength(); j++) {
-                if (secondBoard.getBoard()[i][j] == Board.WATER)
-                    s += DisplayColors.ANSI_BLUE + Board.WATER + "   " + DisplayColors.ANSI_RESET;
-                else if (secondBoard.getBoard()[i][j] == Board.HIT)
-                    s += DisplayColors.ANSI_RED + Board.HIT + "   " + DisplayColors.ANSI_RESET;
-                else if (secondBoard.getBoard()[i][j] == Board.MISS) s += Board.MISS + "   " + DisplayColors.ANSI_RESET;
-                else s += DisplayColors.ANSI_YELLOW + secondBoard.getBoard()[i][j] + "   " + DisplayColors.ANSI_RESET;
+                if (secondBoard.getBoard()[i][j] == Board.WATER) {
+                    tg.setForegroundColor(TextColor.ANSI.BLUE);
+                    tg.putString(43 + j * 3, 3 + i, Board.WATER + " ");
+                    tg.setForegroundColor(TextColor.ANSI.WHITE);
+                } else if (secondBoard.getBoard()[i][j] == Board.HIT) {
+                    tg.setForegroundColor(TextColor.ANSI.RED);
+                    tg.putString(43 + j * 3, 3 + i, Board.HIT + " ");
+                    tg.setForegroundColor(TextColor.ANSI.WHITE);
+                } else if (secondBoard.getBoard()[i][j] == Board.MISS) {
+                    tg.setForegroundColor(TextColor.ANSI.WHITE);
+                    tg.putString(43 + j * 3, 3 + i, Board.MISS + " ");
+                    tg.setForegroundColor(TextColor.ANSI.WHITE);
+                } else {
+                    tg.setForegroundColor(TextColor.ANSI.YELLOW);
+                    tg.putString(43 + j * 3, 3 + i, secondBoard.getBoard()[i][j] + " ");
+                    tg.setForegroundColor(TextColor.ANSI.WHITE);
+                }
             }
-
-            s += "\n";
         }
-        s += "\n――――――――――――――――――――――――――――――――――\n";
-        return s;
+
+        try {
+            screen.refresh();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
-    public static void printBoard(Board board) {
-        System.out.println(toStringBoard(board));
-    }
-
-    public static String toStringBoard(Board board) {
+    public static void printBoard(Board board) throws IOException {
+        TextGraphics tg = screen.newTextGraphics();
         String letters = "abcdefghij";
-        String s = "\n    ";
 
-        for (int i = 1; i <= 10; i++)
-            s += i + "   ";
+        screen.clear();
 
-        s += "\n";
+        for (int i = 1; i <= 10; i++) {
+            tg.setForegroundColor(TextColor.ANSI.WHITE);
+            tg.putString(2 + i * 3, 2, i + "   ");
+        }
+
         for (int i = 0; i < board.getLength(); i++) {
-            s += DisplayColors.ANSI_WHITE;
-            s += letters.charAt(i) + "   ";
+            tg.setForegroundColor(TextColor.ANSI.WHITE);
+            tg.putString(2, 3 + i, letters.charAt(i) + " ");
 
             for (int j = 0; j < board.getLength(); j++) {
-                if (board.getBoard()[i][j] == Board.WATER)
-                    s += DisplayColors.ANSI_BLUE + Board.WATER + "   " + DisplayColors.ANSI_RESET;
-                else if (board.getBoard()[i][j] == Board.HIT)
-                    s += DisplayColors.ANSI_RED + Board.HIT + "   " + DisplayColors.ANSI_RESET;
-                else if (board.getBoard()[i][j] == Board.MISS)
-                    s += DisplayColors.ANSI_WHITE + Board.MISS + "   " + DisplayColors.ANSI_RESET;
-                else s += DisplayColors.ANSI_YELLOW + board.getBoard()[i][j] + "   " + DisplayColors.ANSI_RESET;
+                if (board.getBoard()[i][j] == Board.WATER) {
+                    tg.setForegroundColor(TextColor.ANSI.BLUE);
+                    tg.putString(5 + j * 3, 3 + i, Board.WATER + " ");
+                    tg.setForegroundColor(TextColor.ANSI.WHITE);
+                } else if (board.getBoard()[i][j] == Board.HIT) {
+                    tg.setForegroundColor(TextColor.ANSI.RED);
+                    tg.putString(5 + j * 3, 3 + i, Board.HIT + " ");
+                    tg.setForegroundColor(TextColor.ANSI.WHITE);
+                } else if (board.getBoard()[i][j] == Board.MISS) {
+                    tg.setForegroundColor(TextColor.ANSI.WHITE);
+                    tg.putString(5 + j * 3, 3 + i, Board.MISS + " ");
+                    tg.setForegroundColor(TextColor.ANSI.WHITE);
+                } else {
+                    tg.setForegroundColor(TextColor.ANSI.YELLOW);
+                    tg.putString(5 + j * 3, 3 + i, board.getBoard()[i][j] + " ");
+                    tg.setForegroundColor(TextColor.ANSI.WHITE);
+                }
             }
-            s += "\n";
+
         }
-        return s;
+
+        screen.refresh();
     }
 
     public static void printRanking() {
