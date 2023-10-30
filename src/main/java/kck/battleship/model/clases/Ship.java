@@ -42,5 +42,4 @@ public class Ship {
     public String toGraphicLength() {
         return ("" + Board.SHIP).repeat(length);
     }
-
 }

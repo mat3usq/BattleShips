@@ -97,7 +97,7 @@ public class Board {
         return list;
     }
 
-    public ArrayList<Position> getAllNearPositions(int row, int column) throws PositionException, PositionException {
+    public ArrayList<Position> getAllNearPositions(int row, int column) throws PositionException {
         ArrayList<Position> list = new ArrayList<>();
         //nord
         if (row - 1 >= 0) list.add(new Position(row - 1, column));

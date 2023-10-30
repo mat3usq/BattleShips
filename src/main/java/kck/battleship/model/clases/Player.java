@@ -10,11 +10,9 @@ import kck.battleship.view.Display;
 import kck.battleship.view.Input;
 
 import java.io.IOException;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
-import java.util.Scanner;
 
 public class Player {
     private String name;
@@ -23,7 +21,6 @@ public class Player {
     private ArrayList<Position> nextTargets = new ArrayList<>();
     private boolean isAI;
     private Date lastShootTime;
-
 
     public Player(String name) {
         this.name = name;
@@ -46,24 +43,12 @@ public class Player {
         return list;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getName() {
         return name;
     }
 
     public Board getBoard() {
         return board;
-    }
-
-    public ArrayList<Position> getShoots() {
-        return shoots;
-    }
-
-    public void setAI(boolean AI) {
-        isAI = AI;
     }
 
     public boolean isAI() {

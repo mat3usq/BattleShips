@@ -13,8 +13,6 @@ import kck.battleship.model.enum_.Direction;
 import kck.battleship.model.clases.Position;
 
 import java.io.IOException;
-import java.util.InputMismatchException;
-import java.util.Scanner;
 
 public class Input {
 

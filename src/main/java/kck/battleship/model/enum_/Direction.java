@@ -11,10 +11,4 @@ public enum Direction {
         else if (_char == 'v' || _char == 'V') return VERTICAL;
         else throw new DirectionException("Podany znak '" + _char + "' nie jest poprawny");
     }
-
-    public static Direction decode(String string) throws DirectionException {
-        if (string.toLowerCase().equals("horizontal")) return HORIZONTAL;
-        else if (string.toLowerCase().equals("vertical")) return VERTICAL;
-        else throw new DirectionException("Podany string '" + string + "' nie jest poprawny");
-    }
 }

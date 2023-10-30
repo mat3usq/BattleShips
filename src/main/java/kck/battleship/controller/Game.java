@@ -71,7 +71,7 @@ public class Game {
         } else return false;
     }
 
-    private void addAllShips() throws PositionException, IOException, InterruptedException {
+    private void addAllShips() throws IOException, InterruptedException {
         if (firstPlayer.isAI() && secondPlayer.isAI()) {
             firstPlayer.addAllShips(screen, terminal);
             secondPlayer.addAllShips(screen, terminal);
