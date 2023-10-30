@@ -1,16 +1,10 @@
 package kck.battleship.view;
 
 import com.googlecode.lanterna.SGR;
-import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
-import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
-import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
 import com.googlecode.lanterna.input.KeyStroke;
-import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
-import com.googlecode.lanterna.screen.TerminalScreen;
-import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import kck.battleship.controller.Game;
 import kck.battleship.exceptions.PositionException;
@@ -38,8 +32,8 @@ public class Display {
         printTitle();
 
         tg.putString(16, 16, "Jeśli chcesz przejść dalej, kliknij");
+        tg.setForegroundColor(TextColor.ANSI.GREEN_BRIGHT);
         tg.putString(52, 16, "ENTER", SGR.BLINK);
-        tg.putString(58, 16, "...");
 
         try {
             screen.refresh();
@@ -176,7 +170,7 @@ public class Display {
                         printRules(terminal);
                     }
                     case "Ranking" -> {
-                        printRanking();
+                        printRanking(terminal, 0);
                     }
                     case "Wyjście" -> {
                         printExit();
@@ -357,7 +351,7 @@ public class Display {
         screen.refresh();
     }
 
-    public static void printAdjacentBoard(Player pOne, Player pTwo) throws PositionException {
+    public static void printAdjacentBoard(Player pOne, Player pTwo) {
         Board firstBoard = pOne.getBoard();
 //        Board secondBoard = pTwo.getBoard().getBoardHideShips();
         Board secondBoard = pTwo.getBoard();
@@ -473,8 +467,8 @@ public class Display {
         screen.refresh();
     }
 
-    public static void printRanking() {
-        String fileName = "/Users/mateusz/Desktop/_BattleShips/src/main/java/kck/battleship/model/data/ranking.txt"; // Nazwa pliku, w którym zapisywane są wyniki
+    public static void printRanking(Terminal terminal, int page) throws IOException, PositionException, InterruptedException {
+        String fileName = "src/main/java/kck/battleship/model/data/ranking.txt"; // Nazwa pliku, w którym zapisywane są wyniki
 
         List<Ranking> rankings = new ArrayList<>();
 
@@ -504,16 +498,56 @@ public class Display {
         }
 
         Collections.sort(rankings, Collections.reverseOrder(Comparator.comparingInt(Ranking::getPoints)));
-        System.out.println("\n              " + DisplayColors.ANSI_BLUE + "Ranking" + DisplayColors.ANSI_RESET);
-        System.out.println(DisplayColors.ANSI_BLUE + "Position" + DisplayColors.ANSI_CYAN + "    Points        " + DisplayColors.ANSI_GREEN + "Name" + DisplayColors.ANSI_RESET);
+
+        TextGraphics tg = screen.newTextGraphics();
+        screen.clear();
+
+        tg.setForegroundColor(TextColor.ANSI.GREEN_BRIGHT);
+        tg.putString(33, 3, "RANKING", SGR.BOLD);
+        tg.setForegroundColor(TextColor.ANSI.BLUE_BRIGHT);
+        tg.putString(20, 5, "Pozycja");
+        tg.setForegroundColor(TextColor.ANSI.CYAN_BRIGHT);
+        tg.putString(35, 5, "Nick");
+        tg.setForegroundColor(TextColor.ANSI.MAGENTA);
+        tg.putString(47, 5, "Punkty");
+        tg.setForegroundColor(TextColor.ANSI.WHITE);
+
         int i = 0;
-        for (Ranking ranking : rankings) {
+        int itemsPerPage = 10; // Liczba wyników na stronie
+        int startIndex = page * itemsPerPage; // Oblicz indeks początkowy na podstawie strony
+        int endIndex = Math.min(startIndex + itemsPerPage, rankings.size()); // Oblicz indeks końcowy, nie przekraczając rozmiaru listy
+
+        for (int j = startIndex; j < endIndex; j++) {
             i++;
-            System.out.println("    " + i + "          " + ranking.getPoints() + "          " + ranking.getPlayer().getName());
+            Ranking ranking = rankings.get(j);
+            tg.putString(23, 6 + i, (j + 1) + "."); // +1, aby wyświetlać numerację od 1 na stronie
+            tg.putString(33, 6 + i, ranking.getPlayer().getName());
+            tg.putString(49, 6 + i, String.valueOf(ranking.getPoints()));
         }
 
+        screen.refresh();
 
-        System.out.print("\nNaciśnij dowolny klawisz, aby kontynuować...");
-        new Scanner(System.in).nextLine();
+
+        Boolean b = true;
+        while (b) {
+            KeyStroke k = terminal.pollInput();
+            if (k != null)
+                switch (k.getKeyType()) {
+                    case Escape -> {
+                        printMenuPage(3);
+                        chooseOption(terminal, 3);
+                        b = false;
+                    }
+                    case ArrowUp -> {
+                        if (page > 0)
+                            printRanking(terminal, --page);
+                    }
+                    case ArrowDown -> {
+                        if (page < rankings.size() / 10)
+                            printRanking(terminal, ++page);
+                    }
+                }
+        }
+
     }
 }

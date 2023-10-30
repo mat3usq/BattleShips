@@ -26,7 +26,7 @@ public class Ranking {
 
     public void save() {
         try {
-            File plik = new File("/Users/mateusz/Desktop/_BattleShips/src/main/java/kck/battleship/model/data/ranking.txt");
+            File plik = new File("src/main/java/kck/battleship/model/data/ranking.txt");
 
             // Tworzenie pliku, jeśli nie istnieje
             if (!plik.exists()) {
@@ -48,6 +48,4 @@ public class Ranking {
             e.printStackTrace();
         }
     }
-
-
 }

@@ -12,7 +12,6 @@ import kck.battleship.view.Input;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.Scanner;
 
 public class Game {
     private final Player firstPlayer;
@@ -33,7 +32,7 @@ public class Game {
         firstPlayerRank = null;
     }
 
-    private boolean turn(Player attack, Player defend, Boolean reverse) throws PositionException, IOException {
+    private boolean turn(Player attack, Player defend, Boolean reverse) throws PositionException {
         Position shoot = null;
         boolean isHit, isAddHit;
         if (attack.hasShipsLive()) {
