@@ -331,15 +331,14 @@ public class Display {
     }
 
     public static void printWinner(Player player, Ranking rank) {
-        screen.clear();
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.GREEN_BRIGHT);
-        tg.putString(24, 15, "✔ " + player.getName() + " wygrał(a)!");
+        tg.putString(28, 15, "✔ " + player.getName() + " wygrał(a)!");
         tg.setForegroundColor(TextColor.ANSI.YELLOW_BRIGHT);
-        tg.putString(24, 16, "Twoj Wynik: " + rank.getPoints());
+        tg.putString(32, 17, "Twoj Wynik: " + rank.getPoints());
         try {
-            Thread.sleep(3000);
             screen.refresh();
+            Thread.sleep(3000);
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
