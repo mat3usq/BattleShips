@@ -1,5 +1,7 @@
 package kck.battleship.controller;
 
+import com.googlecode.lanterna.TextColor;
+import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.Terminal;
 import kck.battleship.exceptions.BoardException;
@@ -22,6 +24,7 @@ public class Game {
 
     public Game(String name) {
         firstPlayer = new Player(name);
+        firstPlayer.getShop();
         firstPlayerRank = new Ranking(firstPlayer, 0);
         secondPlayer = new Player("COMPUTER", true);
     }
@@ -43,8 +46,10 @@ public class Game {
         else
             playGameHumanVsAI(firstPlayer, secondPlayer);
 
+        if (!firstPlayer.isAI())
+            firstPlayerRank.save();
+
         printResultGame();
-        firstPlayerRank.save();
 
         Display.printMenuPage(0);
         Display.chooseOption(terminal, 0);
@@ -65,24 +70,43 @@ public class Game {
         boolean isHit, isAddHit;
 
         if (attacker.hasShipsLive()) {
-            do {
+
+            if (defender.getDurabilityForceField() > 0) {
+                defender.setDurabilityForceField(defender.getDurabilityForceField() - 1);
+                TextGraphics tg = screen.newTextGraphics();
+                tg.putString(46, 15, "Computer nie trafil w ciebie!");
+                tg.setForegroundColor(TextColor.ANSI.BLUE_BRIGHT);
+                if (defender.getDurabilityForceField() == 0)
+                    tg.putString(50, 16, "Poniewaz miales bariere!");
+                else
+                    tg.putString(33, 16, "Poniewaz masz bariere jeszcze przez: " + defender.getDurabilityForceField() + " rund");
+                tg.setForegroundColor(TextColor.ANSI.WHITE);
                 try {
-                    shoot = attacker.shoot(screen, terminal, defender.getBoard().getBoardHideShips());
-                    isAddHit = defender.addShoot(shoot);
-                } catch (BoardException e) {
-                    if (!attacker.isAI()) Display.printError("Błąd, już strzelałeś w tą pozycję!");
-                    isAddHit = false;
+                    screen.refresh();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
-            } while (!isAddHit);
+            } else {
+                do {
+                    try {
+                        shoot = attacker.shoot(screen, terminal, defender.getBoard().getBoardHideShips());
+                        isAddHit = defender.addShoot(shoot);
+                    } catch (BoardException e) {
+                        if (!attacker.isAI()) Display.printError("Błąd, już strzelałeś w tą pozycję!");
+                        isAddHit = false;
+                    }
+                } while (!isAddHit);
 
-            isHit = defender.getBoard().IsHit(shoot);
+                isHit = defender.getBoard().IsHit(shoot);
 
-            if (isHit) {
-                attacker.registerShoot(shoot);
-                updatePlayerPoints(attacker);
+                if (isHit) {
+                    attacker.registerShoot(shoot);
+                    updatePlayerPoints(attacker);
+                }
+
+                Display.printShot(attacker, shoot, isHit);
             }
 
-            Display.printShot(attacker, shoot, isHit);
             delayForGameplay();
 
             if (attacker.isAI() && defender.isAI() && !reverse)
@@ -101,7 +125,7 @@ public class Game {
     private void updatePlayerPoints(Player player) {
         if (!player.isAI()) {
             long diff = (new Date().getTime() - player.getLastShootTime().getTime()) / 1000;
-            firstPlayerRank.setPoints((int) (100 / diff));
+            firstPlayerRank.addPoints((int) (100 / diff));
             player.setLastShootTime(new Date());
         }
     }
@@ -118,7 +142,7 @@ public class Game {
             firstPlayer.addShips(screen, terminal);
             secondPlayer.addShips(screen, terminal);
             Display.printBoards(firstPlayer, secondPlayer);
-        } else if (Input.randAddShips(screen, terminal, "Czy chcesz losowo rozmiescic swoje statki(y/n): ")) {
+        } else if (Input.question(screen, terminal, "Czy chcesz losowo rozmiescic swoje statki(y/n): ")) {
             firstPlayer.randAddShips();
             secondPlayer.addShips(screen, terminal);
             Display.printBoards(firstPlayer, secondPlayer);

@@ -4,8 +4,7 @@ public enum ShipT {
     SUBMARINE(1, 2),
     CRUISER(2, 3),
     DESTROYER(2, 4),
-    BATTLESHIP(1, 5),
-    CARRIER(1, 5);
+    BATTLESHIP(1, 5);
 
     private final int numberOfShips;
     private final int shipLength;
@@ -41,7 +40,6 @@ public enum ShipT {
             case DESTROYER -> "NISZCZYCIEL";
             case CRUISER -> "KRĄŻOWNIK";
             case SUBMARINE -> "ŁÓDŹ PODWODNA";
-            case CARRIER -> "PRZEWOŹNIK";
         };
     }
 }

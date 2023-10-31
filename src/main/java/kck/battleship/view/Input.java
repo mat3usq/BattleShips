@@ -112,7 +112,7 @@ public class Input {
         }
     }
 
-    public static boolean randAddShips(Screen screen, Terminal terminal, String message) throws IOException, InterruptedException {
+    public static boolean question(Screen screen, Terminal terminal, String message) throws IOException, InterruptedException {
         char userResponse = '\0';
         TextGraphics tg = screen.newTextGraphics();
         KeyStroke keyStroke;
@@ -136,7 +136,7 @@ public class Input {
         return userResponse == 'y';
     }
 
-    public static String getUserInput(Screen screen, Terminal terminal) throws IOException, InterruptedException {
+    public static String getUserInput(Screen screen, Terminal terminal, String message) throws IOException, InterruptedException, PositionException {
         TextGraphics tg = screen.newTextGraphics();
         StringBuilder userInput = new StringBuilder();
         KeyStroke keyStroke;
@@ -159,6 +159,11 @@ public class Input {
                     if (userInput.toString().trim().length() > 0) {
                         canSubmit = true;
                     }
+                } else if (keyStroke.getKeyType() == KeyType.Escape)
+                {
+                    Display.printMenuPage(0);
+                    Display.chooseOption(terminal, 0);
+                    return null;
                 }
             }
 
@@ -169,7 +174,7 @@ public class Input {
             tg.putString(6, 7, " | |_) / ___ \\| |   | | | |___| |___   ___) |  _  || ||  __/ ___) |\n");
             tg.putString(6, 8, " |____/_/   \\_\\_|   |_| |_____|_____| |____/|_| |_|___|_|   |____/ \n");
 
-            tg.putString(19, 12, "Wprowadź swoj NICK i naciśnij Enter:");
+            tg.putString(19, 12, message);
             tg.putString(25, 14, "NICK: " + userInput);
             screen.refresh();
 
@@ -178,4 +183,6 @@ public class Input {
 
         return userInput.toString();
     }
+
+
 }

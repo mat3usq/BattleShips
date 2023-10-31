@@ -11,16 +11,13 @@ import kck.battleship.exceptions.PositionException;
 import kck.battleship.model.clases.*;
 import kck.battleship.model.enum_.ShipT;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
 public class Display {
     private static Screen screen;
 
-    private static final List<String> menuList = new ArrayList<>(Arrays.asList("Rozpocznij Grę", "Symuluj Grę", "Zasady Gry", "Ranking", "Wyjście"));
+    private static final List<String> menuList = new ArrayList<>(Arrays.asList("Rozpocznij Grę", "Symuluj Grę", "Sklep", "Ranking", "Zasady Gry", "Wyjście"));
 
     public Display(Screen screen) {
         this.screen = screen;
@@ -87,18 +84,21 @@ public class Display {
         for (int i = 0; i < menuList.size(); i++) {
             TextGraphics tg = screen.newTextGraphics();
 
-            if (i == selected) {
+            if (i == selected)
                 tg.setForegroundColor(TextColor.ANSI.MAGENTA);
-                if (i != menuList.size() - 1)
-                    tg.putString(32 + i, i + 16, menuList.get(i), SGR.BOLD);
-                else
-                    tg.putString(31 + i, i + 16, menuList.get(i), SGR.BOLD);
-            } else {
-                if (i != menuList.size() - 1)
-                    tg.putString(32 + i, i + 16, menuList.get(i));
-                else
-                    tg.putString(31 + i, i + 16, menuList.get(i));
-            }
+
+            if (i == 0)
+                tg.putString(32, i + 16, menuList.get(i), SGR.BOLD);
+            if (i == 1)
+                tg.putString(33, i + 16, menuList.get(i), SGR.BOLD);
+            if (i == 2)
+                tg.putString(36, i + 16, menuList.get(i), SGR.BOLD);
+            if (i == 3)
+                tg.putString(35, i + 16, menuList.get(i), SGR.BOLD);
+            if (i == 4)
+                tg.putString(34, i + 16, menuList.get(i), SGR.BOLD);
+            if (i == 5)
+                tg.putString(35, i + 16, menuList.get(i), SGR.BOLD);
 
             try {
                 screen.refresh();
@@ -126,7 +126,8 @@ public class Display {
         }
     }
 
-    public static void chooseOption(Terminal terminal, int selected) throws IOException, PositionException, InterruptedException {
+    public static void chooseOption(Terminal terminal, int selected) throws
+            IOException, PositionException, InterruptedException {
         Boolean b = true;
         while (b) {
             KeyStroke k = terminal.pollInput();
@@ -153,24 +154,30 @@ public class Display {
         }
     }
 
-    private static void option(int selected, Terminal terminal) throws IOException, PositionException, InterruptedException {
+    private static void option(int selected, Terminal terminal) throws
+            IOException, PositionException, InterruptedException {
         for (int i = 0; i < menuList.size(); i++) {
             if (i == selected)
                 switch (menuList.get(i)) {
                     case "Rozpocznij Grę" -> {
-                        String name = Input.getUserInput(screen, terminal);
-                        Game game = new Game(name);
-                        game.run(screen, terminal);
+                        String name = Input.getUserInput(screen, terminal, "Wprowadź swoj NICK i naciśnij Enter:");
+                        if (name != null) {
+                            Game game = new Game(name);
+                            game.run(screen, terminal);
+                        }
                     }
                     case "Symuluj Grę" -> {
                         Game game = new Game();
                         game.run(screen, terminal);
                     }
-                    case "Zasady Gry" -> {
-                        printRules(terminal);
+                    case "Sklep" -> {
+                        printShop(terminal);
                     }
                     case "Ranking" -> {
                         printRanking(terminal, 0);
+                    }
+                    case "Zasady Gry" -> {
+                        printRules(terminal);
                     }
                     case "Wyjście" -> {
                         printExit();
@@ -188,8 +195,8 @@ public class Display {
             if (k != null)
                 switch (k.getKeyType()) {
                     case Escape -> {
-                        printMenuPage(2);
-                        chooseOption(terminal, 2);
+                        printMenuPage(4);
+                        chooseOption(terminal, 4);
                         b = false;
                     }
                     case ArrowUp -> {
@@ -328,8 +335,10 @@ public class Display {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.GREEN_BRIGHT);
         tg.putString(28, 15, "✔ " + player.getName() + " wygrał(a)!");
-        tg.setForegroundColor(TextColor.ANSI.YELLOW_BRIGHT);
-        tg.putString(32, 17, "Twoj Wynik: " + rank.getPoints());
+        if (rank != null) {
+            tg.setForegroundColor(TextColor.ANSI.YELLOW_BRIGHT);
+            tg.putString(32, 17, "Twoj Wynik: " + rank.getPoints());
+        }
         try {
             screen.refresh();
             Thread.sleep(3000);
@@ -467,35 +476,10 @@ public class Display {
         screen.refresh();
     }
 
-    public static void printRanking(Terminal terminal, int page) throws IOException, PositionException, InterruptedException {
-        String fileName = "src/main/java/kck/battleship/model/data/ranking.txt"; // Nazwa pliku, w którym zapisywane są wyniki
+    public static void printRanking(Terminal terminal, int page) throws
+            IOException, PositionException, InterruptedException {
 
-        List<Ranking> rankings = new ArrayList<>();
-
-        try {
-            File plik = new File(fileName);
-            FileReader fileReader = new FileReader(plik);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-            String linia;
-            while ((linia = bufferedReader.readLine()) != null) {
-                String[] parts = linia.split(" ");
-                if (parts.length == 2) {
-                    try {
-                        int punkty = Integer.parseInt(parts[0]);
-                        String playerName = parts[1];
-                        Player player = new Player(playerName);
-                        rankings.add(new Ranking(player, punkty));
-                    } catch (NumberFormatException e) {
-                        System.err.println("Błąd parsowania punktów w linii: " + linia);
-                    }
-                }
-            }
-
-            bufferedReader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        List<Ranking> rankings = Ranking.getRanking();
 
         Collections.sort(rankings, Collections.reverseOrder(Comparator.comparingInt(Ranking::getPoints)));
 
@@ -549,5 +533,108 @@ public class Display {
                 }
         }
 
+    }
+
+    private static void printShop(Terminal terminal) throws IOException, PositionException, InterruptedException {
+        int selected = 0;
+        printItemsInShop(selected);
+        Boolean b = true;
+        while (b) {
+            KeyStroke k = terminal.pollInput();
+            if (k != null)
+                switch (k.getKeyType()) {
+                    case Escape -> {
+                        printMenuPage(2);
+                        chooseOption(terminal, 2);
+                        b = false;
+                    }
+                    case ArrowLeft -> {
+                        printItemsInShop(0);
+                        selected = 0;
+                    }
+                    case ArrowRight -> {
+                        printItemsInShop(1);
+                        selected = 1;
+                    }
+                    case Enter -> {
+                        String name = Input.getUserInput(screen, terminal, "Podaj swoj nick, aby kupic w sklepie wybrana rzecz!");
+                        String s;
+
+                        if (selected == 0)
+                            s = Ranking.enoughPoints(name, 500, screen, terminal, selected);
+                        else
+                            s = Ranking.enoughPoints(name, 300, screen, terminal, selected);
+
+
+                        TextGraphics tg = screen.newTextGraphics();
+                        if (s == null) {
+                            tg.setForegroundColor(TextColor.ANSI.GREEN_BRIGHT);
+                            tg.putString(20, 21, "Pomyslnie zakupiono wybrana rzecz!");
+                        } else {
+                            tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
+                            tg.putString(20, 19, s);
+                        }
+
+                        screen.refresh();
+
+                        Thread.sleep(2000);
+                        printItemsInShop(selected);
+                    }
+                }
+        }
+    }
+
+    private static void printItemsInShop(int x) {
+        screen.clear();
+
+        TextGraphics tg = screen.newTextGraphics();
+        tg.putString(24, 1, "   _____ _    _  ____  _____  \n");
+        tg.putString(24, 2, "  / ____| |  | |/ __ \\|  __ \\ \n");
+        tg.putString(24, 3, " | (___ | |__| | |  | | |__) |\n");
+        tg.putString(24, 4, "  \\___ \\|  __  | |  | |  ___/ \n");
+        tg.putString(24, 5, "  ____) | |  | | |__| | |     \n");
+        tg.putString(24, 6, " |_____/|_|  |_|\\____/|_|     \n");
+
+        if (x == 0)
+            tg.setForegroundColor(TextColor.ANSI.MAGENTA);
+
+        tg.putString(1, 9, "+~^~^~^~^^~^~^~^~^~^~^~^~~^~^~^~^~+");
+        tg.putString(1, 10, "|                   _,:`,:'_=-    |");
+        tg.putString(1, 11, "|                ,:',:@,:\"'       |");
+        tg.putString(1, 12, "|             ,:',:`,:',?         |");
+        tg.putString(1, 13, "|         __||_||_||_||__         |");
+        tg.putString(1, 14, "|    ____[\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"]____    |");
+        tg.putString(1, 15, "|    \\ \" '''''''''''''''''''' |   |");
+        tg.putString(1, 16, "+~^~^~^~^^~^LOTNISKOWIEC^~^~^~^~^~+\n");
+        tg.setForegroundColor(TextColor.ANSI.CYAN_BRIGHT);
+        tg.putString(1, 18, "             Cena: 500");
+        tg.setForegroundColor(TextColor.ANSI.DEFAULT);
+
+        if (x == 1)
+            tg.setForegroundColor(TextColor.ANSI.MAGENTA);
+        tg.putString(42, 8, "        _.,,,,,,,,,._\n");
+        tg.putString(42, 9, "     .d''            ``b.\n");
+        tg.putString(42, 10, "   .p'     Obiekty     `q.\n");
+        tg.putString(42, 11, " .d'     w magicznym     `b.\n");
+        tg.putString(42, 12, ".d'  polu moga byc mniej  `b.\n");
+        tg.putString(42, 13, " ::  podatne na obrazenia  ::\n");
+        tg.putString(42, 14, " `p.  rakietowe (działa  .q'\n");
+        tg.putString(42, 15, "  `p.   na pierwszych   .q'\n");
+        tg.putString(42, 16, "   `b.    5 strzałów   .d'\n");
+        tg.putString(42, 17, "     `q..            ..,'\n");
+        tg.putString(42, 18, "        '',,,,,,,,,,''\n");
+        tg.setForegroundColor(TextColor.ANSI.CYAN_BRIGHT);
+        tg.putString(42, 20, "           Cena: 300");
+        tg.setForegroundColor(TextColor.ANSI.DEFAULT);
+
+
+        tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
+        tg.putString(4, 22, "KUPIONE RZECZY W SKLEPIE OBOWIAZUJĄ TYLKO PRZEZ PIERWSZA ZAGRANA GRE!!!");
+
+        try {
+            screen.refresh();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

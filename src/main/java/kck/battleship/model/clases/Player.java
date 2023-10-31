@@ -9,7 +9,7 @@ import kck.battleship.model.enum_.ShipT;
 import kck.battleship.view.Display;
 import kck.battleship.view.Input;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
@@ -20,6 +20,8 @@ public class Player {
     private final ArrayList<Position> shoots = new ArrayList<>();
     private final ArrayList<Position> nextShots = new ArrayList<>();
     private final boolean isAI;
+    private boolean hasAirCrafter = false;
+    private int durabilityForceField = 0;
     private Date lastShootTime;
 
     public Player(String name) {
@@ -61,6 +63,14 @@ public class Player {
         this.lastShootTime = lastShootTime;
     }
 
+    public int getDurabilityForceField() {
+        return durabilityForceField;
+    }
+
+    public void setDurabilityForceField(int durabilityForceField) {
+        this.durabilityForceField = durabilityForceField;
+    }
+
     public void addShips(Screen screen, Terminal terminal) throws IOException, InterruptedException {
         if (!isAI) {
             boolean isAdded;
@@ -69,6 +79,8 @@ public class Player {
             String messageInputPosition = "Wprowadź współrzędną (np. A1): ";
             String messageInputDirection = "Wprowadź kierunek (h/v): ";
             ArrayList<Ship> list = initShips();
+            if (hasAirCrafter)
+                list.add(new Ship("LOTNISKOWIEC", 6));
             for (int i = 0; i < list.size(); i++) {
                 Ship ship = list.get(i);
                 do {
@@ -98,6 +110,8 @@ public class Player {
     public void randAddShips() {
         Random random = new Random();
         ArrayList<Ship> list = initShips();
+        if (hasAirCrafter)
+            list.add(new Ship("LOTNISKOWIEC", 6));
 
         boolean isAdded;
         Position position;
@@ -182,5 +196,85 @@ public class Player {
 
     private void reset() {
         board.reset();
+    }
+
+    public void getShop() {
+        String fileName = "src/main/java/kck/battleship/model/data/shop.txt"; // Nazwa pliku, w którym zapisywane są wyniki
+
+        try {
+            File plik = new File(fileName);
+            FileReader fileReader = new FileReader(plik);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+            String linia;
+            while ((linia = bufferedReader.readLine()) != null) {
+                String[] parts = linia.split(" ");
+                if (parts.length == 2) {
+                    try {
+                        String playerName = parts[0];
+                        int shopOption = Integer.parseInt(parts[1]);
+
+                        if (playerName.equals(name))
+                            if (shopOption == 0)
+                                hasAirCrafter = true;
+                            else if (shopOption == 1) {
+                                durabilityForceField = 5;
+                            }
+                    } catch (NumberFormatException e) {
+                        System.err.println("Błąd parsowania punktów w linii: " + linia);
+                    }
+                }
+            }
+
+            bufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        removeShopEntries();
+    }
+
+    private void removeShopEntries() {
+        String fileName = "src/main/java/kck/battleship/model/data/shop.txt"; // Nazwa pliku, w którym zapisywane są wyniki
+
+        try {
+            File inputFile = new File(fileName);
+            File tempFile = new File(fileName + "_temp"); // Tymczasowy plik o innej nazwie
+
+            BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+
+            String linia;
+            while ((linia = reader.readLine()) != null) {
+                String[] parts = linia.split(" ");
+                if (parts.length == 2) {
+                    try {
+                        String playerName = parts[0];
+                        int shopOption = Integer.parseInt(parts[1]);
+
+                        // Jeśli warunek nie jest spełniony, zapisz wiersz do pliku tymczasowego
+                        if (!(playerName.equals(name) && (shopOption == 0 || shopOption == 1))) {
+                            writer.write(linia + System.lineSeparator());
+                        }
+                    } catch (NumberFormatException e) {
+                        System.err.println("Błąd parsowania punktów w linii: " + linia);
+                    }
+                }
+            }
+
+            // Zamknij obiekty reader i writer
+            reader.close();
+            writer.close();
+
+            // Usuń oryginalny plik i zmień nazwę tymczasowego pliku na oryginalny
+            if (inputFile.delete() && tempFile.renameTo(inputFile)) {
+                System.out.println("Usunięto wiersze spełniające warunek.");
+            } else {
+                System.err.println("Błąd usuwania wierszy.");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
