@@ -126,8 +126,7 @@ public class Display {
         }
     }
 
-    public static void chooseOption(Terminal terminal, int selected) throws
-            IOException, PositionException, InterruptedException {
+    public static void chooseOption(Terminal terminal, int selected) throws IOException, PositionException, InterruptedException {
         Boolean b = true;
         while (b) {
             KeyStroke k = terminal.pollInput();
@@ -154,8 +153,7 @@ public class Display {
         }
     }
 
-    private static void option(int selected, Terminal terminal) throws
-            IOException, PositionException, InterruptedException {
+    private static void option(int selected, Terminal terminal) throws IOException, PositionException, InterruptedException {
         for (int i = 0; i < menuList.size(); i++) {
             if (i == selected)
                 switch (menuList.get(i)) {
@@ -476,8 +474,7 @@ public class Display {
         screen.refresh();
     }
 
-    public static void printRanking(Terminal terminal, int page) throws
-            IOException, PositionException, InterruptedException {
+    public static void printRanking(Terminal terminal, int page) throws IOException, PositionException, InterruptedException {
 
         List<Ranking> rankings = Ranking.getRanking();
 

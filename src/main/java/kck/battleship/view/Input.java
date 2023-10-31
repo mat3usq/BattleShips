@@ -183,6 +183,4 @@ public class Input {
 
         return userInput.toString();
     }
-
-
 }
