@@ -211,23 +211,23 @@ public class Display {
             tg.putString(30, 1, "Jak wygrać?", SGR.BOLD, SGR.ITALIC);
             tg.setForegroundColor(TextColor.ANSI.WHITE);
             tg.putString(2, 3, "- Każdy gracz ma pole bitwy reprezentowane przez siatkę 10x10 (domyślną),");
-            tg.putString(2, 4, "   na której rozmieszcza " + ShipT.sizeAllShips() + " statków, ukrytych przed przeciwnikiem.");
+            tg.putString(2, 4, "   na której rozmieszcza " + ShipT.countAllShips() + " statków, ukrytych przed przeciwnikiem.");
             tg.putString(2, 5, "- Celem gry jest zatopienie wszystkich statków przeciwnika!");
             tg.putString(2, 6, "- Np. statek typu " + ShipT.values()[0] + ", który zajmuje " + ShipT.values()[0].getShipLength() + " pól,");
             tg.putString(2, 7, "   zostaje zatopiony po dwóch trafieniach.");
-            tg.putString(2, 8, "- Wszystkie " + ShipT.sizeAllShips() + " statki zajmują łącznie " + ShipT.lengthAllShips() + " pól,");
+            tg.putString(2, 8, "- Wszystkie " + ShipT.countAllShips() + " statki zajmują łącznie " + ShipT.lengthAllShips() + " pól,");
             tg.putString(2, 9, "   więc pierwszy gracz, który odnotuje " + ShipT.lengthAllShips() + " trafień, wygrywa!");
 
             tg.setForegroundColor(TextColor.ANSI.YELLOW);
             tg.putString(30, 11, "Rozgrywka", SGR.BOLD, SGR.ITALIC);
             tg.setForegroundColor(TextColor.ANSI.WHITE);
-            tg.putString(2, 13, "- Postępuj zgodnie z instrukcjami w celu skonfigurowania swoich " + ShipT.sizeAllShips() + " statków.");
+            tg.putString(2, 13, "- Postępuj zgodnie z instrukcjami w celu skonfigurowania swoich " + ShipT.countAllShips() + " statków.");
             tg.putString(2, 14, "- Umieścić statek podając współrzędną początkową (A1-J10) i kierunek (h/v).");
             tg.putString(2, 15, "- Statki nie mogą na siebie nachodzić ani stykać się.");
             tg.putString(2, 16, "- Gdy obaj gracze skonfigurują swoje statki, bitwa się rozpoczyna!");
             tg.putString(2, 17, "- Wystrzel rakiety w statki przeciwnika, zgadując współrzędne.");
             tg.putString(2, 18, "- Zostaniesz poinformowany, czy trafiłeś w statek, czy nie.");
-            tg.putString(2, 19, "- Zatop wszystkie " + ShipT.sizeAllShips() + " statków komputera, aby wygrać!");
+            tg.putString(2, 19, "- Zatop wszystkie " + ShipT.countAllShips() + " statków komputera, aby wygrać!");
         } else {
             tg.setForegroundColor(TextColor.ANSI.GREEN);
             tg.putString(30, 1, "Legenda", SGR.BOLD, SGR.ITALIC);
@@ -338,7 +338,7 @@ public class Display {
         }
     }
 
-    public static void printCurrentShip(Ship ship, int numShipLeft) throws IOException {
+    public static void printShip(Ship ship, int numShipLeft) throws IOException {
         TextGraphics tg = screen.newTextGraphics();
 
         tg.putString(2, 15, "☛ " + ship.getName());
@@ -351,10 +351,10 @@ public class Display {
         screen.refresh();
     }
 
-    public static void printAdjacentBoard(Player pOne, Player pTwo) {
-        Board firstBoard = pOne.getBoard();
-//        Board secondBoard = pTwo.getBoard().getBoardHideShips();
-        Board secondBoard = pTwo.getBoard();
+    public static void printBoards(Player firstPlayer, Player secondPlayer) {
+        Board firstBoard = firstPlayer.getBoard();
+//        Board secondBoard = secondPlayer.getBoard().getBoardHideShips();
+        Board secondBoard = secondPlayer.getBoard();
 
         TextGraphics tg = screen.newTextGraphics();
         String letters = "abcdefghij";

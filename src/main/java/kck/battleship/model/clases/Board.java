@@ -8,13 +8,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Board {
-    private final int length; //one variable for rows = columns = 10 [10x10 matrix]
+    private final int length;
     private char[][] board;
     private int numberShips = 0;
-    public static final char HIT = '☒';
-    public static final char MISS = '☸';
-    public static final char SHIP = '☐';
-    public static final char WATER = '~';
+    public static final char HIT = '✘';
+    public static final char MISS = '◉';
+    public static final char SHIP = '⎕';
+    public static final char WATER = 'ℳ';
 
     public Board(int length) {
         this.length = length;

@@ -62,10 +62,10 @@ public class Game {
             } catch (InterruptedException e) {
             }
 
-            if (attack.isAI() && defend.isAI() && !reverse) Display.printAdjacentBoard(attack, defend);
-            else if (attack.isAI() && defend.isAI() && reverse) Display.printAdjacentBoard(defend, attack);
-            else if (!attack.isAI()) Display.printAdjacentBoard(attack, defend);
-            else if (!defend.isAI()) Display.printAdjacentBoard(defend, attack);
+            if (attack.isAI() && defend.isAI() && !reverse) Display.printBoards(attack, defend);
+            else if (attack.isAI() && defend.isAI() && reverse) Display.printBoards(defend, attack);
+            else if (!attack.isAI()) Display.printBoards(attack, defend);
+            else if (!defend.isAI()) Display.printBoards(defend, attack);
 
             return true;
         } else return false;
@@ -73,16 +73,16 @@ public class Game {
 
     private void addAllShips() throws IOException, InterruptedException {
         if (firstPlayer.isAI() && secondPlayer.isAI()) {
-            firstPlayer.addAllShips(screen, terminal);
-            secondPlayer.addAllShips(screen, terminal);
-            Display.printAdjacentBoard(firstPlayer, secondPlayer);
+            firstPlayer.addShips(screen, terminal);
+            secondPlayer.addShips(screen, terminal);
+            Display.printBoards(firstPlayer, secondPlayer);
         } else if (Input.randAddShips(screen, terminal, "Czy chcesz losowo rozmiescic swoje statki(y/n): ")) {
-            firstPlayer.randAddAllShips();
-            secondPlayer.addAllShips(screen, terminal);
-            Display.printAdjacentBoard(firstPlayer, secondPlayer);
+            firstPlayer.randAddShips();
+            secondPlayer.addShips(screen, terminal);
+            Display.printBoards(firstPlayer, secondPlayer);
         } else {
-            firstPlayer.addAllShips(screen, terminal);
-            secondPlayer.addAllShips(screen, terminal);
+            firstPlayer.addShips(screen, terminal);
+            secondPlayer.addShips(screen, terminal);
         }
     }
 

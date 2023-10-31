@@ -34,7 +34,6 @@ public class Input {
 
                 if (keyStroke != null) {
                     if (keyStroke.getKeyType() == KeyType.Backspace) {
-                        // Obsługuje Backspace: usuwa ostatni znak
                         if (userInput.length() > 0) {
                             userInput.deleteCharAt(userInput.length() - 1);
                             tg.putString(2, 19, "Pozycja: " + userInput + "  ");
@@ -43,11 +42,10 @@ public class Input {
                         char c = keyStroke.getCharacter();
 
                         if (Character.isLetterOrDigit(c) && userInput.length() < 3) {
-                            c = Character.toLowerCase(c); // Zamienia wprowadzoną literę na małą literę
+                            c = Character.toLowerCase(c);
                             userInput.append(c);
                         }
                     } else if (keyStroke.getKeyType() == KeyType.Enter) {
-                        // Sprawdź, czy wprowadzony tekst nie jest pusty lub zawiera tylko spacje
                         if (userInput.toString().trim().length() > 0) {
                             canSubmit = true;
                         }
@@ -55,7 +53,6 @@ public class Input {
                 }
                 screen.refresh();
             } while (!canSubmit);
-
 
             char row = userInput.charAt(0);
             int column = Integer.parseInt(userInput.substring(1));
@@ -76,7 +73,6 @@ public class Input {
         boolean canSubmit = false;
         tg.putString(2, 21, "Kierunek:     ");
 
-
         try {
             do {
                 tg.putString(2, 20, message);
@@ -87,7 +83,6 @@ public class Input {
 
                 if (keyStroke != null) {
                     if (keyStroke.getKeyType() == KeyType.Backspace) {
-                        // Obsługuje Backspace: usuwa ostatni znak
                         if (userInput.length() > 0) {
                             userInput.deleteCharAt(userInput.length() - 1);
                             tg.putString(2, 21, "Kierunek: " + userInput + "  ");
@@ -96,11 +91,10 @@ public class Input {
                         char c = keyStroke.getCharacter();
 
                         if (Character.isLetterOrDigit(c) && userInput.length() < 1) {
-                            c = Character.toLowerCase(c); // Zamienia wprowadzoną literę na małą literę
+                            c = Character.toLowerCase(c);
                             userInput.append(c);
                         }
                     } else if (keyStroke.getKeyType() == KeyType.Enter) {
-                        // Sprawdź, czy wprowadzony tekst nie jest pusty lub zawiera tylko spacje
                         if (userInput.toString().trim().length() > 0) {
                             canSubmit = true;
                         }
@@ -119,7 +113,7 @@ public class Input {
     }
 
     public static boolean randAddShips(Screen screen, Terminal terminal, String message) throws IOException, InterruptedException {
-        char userResponse = '\0'; // Domyślna wartość
+        char userResponse = '\0';
         TextGraphics tg = screen.newTextGraphics();
         KeyStroke keyStroke;
 
@@ -130,17 +124,15 @@ public class Input {
                 if (keyStroke.getKeyType() == KeyType.Character) {
                     char c = Character.toLowerCase(keyStroke.getCharacter());
 
-                    // Sprawdzamy, czy to litera "y" lub "n"
                     if (c == 'y' || c == 'n')
                         userResponse = c;
-
                 }
 
             tg.putString(15, 17, message);
             tg.putString(25, 19, "Odpowiedź: " + (userResponse == '\0' ? "" : userResponse));
             screen.refresh();
             Thread.sleep(10);
-        } while (userResponse == '\0'); // Oczekujemy na poprawną odpowiedź
+        } while (userResponse == '\0');
         return userResponse == 'y';
     }
 
@@ -155,25 +147,21 @@ public class Input {
 
             if (keyStroke != null) {
                 if (keyStroke.getKeyType() == KeyType.Backspace) {
-                    // Obsługuje Backspace: usuwa ostatni znak
                     if (userInput.length() > 0)
                         userInput.deleteCharAt(userInput.length() - 1);
 
                 } else if (keyStroke.getKeyType() == KeyType.Character) {
                     char c = keyStroke.getCharacter();
 
-                    // Sprawdzamy, czy to litera lub cyfra, i czy nie przekracza 15 znaków
                     if (Character.isLetterOrDigit(c) && userInput.length() < 15)
                         userInput.append(c);
                 } else if (keyStroke.getKeyType() == KeyType.Enter) {
-                    // Sprawdź, czy wprowadzony tekst nie jest pusty lub zawiera tylko spacje
                     if (userInput.toString().trim().length() > 0) {
                         canSubmit = true;
                     }
                 }
             }
 
-            // Aktualizujemy ekran, aby widzieć wprowadzony tekst
             screen.clear();
             tg.putString(6, 4, "  ____    _  _____ _____ _     _____   ____  _   _ ___ ____  ____");
             tg.putString(6, 5, " | __ )  / \\|_   _|_   _| |   | ____| / ___|| | | |_ _|  _ \\/ ___|");

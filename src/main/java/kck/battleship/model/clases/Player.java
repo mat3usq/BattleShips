@@ -18,8 +18,8 @@ public class Player {
     private String name;
     private final Board board = new Board(10);
     private final ArrayList<Position> shoots = new ArrayList<>();
-    private ArrayList<Position> nextTargets = new ArrayList<>();
-    private boolean isAI;
+    private final ArrayList<Position> nextTargets = new ArrayList<>();
+    private final boolean isAI;
     private Date lastShootTime;
 
     public Player(String name) {
@@ -63,7 +63,7 @@ public class Player {
         this.lastShootTime = lastShootTime;
     }
 
-    public void addAllShips(Screen screen, Terminal terminal) throws IOException, InterruptedException {
+    public void addShips(Screen screen, Terminal terminal) throws IOException, InterruptedException {
         if (!isAI) {
             boolean isAdded;
             Position position;
@@ -75,7 +75,7 @@ public class Player {
                 Ship ship = list.get(i);
                 do {
                     Display.printBoard(board);
-                    Display.printCurrentShip(ship, countShip(list, ship.getLength()));
+                    Display.printShip(ship, countShip(list, ship.getLength()));
 
                     position = Input.readPosition(screen, terminal, board, messageInputPosition);
                     direction = Input.readDirection(screen, terminal, messageInputDirection);
@@ -94,10 +94,10 @@ public class Player {
                 i--;
             }
             Display.printBoard(board);
-        } else randAddAllShips();
+        } else randAddShips();
     }
 
-    public void randAddAllShips() {
+    public void randAddShips() {
         Random random = new Random();
         ArrayList<Ship> list = initShips();
 
