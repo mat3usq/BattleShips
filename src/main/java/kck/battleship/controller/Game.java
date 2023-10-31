@@ -32,43 +32,85 @@ public class Game {
         firstPlayerRank = null;
     }
 
-    private boolean turn(Player attack, Player defend, Boolean reverse) throws PositionException {
+    public void run(Screen screen, Terminal terminal) throws PositionException, IOException, InterruptedException {
+        this.screen = screen;
+        this.terminal = terminal;
+
+        addAllShips();
+
+        if (firstPlayer.isAI() && secondPlayer.isAI())
+            playGame(firstPlayer, secondPlayer);
+        else
+            playGameHumanVsAI(firstPlayer, secondPlayer);
+
+        printResultGame();
+        firstPlayerRank.save();
+
+        Display.printMenuPage(0);
+        Display.chooseOption(terminal, 0);
+    }
+
+    private void playGame(Player player1, Player player2) throws PositionException {
+        while (playTurn(player1, player2, false) && playTurn(player2, player1, true)) {
+        }
+    }
+
+    private void playGameHumanVsAI(Player humanPlayer, Player aiPlayer) throws PositionException {
+        while (playTurn(humanPlayer, aiPlayer, false) && playTurn(aiPlayer, humanPlayer, false)) {
+        }
+    }
+
+    private boolean playTurn(Player attacker, Player defender, Boolean reverse) throws PositionException {
         Position shoot = null;
         boolean isHit, isAddHit;
-        if (attack.hasShipsLive()) {
+
+        if (attacker.hasShipsLive()) {
             do {
                 try {
-                    shoot = attack.shoot(screen, terminal, defend.getBoard().getBoardHideShips());
-                    isAddHit = defend.addShoot(shoot);
+                    shoot = attacker.shoot(screen, terminal, defender.getBoard().getBoardHideShips());
+                    isAddHit = defender.addShoot(shoot);
                 } catch (BoardException e) {
-                    if (!attack.isAI()) Display.printError("Błąd, już strzelałeś w tą pozycję!");
+                    if (!attacker.isAI()) Display.printError("Błąd, już strzelałeś w tą pozycję!");
                     isAddHit = false;
                 }
             } while (!isAddHit);
-            isHit = defend.getBoard().thereIsHit(shoot);
+
+            isHit = defender.getBoard().IsHit(shoot);
 
             if (isHit) {
-                attack.registerShoot(shoot);
-                if (!attack.isAI()) {
-                    long diff = (new Date().getTime() - attack.getLastShootTime().getTime()) / 1000;
-                    firstPlayerRank.setPoints((int) (100 / diff));
-                    attack.setLastShootTime(new Date());
-                }
+                attacker.registerShoot(shoot);
+                updatePlayerPoints(attacker);
             }
 
-            Display.printShot(attack, shoot, isHit);
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-            }
+            Display.printShot(attacker, shoot, isHit);
+            delayForGameplay();
 
-            if (attack.isAI() && defend.isAI() && !reverse) Display.printBoards(attack, defend);
-            else if (attack.isAI() && defend.isAI() && reverse) Display.printBoards(defend, attack);
-            else if (!attack.isAI()) Display.printBoards(attack, defend);
-            else if (!defend.isAI()) Display.printBoards(defend, attack);
+            if (attacker.isAI() && defender.isAI() && !reverse)
+                Display.printBoards(attacker, defender);
+            else if (attacker.isAI() && defender.isAI() && reverse)
+                Display.printBoards(defender, attacker);
+            else if (!attacker.isAI())
+                Display.printBoards(attacker, defender);
+            else if (!defender.isAI())
+                Display.printBoards(defender, attacker);
 
             return true;
         } else return false;
+    }
+
+    private void updatePlayerPoints(Player player) {
+        if (!player.isAI()) {
+            long diff = (new Date().getTime() - player.getLastShootTime().getTime()) / 1000;
+            firstPlayerRank.setPoints((int) (100 / diff));
+            player.setLastShootTime(new Date());
+        }
+    }
+
+    private void delayForGameplay() {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+        }
     }
 
     private void addAllShips() throws IOException, InterruptedException {
@@ -87,23 +129,9 @@ public class Game {
     }
 
     private void printResultGame() {
-        if (firstPlayer.shipsLeft() > secondPlayer.shipsLeft()) Display.printWinner(firstPlayer, firstPlayerRank);
-        else Display.printWinner(secondPlayer, firstPlayerRank);
-    }
-
-    public void run(Screen screen, Terminal terminal) throws PositionException, IOException, InterruptedException {
-        this.screen = screen;
-        this.terminal = terminal;
-        addAllShips();
-        if (firstPlayer.isAI() && secondPlayer.isAI()) {
-            while (turn(firstPlayer, secondPlayer, false) && turn(secondPlayer, firstPlayer, true)) {
-            }
-        } else
-            while (turn(firstPlayer, secondPlayer, false) && turn(secondPlayer, firstPlayer, false)) {
-            }
-        printResultGame();
-        firstPlayerRank.save();
-        Display.printMenuPage(0);
-        Display.chooseOption(terminal, 0);
+        if (firstPlayer.shipsLeft() > secondPlayer.shipsLeft())
+            Display.printWinner(firstPlayer, firstPlayerRank);
+        else
+            Display.printWinner(secondPlayer, firstPlayerRank);
     }
 }

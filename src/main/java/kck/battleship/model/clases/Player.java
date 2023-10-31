@@ -18,7 +18,7 @@ public class Player {
     private String name;
     private final Board board = new Board(10);
     private final ArrayList<Position> shoots = new ArrayList<>();
-    private final ArrayList<Position> nextTargets = new ArrayList<>();
+    private final ArrayList<Position> nextShots = new ArrayList<>();
     private final boolean isAI;
     private Date lastShootTime;
 
@@ -35,11 +35,9 @@ public class Player {
 
     private ArrayList<Ship> initShips() {
         ArrayList<Ship> list = new ArrayList<>();
-        for (ShipT type : ShipT.values()) {
-            for (int i = 0; i < type.getNumberShips(); i++) {
+        for (ShipT type : ShipT.values())
+            for (int i = 0; i < type.getNumberShips(); i++)
                 list.add(new Ship(ShipT.toPolishName(type), type.getShipLength()));
-            }
-        }
         return list;
     }
 
@@ -87,7 +85,7 @@ public class Player {
                     } catch (BoardException | PositionException e) {
                         Display.printError(e.toString());
                         isAdded = false;
-                        Thread.sleep(2000); // Dodaj opóźnienie na 2 sekundy
+                        Thread.sleep(2000);
                     }
                 } while (!isAdded);
                 list.remove(i);
@@ -135,9 +133,8 @@ public class Player {
 
     private int countShip(ArrayList<Ship> ships, int length) {
         int count = 0;
-        for (Ship ship : ships) {
+        for (Ship ship : ships)
             if (ship.getLength() == length) count++;
-        }
         return count;
     }
 
@@ -160,20 +157,18 @@ public class Player {
         Position lastPos, nextPos;
         if (shoots.isEmpty()) return randPosition();
         else {
-            lastPos = getLastShoot(); //last hit
-            nextTargets.addAll(boardEnemy.getPossibleTarget(lastPos));
-            if (nextTargets.isEmpty()) return randPosition();
-            nextPos = nextTargets.get(0);
-            nextTargets.remove(0);
+            lastPos = getLastShoot();
+            nextShots.addAll(boardEnemy.getPossiblePositions(lastPos));
+            if (nextShots.isEmpty()) return randPosition();
+            nextPos = nextShots.get(0);
+            nextShots.remove(0);
             return nextPos;
         }
     }
 
     public Position shoot(Screen screen, Terminal terminal, Board boardEnemy) throws PositionException {
         if (isAI) return shootAI(boardEnemy);
-        else {
-            return Input.readPosition(screen, terminal, board, name + ", gdzie chcesz strzelić? ");
-        }
+        else return Input.readPosition(screen, terminal, board, name + ", gdzie chcesz strzelić? ");
     }
 
     public void registerShoot(Position position) {

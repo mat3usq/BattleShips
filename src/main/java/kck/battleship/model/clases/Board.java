@@ -55,23 +55,23 @@ public class Board {
         return board[position.getRow()][position.getColumn()];
     }
 
-    public boolean thereIsShip(Position position) {
+    public boolean IsShip(Position position) {
         return at(position) == SHIP;
     }
 
-    public boolean thereIsWater(Position position) {
+    public boolean IsWater(Position position) {
         return at(position) == WATER;
     }
 
-    public boolean thereIsMiss(Position position) {
+    public boolean IsMiss(Position position) {
         return at(position) == MISS;
     }
 
-    public boolean thereIsHit(Position position) {
+    public boolean IsHit(Position position) {
         return at(position) == HIT;
     }
 
-    public boolean thereIsSpace(Ship ship) {
+    public boolean IsSpace(Ship ship) {
         int l = ship.getLength();
         int x = ship.getPosition().getRow();
         int y = ship.getPosition().getColumn();
@@ -79,98 +79,113 @@ public class Board {
         else return (length - x + 1) > l;
     }
 
-    public ArrayList<Position> getPossibleTarget(Position position) throws PositionException {
+    public ArrayList<Position> getPossiblePositions(Position position) throws PositionException {
         int row = position.getRow(), column = position.getColumn();
         ArrayList<Position> list = new ArrayList<>();
-        //nord
-        if (row - 1 >= 0 && !thereIsMiss(new Position(row - 1, column)) && !thereIsHit(new Position(row - 1, column)))
-            list.add(new Position(row - 1, column));
-        //ovest
-        if (column - 1 >= 0 && !thereIsMiss(new Position(row, column - 1)) && !thereIsHit(new Position(row, column - 1)))
-            list.add(new Position(row, column - 1));
-        //sud
-        if (row + 1 < length && !thereIsMiss(new Position(row + 1, column)) && !thereIsHit(new Position(row + 1, column)))
-            list.add(new Position(row + 1, column));
-        //est
-        if (column + 1 < length && !thereIsMiss(new Position(row, column + 1)) && !thereIsHit(new Position(row, column + 1)))
-            list.add(new Position(row, column + 1));
+
+        // Sprawdź północ
+        addIfValidAndNotMissOrHit(list, row - 1, column);
+        // Sprawdź zachód
+        addIfValidAndNotMissOrHit(list, row, column - 1);
+        // Sprawdź południe
+        addIfValidAndNotMissOrHit(list, row + 1, column);
+        // Sprawdź wschód
+        addIfValidAndNotMissOrHit(list, row, column + 1);
+
         return list;
     }
 
-    public ArrayList<Position> getAllNearPositions(int row, int column) throws PositionException {
+    private void addIfValidAndNotMissOrHit(ArrayList<Position> list, int row, int column) throws PositionException {
+        if (row >= 0 && row < length && column >= 0 && column < length) {
+            Position newPosition = new Position(row, column);
+            if (!IsMiss(newPosition) && !IsHit(newPosition))
+                list.add(newPosition);
+        }
+    }
+
+    public ArrayList<Position> getNearPositions(int row, int column) throws PositionException {
         ArrayList<Position> list = new ArrayList<>();
-        //nord
-        if (row - 1 >= 0) list.add(new Position(row - 1, column));
-        //sud
-        if (row + 1 < length) list.add(new Position(row + 1, column));
-        //est
-        if (column + 1 < length) list.add(new Position(row, column + 1));
-        //ovest
-        if (column - 1 >= 0) list.add(new Position(row, column - 1));
-        //nord-est
-        if (row - 1 >= 0 && column + 1 < length) list.add(new Position(row - 1, column + 1));
-        //nord-ovest
-        if (row - 1 >= 0 && column - 1 >= 0) list.add(new Position(row - 1, column - 1));
-        //sud-est
-        if (row + 1 < length && column + 1 < length) list.add(new Position(row + 1, column + 1));
-        //sud-ovest
-        if (row + 1 < length && column - 1 >= 0) list.add(new Position(row + 1, column - 1));
+
+        // Północ
+        addIfValid(list, row - 1, column);
+        // Południe
+        addIfValid(list, row + 1, column);
+        // Wschód
+        addIfValid(list, row, column + 1);
+        // Zachód
+        addIfValid(list, row, column - 1);
+        // Północ-Wschód
+        addIfValid(list, row - 1, column + 1);
+        // Północ-Zachód
+        addIfValid(list, row - 1, column - 1);
+        // Południe-Wschód
+        addIfValid(list, row + 1, column + 1);
+        // Południe-Zachód
+        addIfValid(list, row + 1, column - 1);
+
         return list;
+    }
+
+    private void addIfValid(ArrayList<Position> list, int row, int column) throws PositionException {
+        if (row >= 0 && row < length && column >= 0 && column < length)
+            list.add(new Position(row, column));
     }
 
     private boolean isShipAround(int row, int column) throws PositionException {
-        ArrayList<Position> list = getAllNearPositions(row, column);
-        for (Position position : list) {
+        ArrayList<Position> list = getNearPositions(row, column);
+        for (Position position : list)
             if (at(position) == SHIP) return true;
-        }
         return false;
     }
 
     public boolean isNearShip(Ship ship) throws PositionException {
-        int k, row, column;
-        row = ship.getPosition().getRow();
-        column = ship.getPosition().getColumn();
+        int row = ship.getPosition().getRow();
+        int column = ship.getPosition().getColumn();
 
-        if (ship.getDirection() == Direction.HORIZONTAL) k = column;
-        else k = row;
+        int k = (ship.getDirection() == Direction.HORIZONTAL) ? column : row;
 
         for (int i = 0; i < ship.getLength() && k + i < length - 1; i++) {
-            if (isShipAround(row, column)) return true;
+            if (isShipAround(row, column)) {
+                return true;
+            }
 
-            if (ship.getDirection() == Direction.HORIZONTAL) column++;
-            else if (ship.getDirection() == Direction.VERTICAL) row++;
+            if (ship.getDirection() == Direction.HORIZONTAL)
+                column++;
+            else if (ship.getDirection() == Direction.VERTICAL)
+                row++;
         }
         return false;
     }
 
     public boolean addShip(Ship ship) throws BoardException, PositionException {
-        int k = 0, row, column;
-        if (!thereIsShip(ship.getPosition())) {
-            if (thereIsSpace(ship)) {
-                if (!isNearShip(ship)) {
-                    row = ship.getPosition().getRow();
-                    column = ship.getPosition().getColumn();
-                    for (int i = 0; i < ship.getLength() && k + i < length; i++) {
-                        if (ship.getDirection() == Direction.HORIZONTAL) {
-                            if (i == 0) k = column;
-                            board[row][column + i] = SHIP;
-                        } else if (ship.getDirection() == Direction.VERTICAL) {
-                            if (i == 0) k = row;
-                            board[row + i][column] = SHIP;
-                        }
-                        numberShips++;
+        int row = ship.getPosition().getRow();
+        int column = ship.getPosition().getColumn();
+
+        if (IsShip(ship.getPosition())) throw new BoardException("Błąd, istnieje już statek na tej pozycji");
+
+        if (IsSpace(ship)) {
+            if (!isNearShip(ship)) {
+                int k = (ship.getDirection() == Direction.HORIZONTAL) ? column : row;
+                for (int i = 0; i < ship.getLength() && k + i < length; i++) {
+                    if (ship.getDirection() == Direction.HORIZONTAL) {
+                        if (i == 0) k = column;
+                        board[row][column + i] = SHIP;
+                    } else if (ship.getDirection() == Direction.VERTICAL) {
+                        if (i == 0) k = row;
+                        board[row + i][column] = SHIP;
                     }
-                    return true;
-                } else throw new BoardException("Błąd, inny statek znajduje się w pobliżu");
+                    numberShips++;
+                }
+                return true;
             } else throw new BoardException("Błąd, inny statek znajduje się w pobliżu");
-        } else throw new BoardException("Błąd, istnieje już statek na tej pozycji");
+        } else throw new BoardException("Błąd, inny statek znajduje się w pobliżu");
     }
 
     public boolean addHit(Position position) throws BoardException {
-        if (thereIsShip(position)) {
+        if (IsShip(position)) {
             numberShips--;
             return set(HIT, position);
-        } else if (thereIsWater(position)) return set(MISS, position);
+        } else if (IsWater(position)) return set(MISS, position);
         else throw new BoardException("Błąd, już strzelałeś w tą pozycję");
     }
 
@@ -178,7 +193,7 @@ public class Board {
         char[][] matrix = new char[length][length];
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < length; j++) {
-                if (!thereIsShip(new Position(i, j))) {
+                if (!IsShip(new Position(i, j))) {
                     matrix[i][j] = at(new Position(i, j));
                 } else matrix[i][j] = WATER;
             }
