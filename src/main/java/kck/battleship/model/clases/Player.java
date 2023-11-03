@@ -88,8 +88,9 @@ public class Player {
                     Display.printShip(ship, countShip(list, ship.getLength()));
 
                     position = Input.readPosition(screen, terminal, board, messageInputPosition);
-                    direction = Input.readDirection(screen, terminal, messageInputDirection);
                     ship.setPosition(position);
+
+                    direction = Input.readDirection(screen, terminal, messageInputDirection);
                     ship.setDirection(direction);
 
                     try {

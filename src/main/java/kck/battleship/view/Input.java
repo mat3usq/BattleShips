@@ -1,6 +1,8 @@
 package kck.battleship.view;
 
 
+import com.googlecode.lanterna.SGR;
+import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
@@ -21,13 +23,19 @@ public class Input {
         StringBuilder userInput = new StringBuilder();
         KeyStroke keyStroke;
         boolean canSubmit = false;
-        tg.putString(2, 19, "Pozycja:     ");
 
+        tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+        tg.putString(2, 19, "Pozycja:     ", SGR.BOLD);
 
         try {
             do {
-                tg.putString(2, 18, message);
-                tg.putString(2, 19, "Pozycja: " + userInput);
+                tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+                tg.putString(2, 18, message, SGR.BOLD);
+                tg.putString(2, 19, "                           ", SGR.BOLD);
+                tg.putString(2, 19, "Pozycja: ", SGR.BOLD);
+                tg.setForegroundColor(TextColor.ANSI.GREEN_BRIGHT);
+                tg.putString(11, 19, String.valueOf(userInput), SGR.BOLD);
+                tg.putString(11 + userInput.length(), 19, "|  ", SGR.BOLD, SGR.BLINK);
                 Thread.sleep(10);
 
                 keyStroke = terminal.pollInput();
@@ -36,7 +44,11 @@ public class Input {
                     if (keyStroke.getKeyType() == KeyType.Backspace) {
                         if (userInput.length() > 0) {
                             userInput.deleteCharAt(userInput.length() - 1);
-                            tg.putString(2, 19, "Pozycja: " + userInput + "  ");
+                            tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+                            tg.putString(2, 19, "Pozycja: ", SGR.BOLD);
+                            tg.setForegroundColor(TextColor.ANSI.GREEN_BRIGHT);
+                            tg.putString(11, 19, String.valueOf(userInput), SGR.BOLD);
+                            tg.putString(11 + userInput.length(), 19, "|  ", SGR.BOLD, SGR.BLINK);
                         }
                     } else if (keyStroke.getKeyType() == KeyType.Character) {
                         char c = keyStroke.getCharacter();
@@ -53,6 +65,9 @@ public class Input {
                 }
                 screen.refresh();
             } while (!canSubmit);
+
+            tg.putString(11 + userInput.length(), 19, "   ");
+            screen.refresh();
 
             char row = userInput.charAt(0);
             int column = Integer.parseInt(userInput.substring(1));
@@ -71,12 +86,20 @@ public class Input {
         StringBuilder userInput = new StringBuilder();
         KeyStroke keyStroke;
         boolean canSubmit = false;
-        tg.putString(2, 21, "Kierunek:     ");
+
+
+        tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+        tg.putString(2, 22, "Kierunek:     ", SGR.BOLD);
 
         try {
             do {
-                tg.putString(2, 20, message);
-                tg.putString(2, 21, "Kierunek: " + userInput);
+                tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+                tg.putString(2, 21, message, SGR.BOLD);
+                tg.putString(2, 22, "                           ", SGR.BOLD);
+                tg.putString(2, 22, "Kierunek: ", SGR.BOLD);
+                tg.setForegroundColor(TextColor.ANSI.GREEN_BRIGHT);
+                tg.putString(12, 22, String.valueOf(userInput), SGR.BOLD);
+                tg.putString(12 + userInput.length(), 22, "|  ", SGR.BOLD, SGR.BLINK);
                 Thread.sleep(10);
 
                 keyStroke = terminal.pollInput();
@@ -85,7 +108,10 @@ public class Input {
                     if (keyStroke.getKeyType() == KeyType.Backspace) {
                         if (userInput.length() > 0) {
                             userInput.deleteCharAt(userInput.length() - 1);
-                            tg.putString(2, 21, "Kierunek: " + userInput + "  ");
+                            tg.putString(2, 22, "Kierunek: ", SGR.BOLD);
+                            tg.setForegroundColor(TextColor.ANSI.GREEN_BRIGHT);
+                            tg.putString(12, 22, String.valueOf(userInput), SGR.BOLD);
+                            tg.putString(12 + userInput.length(), 22, "|  ", SGR.BOLD, SGR.BLINK);
                         }
                     } else if (keyStroke.getKeyType() == KeyType.Character) {
                         char c = keyStroke.getCharacter();
@@ -118,6 +144,7 @@ public class Input {
         KeyStroke keyStroke;
 
         do {
+            tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
             keyStroke = terminal.pollInput();
 
             if (keyStroke != null)
@@ -128,8 +155,14 @@ public class Input {
                         userResponse = c;
                 }
 
-            tg.putString(15, 17, message);
-            tg.putString(25, 19, "Odpowiedź: " + (userResponse == '\0' ? "" : userResponse));
+            tg.putString(16, 17, message, SGR.BOLD);
+            tg.putString(25, 19, "Odpowiedź: ", SGR.BOLD);
+            tg.setForegroundColor(TextColor.ANSI.GREEN_BRIGHT);
+            tg.putString(36, 19, String.valueOf((userResponse == '\0' ? "" : userResponse)), SGR.BOLD);
+            if(userResponse == '\0')
+                tg.putString(36 , 19, "|  ", SGR.BOLD, SGR.BLINK);
+            else
+                tg.putString(37 , 19, "|  ", SGR.BOLD, SGR.BLINK);
             screen.refresh();
             Thread.sleep(10);
         } while (userResponse == '\0');
@@ -159,8 +192,7 @@ public class Input {
                     if (userInput.toString().trim().length() > 0) {
                         canSubmit = true;
                     }
-                } else if (keyStroke.getKeyType() == KeyType.Escape)
-                {
+                } else if (keyStroke.getKeyType() == KeyType.Escape) {
                     Display.printMenuPage(0);
                     Display.chooseOption(terminal, 0);
                     return null;
@@ -168,18 +200,26 @@ public class Input {
             }
 
             screen.clear();
-            tg.putString(6, 4, "  ____    _  _____ _____ _     _____   ____  _   _ ___ ____  ____");
-            tg.putString(6, 5, " | __ )  / \\|_   _|_   _| |   | ____| / ___|| | | |_ _|  _ \\/ ___|");
-            tg.putString(6, 6, " |  _ \\ / _ \\ | |   | | | |   |  _|   \\___ \\| |_| || || |_) \\___ \\ \n");
-            tg.putString(6, 7, " | |_) / ___ \\| |   | | | |___| |___   ___) |  _  || ||  __/ ___) |\n");
-            tg.putString(6, 8, " |____/_/   \\_\\_|   |_| |_____|_____| |____/|_| |_|___|_|   |____/ \n");
+            Display.printTitle();
 
-            tg.putString(19, 12, message);
-            tg.putString(25, 14, "NICK: " + userInput);
+            tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+            if (message.length() > 40)
+                tg.putString(12, 12, message, SGR.BOLD);
+            else
+                tg.putString(20, 12, message, SGR.BOLD);
+
+            tg.putString(25, 14, "NICK: ", SGR.BOLD);
+            tg.setForegroundColor(TextColor.ANSI.GREEN_BRIGHT);
+            tg.putString(31, 14, String.valueOf(userInput), SGR.BOLD);
+            tg.putString(31 + String.valueOf(userInput).length(), 14, "|  ", SGR.BOLD, SGR.BLINK);
+
             screen.refresh();
 
             Thread.sleep(10);
         } while (!canSubmit);
+
+        tg.putString(31 + String.valueOf(userInput).length(), 14, "  ");
+        screen.refresh();
 
         return userInput.toString();
     }

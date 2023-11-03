@@ -146,10 +146,10 @@ public class Ranking {
                             rankings.remove(r);
 
                         saveRanking(rankings);
-                        saveBuyer(name , x);
+                        saveBuyer(name, x);
 
                         return null;
-                    }
+                    } else return "Do Zobaczenia innym razem!";
                 } else return "Masz za malo punktow, aby to kupic!";
             }
 

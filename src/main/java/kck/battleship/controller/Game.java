@@ -1,5 +1,6 @@
 package kck.battleship.controller;
 
+import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.screen.Screen;
@@ -40,6 +41,7 @@ public class Game {
         this.terminal = terminal;
 
         addAllShips();
+        Display.printBoards(firstPlayer, secondPlayer);
 
         if (firstPlayer.isAI() && secondPlayer.isAI())
             playGame(firstPlayer, secondPlayer);
@@ -74,12 +76,17 @@ public class Game {
             if (defender.getDurabilityForceField() > 0) {
                 defender.setDurabilityForceField(defender.getDurabilityForceField() - 1);
                 TextGraphics tg = screen.newTextGraphics();
-                tg.putString(46, 15, "Computer nie trafil w ciebie!");
-                tg.setForegroundColor(TextColor.ANSI.BLUE_BRIGHT);
+                tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+                tg.putString(46, 15, "Computer nie trafil w ciebie!", SGR.BOLD);
+                tg.setForegroundColor(TextColor.ANSI.CYAN_BRIGHT);
                 if (defender.getDurabilityForceField() == 0)
-                    tg.putString(50, 16, "Poniewaz miales bariere!");
-                else
-                    tg.putString(33, 16, "Poniewaz masz bariere jeszcze przez: " + defender.getDurabilityForceField() + " rund");
+                    tg.putString(50, 16, "Poniewaz miales bariere!", SGR.BOLD);
+                else {
+                    tg.putString(33, 16, "Poniewaz masz bariere jeszcze przez: " + defender.getDurabilityForceField(), SGR.BOLD);
+                    tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
+                    tg.putString(70, 16, String.valueOf(defender.getDurabilityForceField()), SGR.BOLD);
+                    tg.putString(72, 16, "rund", SGR.BOLD);
+                }
                 tg.setForegroundColor(TextColor.ANSI.WHITE);
                 try {
                     screen.refresh();
