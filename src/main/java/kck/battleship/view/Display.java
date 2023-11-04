@@ -289,6 +289,11 @@ public class Display {
             tg.putString(9, 8 + i, " ) : Nietrafiony Strzał ", SGR.BOLD);
 
         }
+
+        tg.putString(30, 21, "Strona   z 2", SGR.BOLD);
+        tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
+        tg.putString(37, 21, String.valueOf(x), SGR.BOLD);
+
         try {
             screen.refresh();
         } catch (IOException e) {
@@ -526,6 +531,10 @@ public class Display {
             tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
         }
 
+        tg.putString(30, 20, "Strona   z " + (rankings.size() / itemsPerPage + 1), SGR.BOLD);
+        tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
+        tg.putString(37, 20, String.valueOf(page + 1), SGR.BOLD);
+
         screen.refresh();
 
         Boolean b = true;
@@ -543,7 +552,7 @@ public class Display {
                             printRanking(terminal, --page);
                     }
                     case ArrowDown -> {
-                        if (page < rankings.size() / 10)
+                        if (page < rankings.size() / itemsPerPage)
                             printRanking(terminal, ++page);
                     }
                 }
