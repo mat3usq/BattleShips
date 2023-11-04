@@ -16,13 +16,13 @@ import java.util.Random;
 
 public class Player {
     private String name;
-    private final Board board = new Board(10);
-    private final ArrayList<Position> shoots = new ArrayList<>();
-    private final ArrayList<Position> nextShots = new ArrayList<>();
     private final boolean isAI;
     private boolean hasAirCrafter = false;
     private int durabilityForceField = 0;
     private Date lastShootTime;
+    private final Board board = new Board(10);
+    private final ArrayList<Position> shoots = new ArrayList<>();
+    private final ArrayList<Position> nextShots = new ArrayList<>();
 
     public Player(String name) {
         this.name = name;
