@@ -71,7 +71,7 @@ public class Display {
                 switch (k.getKeyType()) {
                     case Escape -> {
                         printExit();
-                        screen.stopScreen();
+                        screen.close();
                         System.exit(0);
                         b = false;
                     }
@@ -145,7 +145,7 @@ public class Display {
                 switch (k.getKeyType()) {
                     case Escape -> {
                         printExit();
-                        screen.stopScreen();
+                        screen.close();
                         System.exit(0);
                         b = false;
                     }
