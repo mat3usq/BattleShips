@@ -16,16 +16,8 @@ public class Position {
     public Position(char row, int column) throws PositionException {
         if (row < 'a' || column < 0)
             throw new PositionException("Wprowadzaj dane w formacie [rząd][kolumna]");
-        this.row = decode(row);
+        this.row = convertRowToIndex(row);
         this.column = column;
-    }
-
-    public static int decode(char row) {
-        return row - 'a';
-    }
-
-    public static char encode(int row) {
-        return (char) ('a' + row);
     }
 
     public int getRow() {
@@ -36,14 +28,21 @@ public class Position {
         return column;
     }
 
-    public String toStringEncode(Position position) {
-        return "(" + (char)('a' + position.getRow()) + "," + (position.getColumn() + 1) + ")";
+    public static int convertRowToIndex(char row) {
+        return row - 'a';
     }
 
-    public static boolean isInRange(char row, int column, Board board) throws PositionException {
-        int decodeRow = decode(row);
+    public static char convertIndexToRow(int row) {
+        return (char) ('a' + row);
+    }
+
+    public static void isInRange(char row, int column, Board board) throws PositionException {
+        int decodeRow = convertRowToIndex(row);
         if (decodeRow >= board.getLength() || column > board.getLength() || decodeRow < 0 || column < 0)
-            throw new PositionException("Błąd, dozwolone wartości od A1 do " + Position.encode(board.getLength() - 1) + board.getLength());
-        else return true;
+            throw new PositionException("Błąd, dozwolone wartości od A1 do " + Position.convertIndexToRow(board.getLength() - 1) + board.getLength());
+    }
+
+    public String toStringEncode(Position position) {
+        return "(" + (char)('a' + position.getRow()) + "," + (position.getColumn() + 1) + ")";
     }
 }

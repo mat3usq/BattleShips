@@ -22,7 +22,7 @@ public class Player {
     private Date lastShootTime;
     private final Board board = new Board(10);
     private final ArrayList<Position> shoots = new ArrayList<>();
-    private final ArrayList<Position> nextShots = new ArrayList<>();
+    private final ArrayList<Position> nextShoots = new ArrayList<>();
 
     public Player(String name) {
         this.name = name;
@@ -33,14 +33,6 @@ public class Player {
     public Player(String name, boolean isAI) {
         this.name = name;
         this.isAI = isAI;
-    }
-
-    private ArrayList<Ship> initShips() {
-        ArrayList<Ship> list = new ArrayList<>();
-        for (ShipT type : ShipT.values())
-            for (int i = 0; i < type.getNumberShips(); i++)
-                list.add(new Ship(ShipT.toPolishName(type), type.getShipLength()));
-        return list;
     }
 
     public String getName() {
@@ -73,76 +65,81 @@ public class Player {
 
     public void addShips(Screen screen, Terminal terminal) throws IOException, InterruptedException {
         if (!isAI) {
-            boolean isAdded;
-            Position position;
-            Direction direction;
-            String messageInputPosition = "Wprowadź współrzędną (np. A1): ";
-            String messageInputDirection = "Wprowadź kierunek (h/v): ";
-            ArrayList<Ship> list = initShips();
+            ArrayList<Ship> ships = createShips();
             if (hasAirCrafter)
-                list.add(new Ship("LOTNISKOWIEC", 6));
-            for (int i = 0; i < list.size(); i++) {
-                Ship ship = list.get(i);
-                do {
-                    Display.printBoard(board);
-                    Display.printShip(ship, countShip(list, ship.getLength()));
+                ships.add(new Ship("LOTNISKOWIEC", 6));
 
-                    position = Input.readPosition(screen, terminal, board, messageInputPosition);
-                    ship.setPosition(position);
+            for (Ship ship : ships)
+                addShipManually(screen, terminal, ship, ships);
 
-                    direction = Input.readDirection(screen, terminal, messageInputDirection);
-                    ship.setDirection(direction);
-
-                    try {
-                        isAdded = board.addShip(ship);
-                    } catch (BoardException | PositionException e) {
-                        Display.printError(e.toString());
-                        isAdded = false;
-                        Thread.sleep(2000);
-                    }
-                } while (!isAdded);
-                list.remove(i);
-                i--;
-            }
             Display.printBoard(board);
         } else randAddShips();
     }
 
-    public void randAddShips() {
-        Random random = new Random();
-        ArrayList<Ship> list = initShips();
-        if (hasAirCrafter)
-            list.add(new Ship("LOTNISKOWIEC", 6));
-
+    private void addShipManually(Screen screen, Terminal terminal, Ship ship, ArrayList<Ship> ships) throws InterruptedException, IOException {
         boolean isAdded;
-        Position position;
-        Direction direction;
-        int deadlock = 0, limit = 1000;
+        String messagePosition = "Wprowadź współrzędną (np. A1): ";
+        String messageDirection = "Wprowadź kierunek (h/v): ";
 
-        for (int i = 0; i < list.size(); i++) {
-            Ship ship = list.get(i);
-            deadlock = 0;
-            do {
-                try {
-                    position = new Position(random.nextInt(board.getLength()), random.nextInt(board.getLength()));
-                    direction = random.nextBoolean() ? Direction.VERTICAL : Direction.HORIZONTAL;
-                    ship.setPosition(position);
-                    ship.setDirection(direction);
-                    isAdded = board.addShip(ship);
-                } catch (BoardException | PositionException e) {
-                    isAdded = false;
-                }
-                if (!isAdded) deadlock++;
-                if (deadlock > limit) {
-                    reset();
-                    i = -1;
-                    break;
-                }
-            } while (!isAdded);
-        }
+        do {
+            Display.printBoard(board);
+            Display.printShip(ship, countShip(ships, ship.getLength()));
+
+            ship.setPosition(Input.readPosition(screen, terminal, board, messagePosition));
+            ship.setDirection(Input.readDirection(screen, terminal, messageDirection));
+
+            try {
+                isAdded = board.addShip(ship);
+            } catch (BoardException | PositionException e) {
+                Display.printError(e.toString());
+                isAdded = false;
+                Thread.sleep(2000);
+            }
+        } while (!isAdded);
     }
 
-    public boolean hasShipsLive() {
+    public void randAddShips() {
+        Random random = new Random();
+        ArrayList<Ship> ships = createShips();
+        if (hasAirCrafter)
+            ships.add(new Ship("LOTNISKOWIEC", 6));
+
+        for (Ship ship : ships)
+            addShipRandomly(random, ship);
+    }
+
+    private void addShipRandomly(Random random, Ship ship) {
+        boolean addedSuccessfully = false;
+        int failedAttempts = 0;
+        int limit = 1000;
+
+        while (failedAttempts <= limit) {
+            try {
+                ship.setPosition(randPosition());
+                ship.setDirection(random.nextBoolean() ? Direction.VERTICAL : Direction.HORIZONTAL);
+                addedSuccessfully = board.addShip(ship);
+            } catch (BoardException | PositionException e) {
+            }
+
+            if (addedSuccessfully)
+                break;
+
+            failedAttempts++;
+        }
+
+        if (failedAttempts > limit)
+            reset();
+    }
+
+    private ArrayList<Ship> createShips() {
+        ArrayList<Ship> ships = new ArrayList<>();
+        for (ShipT type : ShipT.values())
+            for (int i = 0; i < type.getNumberShips(); i++)
+                ships.add(new Ship(ShipT.toPolishName(type), type.getShipLength()));
+        return ships;
+    }
+
+    public boolean areShipsStillSailing() {
         return board.getNumberShips() > 0;
     }
 
@@ -164,25 +161,26 @@ public class Player {
         return new Position(x, y);
     }
 
-    public boolean addShoot(Position pos) throws BoardException {
-        return board.addHit(pos);
+    public boolean addShoot(Position shoot) throws BoardException {
+        return board.addHit(shoot);
     }
 
-    public Position shootAI(Board boardEnemy) throws PositionException {
-        Position lastPos, nextPos;
+    public Position ComputerShoot(Board defenderBoard) throws PositionException {
         if (shoots.isEmpty()) return randPosition();
         else {
-            lastPos = getLastShoot();
-            nextShots.addAll(boardEnemy.getPossiblePositions(lastPos));
-            if (nextShots.isEmpty()) return randPosition();
-            nextPos = nextShots.get(0);
-            nextShots.remove(0);
+            nextShoots.addAll(defenderBoard.getAdjacentValidPositions(getLastShoot()));
+
+            if (nextShoots.isEmpty())
+                return randPosition();
+
+            Position nextPos = nextShoots.get(0);
+            nextShoots.remove(0);
             return nextPos;
         }
     }
 
-    public Position shoot(Screen screen, Terminal terminal, Board boardEnemy) throws PositionException {
-        if (isAI) return shootAI(boardEnemy);
+    public Position shoot(Screen screen, Terminal terminal, Board defenderBoard) throws PositionException {
+        if (isAI) return ComputerShoot(defenderBoard);
         else return Input.readPosition(screen, terminal, board, name + ", gdzie chcesz strzelić? ");
     }
 

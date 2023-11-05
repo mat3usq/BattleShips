@@ -31,8 +31,8 @@ public class Game {
     }
 
     public Game() {
-        firstPlayer = new Player("COMPUTER" + "1", true);
-        secondPlayer = new Player("COMPUTER" + "2", true);
+        firstPlayer = new Player("COMPUTER1", true);
+        secondPlayer = new Player("COMPUTER2", true);
         firstPlayerRank = null;
     }
 
@@ -71,7 +71,7 @@ public class Game {
         Position shoot = null;
         boolean isHit, isAddHit;
 
-        if (attacker.hasShipsLive()) {
+        if (attacker.areShipsStillSailing()) {
 
             if (defender.getDurabilityForceField() > 0) {
                 defender.setDurabilityForceField(defender.getDurabilityForceField() - 1);
@@ -145,18 +145,30 @@ public class Game {
     }
 
     private void addAllShips() throws IOException, InterruptedException {
-        if (firstPlayer.isAI() && secondPlayer.isAI()) {
-            firstPlayer.addShips(screen, terminal);
-            secondPlayer.addShips(screen, terminal);
-            Display.printBoards(firstPlayer, secondPlayer);
-        } else if (Input.question(screen, terminal, "Czy chcesz losowo rozmiescic swoje statki(y/n): ")) {
-            firstPlayer.randAddShips();
-            secondPlayer.addShips(screen, terminal);
-            Display.printBoards(firstPlayer, secondPlayer);
+        if (bothPlayersAreAI()) {
+            addShipsForAIPlayers();
         } else {
-            firstPlayer.addShips(screen, terminal);
+            if (shouldRandomlyArrangeShips())
+                firstPlayer.randAddShips();
+            else
+                firstPlayer.addShips(screen, terminal);
+
             secondPlayer.addShips(screen, terminal);
         }
+        Display.printBoards(firstPlayer, secondPlayer);
+    }
+
+    private boolean bothPlayersAreAI() {
+        return firstPlayer.isAI() && secondPlayer.isAI();
+    }
+
+    private void addShipsForAIPlayers() throws IOException, InterruptedException {
+        firstPlayer.addShips(screen, terminal);
+        secondPlayer.addShips(screen, terminal);
+    }
+
+    private boolean shouldRandomlyArrangeShips() throws IOException, InterruptedException {
+        return Input.question(screen, terminal, "Czy chcesz losowo rozmiescic swoje statki (y/n): ");
     }
 
     private void printResultGame() {

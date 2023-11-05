@@ -74,7 +74,7 @@ public class Input {
             Position.isInRange(row, column, board);
             return new Position(row, column - 1);
         } catch (PositionException | NumberFormatException | StringIndexOutOfBoundsException e) {
-            Display.printError("Błąd, dozwolone wartości od A1 do " + Position.encode(board.getLength() - 1) + board.getLength());
+            Display.printError("Błąd, dozwolone wartości od A1 do " + Position.convertIndexToRow(board.getLength() - 1) + board.getLength());
             return readPosition(screen, terminal, board, message);
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);

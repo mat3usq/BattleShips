@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Ranking {
-
     public Player player;
     private int points = 0;
 

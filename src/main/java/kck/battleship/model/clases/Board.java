@@ -18,20 +18,12 @@ public class Board {
 
     public Board(int length) {
         this.length = length;
-        board = initBoard();
+        board = fillWater();
     }
 
     public Board(char[][] matrix) {
         this.length = matrix.length;
         board = matrix;
-    }
-
-    private char[][] initBoard() {
-        char[][] matrix = new char[length][length];
-        for (char[] row : matrix) {
-            Arrays.fill(row, WATER);
-        }
-        return matrix;
     }
 
     public int getLength() {
@@ -79,20 +71,28 @@ public class Board {
         else return (length - x + 1) > l;
     }
 
-    public ArrayList<Position> getPossiblePositions(Position position) throws PositionException {
+    private char[][] fillWater() {
+        char[][] matrix = new char[length][length];
+        for (char[] row : matrix) {
+            Arrays.fill(row, WATER);
+        }
+        return matrix;
+    }
+
+    public ArrayList<Position> getAdjacentValidPositions(Position position) throws PositionException {
         int row = position.getRow(), column = position.getColumn();
-        ArrayList<Position> list = new ArrayList<>();
+        ArrayList<Position> adjacentPositions = new ArrayList<>();
 
         // Sprawdź północ
-        addIfValidAndNotMissOrHit(list, row - 1, column);
+        addIfValidAndNotMissOrHit(adjacentPositions, row - 1, column);
         // Sprawdź zachód
-        addIfValidAndNotMissOrHit(list, row, column - 1);
+        addIfValidAndNotMissOrHit(adjacentPositions, row, column - 1);
         // Sprawdź południe
-        addIfValidAndNotMissOrHit(list, row + 1, column);
+        addIfValidAndNotMissOrHit(adjacentPositions, row + 1, column);
         // Sprawdź wschód
-        addIfValidAndNotMissOrHit(list, row, column + 1);
+        addIfValidAndNotMissOrHit(adjacentPositions, row, column + 1);
 
-        return list;
+        return adjacentPositions;
     }
 
     private void addIfValidAndNotMissOrHit(ArrayList<Position> list, int row, int column) throws PositionException {
@@ -103,27 +103,19 @@ public class Board {
         }
     }
 
-    public ArrayList<Position> getNearPositions(int row, int column) throws PositionException {
-        ArrayList<Position> list = new ArrayList<>();
+    public ArrayList<Position> getAdjacentPositions(int row, int column) throws PositionException {
+        ArrayList<Position> adjacentPositions = new ArrayList<>();
 
-        // Północ
-        addIfValid(list, row - 1, column);
-        // Południe
-        addIfValid(list, row + 1, column);
-        // Wschód
-        addIfValid(list, row, column + 1);
-        // Zachód
-        addIfValid(list, row, column - 1);
-        // Północ-Wschód
-        addIfValid(list, row - 1, column + 1);
-        // Północ-Zachód
-        addIfValid(list, row - 1, column - 1);
-        // Południe-Wschód
-        addIfValid(list, row + 1, column + 1);
-        // Południe-Zachód
-        addIfValid(list, row + 1, column - 1);
+        addIfValid(adjacentPositions, row - 1, column); // Północ
+        addIfValid(adjacentPositions, row + 1, column); // Południe
+        addIfValid(adjacentPositions, row, column + 1); // Wschód
+        addIfValid(adjacentPositions, row, column - 1); // Zachód
+        addIfValid(adjacentPositions, row - 1, column + 1); // Północ-Wschód
+        addIfValid(adjacentPositions, row - 1, column - 1); // Północ-Zachód
+        addIfValid(adjacentPositions, row + 1, column + 1); // Południe-Wschód
+        addIfValid(adjacentPositions, row + 1, column - 1); // Południe-Zachód
 
-        return list;
+        return adjacentPositions;
     }
 
     private void addIfValid(ArrayList<Position> list, int row, int column) throws PositionException {
@@ -132,7 +124,7 @@ public class Board {
     }
 
     private boolean isShipAround(int row, int column) throws PositionException {
-        ArrayList<Position> list = getNearPositions(row, column);
+        ArrayList<Position> list = getAdjacentPositions(row, column);
         for (Position position : list)
             if (at(position) == SHIP) return true;
         return false;
@@ -191,18 +183,17 @@ public class Board {
 
     public Board getBoardHideShips() throws PositionException {
         char[][] matrix = new char[length][length];
-        for (int i = 0; i < length; i++) {
-            for (int j = 0; j < length; j++) {
-                if (!IsShip(new Position(i, j))) {
+        for (int i = 0; i < length; i++)
+            for (int j = 0; j < length; j++)
+                if (!IsShip(new Position(i, j)))
                     matrix[i][j] = at(new Position(i, j));
-                } else matrix[i][j] = WATER;
-            }
-        }
+                else matrix[i][j] = WATER;
+
         return new Board(matrix);
     }
 
     public void reset() {
+        board = fillWater();
         numberShips = 0;
-        board = initBoard();
     }
 }
