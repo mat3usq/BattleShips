@@ -1,6 +1,7 @@
 package kck.battleship.model.clases;
 
 import kck.battleship.model.enum_.Direction;
+import kck.battleship.model.enum_.TypesField;
 
 public class Ship {
     private final String name;
@@ -8,7 +9,7 @@ public class Ship {
     private Position position;
     private Direction direction;
 
-    public Ship(String name, int length){
+    public Ship(String name, int length) {
         this.name = name;
         this.length = length;
         this.position = null;
@@ -39,7 +40,7 @@ public class Ship {
         this.direction = direction;
     }
 
-    public String toGraphicLength() {
-        return ("" + Board.SHIP).repeat(length);
+    public String toString() {
+        return ("" + TypesField.SHIP).repeat(length);
     }
 }

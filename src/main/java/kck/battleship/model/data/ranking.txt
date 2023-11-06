@@ -3,4 +3,6 @@
 200 asd
 100 sad
 200 d
-5000 asdasd
+1500 asdasd
+0 asdasd
+505 asdasd

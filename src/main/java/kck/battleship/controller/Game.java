@@ -5,21 +5,23 @@ import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.Terminal;
-import kck.battleship.exceptions.BoardException;
+import kck.battleship.exceptions.BattleFieldException;
 import kck.battleship.exceptions.PositionException;
+import kck.battleship.model.clases.BattleField;
 import kck.battleship.model.clases.Player;
 import kck.battleship.model.clases.Position;
 import kck.battleship.model.clases.Ranking;
-import kck.battleship.view.Display;
-import kck.battleship.view.Input;
+import kck.battleship.model.enum_.TypesField;
+import kck.battleship.view.TextView;
+import kck.battleship.view.UserInput;
 
 import java.io.IOException;
 import java.util.Date;
 
 public class Game {
     private final Player firstPlayer;
-    private final Player secondPlayer;
     private final Ranking firstPlayerRank;
+    private final Player secondPlayer;
     private Screen screen;
     private Terminal terminal;
 
@@ -27,12 +29,12 @@ public class Game {
         firstPlayer = new Player(name);
         firstPlayer.getShop();
         firstPlayerRank = new Ranking(firstPlayer, 0);
-        secondPlayer = new Player("COMPUTER", true);
+        secondPlayer = new Player("Wróg", true);
     }
 
     public Game() {
-        firstPlayer = new Player("COMPUTER1", true);
-        secondPlayer = new Player("COMPUTER2", true);
+        firstPlayer = new Player("Enemy", true);
+        secondPlayer = new Player("Enemy2", true);
         firstPlayerRank = null;
     }
 
@@ -41,7 +43,7 @@ public class Game {
         this.terminal = terminal;
 
         addAllShips();
-        Display.printBoards(firstPlayer, secondPlayer);
+        TextView.printBoards(firstPlayer, secondPlayer);
 
         if (firstPlayer.isAI() && secondPlayer.isAI())
             playGame(firstPlayer, secondPlayer);
@@ -53,8 +55,8 @@ public class Game {
 
         printResultGame();
 
-        Display.printMenuPage(0);
-        Display.chooseOption(terminal, 0);
+        TextView.printMenuPage(0);
+        TextView.chooseOption(terminal, 0);
     }
 
     private void playGame(Player player1, Player player2) throws PositionException {
@@ -77,7 +79,7 @@ public class Game {
                 defender.setDurabilityForceField(defender.getDurabilityForceField() - 1);
                 TextGraphics tg = screen.newTextGraphics();
                 tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
-                tg.putString(46, 15, "Computer nie trafil w ciebie!", SGR.BOLD);
+                tg.putString(46, 15, "Wróg nie trafil w ciebie!", SGR.BOLD);
                 tg.setForegroundColor(TextColor.ANSI.CYAN_BRIGHT);
                 if (defender.getDurabilityForceField() == 0)
                     tg.putString(50, 16, "Poniewaz miales bariere!", SGR.BOLD);
@@ -96,34 +98,34 @@ public class Game {
             } else {
                 do {
                     try {
-                        shoot = attacker.shoot(screen, terminal, defender.getBoard().getBoardHideShips());
+                        shoot = attacker.shoot(screen, terminal, defender.getBattleField().getbattleFieldHideShips());
                         isAddHit = defender.addShoot(shoot);
-                    } catch (BoardException e) {
-                        if (!attacker.isAI()) Display.printError("Błąd, już strzelałeś w tą pozycję!");
+                    } catch (BattleFieldException e) {
+                        if (!attacker.isAI()) TextView.printError("Błąd, już strzelałeś w tą pozycję!");
                         isAddHit = false;
                     }
                 } while (!isAddHit);
 
-                isHit = defender.getBoard().IsHit(shoot);
+                isHit = defender.getBattleField().at(shoot) == TypesField.HIT;
 
                 if (isHit) {
                     attacker.registerShoot(shoot);
                     updatePlayerPoints(attacker);
                 }
 
-                Display.printShot(attacker, shoot, isHit);
+                TextView.printShot(attacker, shoot, isHit);
             }
 
             delayForGameplay();
 
             if (attacker.isAI() && defender.isAI() && !reverse)
-                Display.printBoards(attacker, defender);
+                TextView.printBoards(attacker, defender);
             else if (attacker.isAI() && defender.isAI() && reverse)
-                Display.printBoards(defender, attacker);
+                TextView.printBoards(defender, attacker);
             else if (!attacker.isAI())
-                Display.printBoards(attacker, defender);
+                TextView.printBoards(attacker, defender);
             else if (!defender.isAI())
-                Display.printBoards(defender, attacker);
+                TextView.printBoards(defender, attacker);
 
             return true;
         } else return false;
@@ -155,7 +157,7 @@ public class Game {
 
             secondPlayer.addShips(screen, terminal);
         }
-        Display.printBoards(firstPlayer, secondPlayer);
+        TextView.printBoards(firstPlayer, secondPlayer);
     }
 
     private boolean bothPlayersAreAI() {
@@ -168,13 +170,13 @@ public class Game {
     }
 
     private boolean shouldRandomlyArrangeShips() throws IOException, InterruptedException {
-        return Input.question(screen, terminal, "Czy chcesz losowo rozmiescic swoje statki (y/n): ");
+        return UserInput.question(screen, terminal, "Czy chcesz losowo rozmiescic swoje statki (y/n): ");
     }
 
     private void printResultGame() {
         if (firstPlayer.shipsLeft() > secondPlayer.shipsLeft())
-            Display.printWinner(firstPlayer, firstPlayerRank);
+            TextView.printWinner(firstPlayer, firstPlayerRank);
         else
-            Display.printWinner(secondPlayer, firstPlayerRank);
+            TextView.printWinner(secondPlayer, firstPlayerRank);
     }
 }

@@ -6,9 +6,7 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.screen.Screen;
 import kck.battleship.exceptions.PositionException;
-import kck.battleship.model.clases.Player;
-import kck.battleship.model.clases.Ranking;
-import kck.battleship.view.Display;
+import kck.battleship.view.TextView;
 
 import java.io.IOException;
 
@@ -18,10 +16,10 @@ public class BattleShips {
         Screen screen = new TerminalScreen(terminal);
         screen.startScreen();
         screen.setCursorPosition(null);
-        new Display(screen);
+        new TextView(screen);
 
-        Display.printHomePage();
-        Display.waitForKeyHomePage(terminal);
-        Display.chooseOption(terminal, 0);
+        TextView.printHomePage();
+        TextView.waitForKeyHomePage(terminal);
+        TextView.chooseOption(terminal, 0);
     }
 }

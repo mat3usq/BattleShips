@@ -2,7 +2,7 @@ package kck.battleship.model.clases;
 
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.Terminal;
-import kck.battleship.view.Input;
+import kck.battleship.view.UserInput;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -137,7 +137,7 @@ public class Ranking {
         for (Ranking r : rankings)
             if (name.equals(r.player.getName())) {
                 if (r.getPoints() >= price) {
-                    Boolean response = Input.question(screen, terminal, "Czy chcesz napewno to kupic(y/n)?");
+                    Boolean response = UserInput.question(screen, terminal, "Czy chcesz napewno to kupic(y/n)?");
 
                     if (response) {
                         r.setPoints(r.getPoints() - price);

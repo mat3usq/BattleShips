@@ -2,12 +2,12 @@ package kck.battleship.model.clases;
 
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.Terminal;
-import kck.battleship.exceptions.BoardException;
+import kck.battleship.exceptions.BattleFieldException;
 import kck.battleship.exceptions.PositionException;
 import kck.battleship.model.enum_.Direction;
-import kck.battleship.model.enum_.ShipT;
-import kck.battleship.view.Display;
-import kck.battleship.view.Input;
+import kck.battleship.model.enum_.TypesShips;
+import kck.battleship.view.TextView;
+import kck.battleship.view.UserInput;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public class Player {
     private boolean hasAirCrafter = false;
     private int durabilityForceField = 0;
     private Date lastShootTime;
-    private final Board board = new Board(10);
+    private final BattleField battleField = new BattleField();
     private final ArrayList<Position> shoots = new ArrayList<>();
     private final ArrayList<Position> nextShoots = new ArrayList<>();
 
@@ -39,8 +39,8 @@ public class Player {
         return name;
     }
 
-    public Board getBoard() {
-        return board;
+    public BattleField getBattleField() {
+        return battleField;
     }
 
     public boolean isAI() {
@@ -72,7 +72,7 @@ public class Player {
             for (Ship ship : ships)
                 addShipManually(screen, terminal, ship, ships);
 
-            Display.printBoard(board);
+            TextView.printBoard(battleField);
         } else randAddShips();
     }
 
@@ -82,16 +82,16 @@ public class Player {
         String messageDirection = "Wprowadź kierunek (h/v): ";
 
         do {
-            Display.printBoard(board);
-            Display.printShip(ship, countShip(ships, ship.getLength()));
+            TextView.printBoard(battleField);
+            TextView.printShip(ship, countShip(ships, ship.getLength()));
 
-            ship.setPosition(Input.readPosition(screen, terminal, board, messagePosition));
-            ship.setDirection(Input.readDirection(screen, terminal, messageDirection));
+            ship.setPosition(UserInput.readPosition(screen, terminal, messagePosition));
+            ship.setDirection(UserInput.readDirection(screen, terminal, messageDirection));
 
             try {
-                isAdded = board.addShip(ship);
-            } catch (BoardException | PositionException e) {
-                Display.printError(e.toString());
+                isAdded = battleField.addShip(ship);
+            } catch (BattleFieldException | PositionException e) {
+                TextView.printError(e.toString());
                 isAdded = false;
                 Thread.sleep(2000);
             }
@@ -115,10 +115,10 @@ public class Player {
 
         while (failedAttempts <= limit) {
             try {
-                ship.setPosition(randPosition());
+                ship.setPosition(Position.randPosition());
                 ship.setDirection(random.nextBoolean() ? Direction.VERTICAL : Direction.HORIZONTAL);
-                addedSuccessfully = board.addShip(ship);
-            } catch (BoardException | PositionException e) {
+                addedSuccessfully = battleField.addShip(ship);
+            } catch (BattleFieldException | PositionException e) {
             }
 
             if (addedSuccessfully)
@@ -133,14 +133,14 @@ public class Player {
 
     private ArrayList<Ship> createShips() {
         ArrayList<Ship> ships = new ArrayList<>();
-        for (ShipT type : ShipT.values())
+        for (TypesShips type : TypesShips.values())
             for (int i = 0; i < type.getNumberShips(); i++)
-                ships.add(new Ship(ShipT.toPolishName(type), type.getShipLength()));
+                ships.add(new Ship(TypesShips.toPolishName(type), type.getShipLength()));
         return ships;
     }
 
     public boolean areShipsStillSailing() {
-        return board.getNumberShips() > 0;
+        return battleField.getNumberShips() > 0;
     }
 
     private int countShip(ArrayList<Ship> ships, int length) {
@@ -151,27 +151,20 @@ public class Player {
     }
 
     public int shipsLeft() {
-        return board.getNumberShips();
+        return battleField.getNumberShips();
     }
 
-    private Position randPosition() throws PositionException {
-        Random random = new Random();
-        int x = random.nextInt(board.getLength());
-        int y = random.nextInt(board.getLength());
-        return new Position(x, y);
+    public boolean addShoot(Position shoot) throws BattleFieldException {
+        return battleField.addHit(shoot);
     }
 
-    public boolean addShoot(Position shoot) throws BoardException {
-        return board.addHit(shoot);
-    }
-
-    public Position ComputerShoot(Board defenderBoard) throws PositionException {
-        if (shoots.isEmpty()) return randPosition();
+    public Position ComputerShoot(BattleField defenderBattleField) throws PositionException {
+        if (shoots.isEmpty()) return Position.randPosition();
         else {
-            nextShoots.addAll(defenderBoard.getAdjacentValidPositions(getLastShoot()));
+            nextShoots.addAll(defenderBattleField.getAdjacentValidPositions(getLastShoot()));
 
             if (nextShoots.isEmpty())
-                return randPosition();
+                return Position.randPosition();
 
             Position nextPos = nextShoots.get(0);
             nextShoots.remove(0);
@@ -179,9 +172,9 @@ public class Player {
         }
     }
 
-    public Position shoot(Screen screen, Terminal terminal, Board defenderBoard) throws PositionException {
-        if (isAI) return ComputerShoot(defenderBoard);
-        else return Input.readPosition(screen, terminal, board, name + ", gdzie chcesz strzelić? ");
+    public Position shoot(Screen screen, Terminal terminal, BattleField defenderBattleField) throws PositionException {
+        if (isAI) return ComputerShoot(defenderBattleField);
+        else return UserInput.readPosition(screen, terminal, name + ", gdzie chcesz strzelić? ");
     }
 
     public void registerShoot(Position position) {
@@ -194,7 +187,7 @@ public class Player {
     }
 
     private void reset() {
-        board.reset();
+        battleField.reset();
     }
 
     public void getShop() {
