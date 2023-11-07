@@ -10,7 +10,7 @@ public class Position {
 
     public Position(int row, int column) throws GameException {
         if (row < 0 || column < 0)
-            throw new GameException("Wprowadzaj dane w formacie [rząd][kolumna]");
+            throw new GameException("Wprowadz pozycje, ktora jest na polu bitwy");
         this.row = row;
         this.column = column;
     }
@@ -30,7 +30,7 @@ public class Position {
         return new Position(x, y);
     }
 
-    public String toStringEncode(Position position) {
+    public String toString(Position position) {
         return "(" + (char) ('a' + position.getRow()) + "," + (position.getColumn() + 1) + ")";
     }
 }

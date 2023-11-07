@@ -305,7 +305,7 @@ public class TextView {
     public static void printError(String message) {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
-        tg.putString(36, 15, message, SGR.BOLD);
+        tg.putString(36, 15, message + "                     ", SGR.BOLD);
         try {
             screen.refresh();
         } catch (IOException e) {
@@ -318,7 +318,7 @@ public class TextView {
         tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
 
         if (player.getName().equals("Wróg") || player.getName().equals("Enemy2")) {
-            tg.putString(48, 15, player.getName() + " strzelił w " + position.toStringEncode(position), SGR.BOLD);
+            tg.putString(48, 15, player.getName() + " strzelił w " + position.toString(position), SGR.BOLD);
             tg.setForegroundColor(TextColor.ANSI.MAGENTA_BRIGHT);
             if (isHit) {
                 tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
@@ -329,7 +329,7 @@ public class TextView {
             }
             tg.setForegroundColor(TextColor.ANSI.WHITE);
         } else {
-            tg.putString(11, 15, player.getName() + " strzelił w " + position.toStringEncode(position), SGR.BOLD);
+            tg.putString(11, 15, player.getName() + " strzelił w " + position.toString(position), SGR.BOLD);
             if (isHit) {
                 tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
                 tg.putString(15, 16, "Trafiony!", SGR.BOLD);

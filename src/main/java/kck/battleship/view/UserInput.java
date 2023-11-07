@@ -162,7 +162,7 @@ public class UserInput {
 
             return new Position(row, column - 1);
         } catch (GameException | NumberFormatException | StringIndexOutOfBoundsException e) {
-            TextView.printError("Błąd: " + userInput + " , wybierz od a1 do j10");
+            TextView.printError("Błąd: " + userInput + ", wybierz od a1 do j10");
             return readPosition(screen, terminal, message);
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);

@@ -6,7 +6,6 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.screen.Screen;
 import kck.battleship.controller.GameException;
-import kck.battleship.model.types.TypesField;
 import kck.battleship.view.TextView;
 
 import java.io.IOException;
