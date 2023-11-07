@@ -5,13 +5,10 @@ import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.Terminal;
-import kck.battleship.exceptions.BattleFieldException;
-import kck.battleship.exceptions.PositionException;
-import kck.battleship.model.clases.BattleField;
 import kck.battleship.model.clases.Player;
 import kck.battleship.model.clases.Position;
 import kck.battleship.model.clases.Ranking;
-import kck.battleship.model.enum_.TypesField;
+import kck.battleship.model.types.TypesField;
 import kck.battleship.view.TextView;
 import kck.battleship.view.UserInput;
 
@@ -38,7 +35,7 @@ public class Game {
         firstPlayerRank = null;
     }
 
-    public void run(Screen screen, Terminal terminal) throws PositionException, IOException, InterruptedException {
+    public void run(Screen screen, Terminal terminal) throws GameException, IOException, InterruptedException {
         this.screen = screen;
         this.terminal = terminal;
 
@@ -59,17 +56,17 @@ public class Game {
         TextView.chooseOption(terminal, 0);
     }
 
-    private void playGame(Player player1, Player player2) throws PositionException {
+    private void playGame(Player player1, Player player2) throws GameException {
         while (playTurn(player1, player2, false) && playTurn(player2, player1, true)) {
         }
     }
 
-    private void playGameHumanVsAI(Player humanPlayer, Player aiPlayer) throws PositionException {
+    private void playGameHumanVsAI(Player humanPlayer, Player aiPlayer) throws GameException {
         while (playTurn(humanPlayer, aiPlayer, false) && playTurn(aiPlayer, humanPlayer, false)) {
         }
     }
 
-    private boolean playTurn(Player attacker, Player defender, Boolean reverse) throws PositionException {
+    private boolean playTurn(Player attacker, Player defender, Boolean reverse) throws GameException {
         Position shoot = null;
         boolean isHit, isAddHit;
 
@@ -100,13 +97,13 @@ public class Game {
                     try {
                         shoot = attacker.shoot(screen, terminal, defender.getBattleField().getbattleFieldHideShips());
                         isAddHit = defender.addShoot(shoot);
-                    } catch (BattleFieldException e) {
-                        if (!attacker.isAI()) TextView.printError("Błąd, już strzelałeś w tą pozycję!");
+                    } catch (GameException e) {
+                        if (!attacker.isAI()) TextView.printError(e.getMessage());
                         isAddHit = false;
                     }
                 } while (!isAddHit);
 
-                isHit = defender.getBattleField().at(shoot) == TypesField.HIT;
+                isHit = defender.getBattleField().at(shoot) == TypesField.HIT.name;
 
                 if (isHit) {
                     attacker.registerShoot(shoot);

@@ -1,9 +1,8 @@
 package kck.battleship.model.clases;
 
-import kck.battleship.exceptions.BattleFieldException;
-import kck.battleship.exceptions.PositionException;
-import kck.battleship.model.enum_.Direction;
-import kck.battleship.model.enum_.TypesField;
+import kck.battleship.controller.GameException;
+import kck.battleship.model.types.TypesDirection;
+import kck.battleship.model.types.TypesField;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,7 +44,7 @@ public class BattleField {
     private char[][] fillWater() {
         char[][] matrix = new char[length][length];
         for (char[] row : matrix) {
-            Arrays.fill(row, TypesField.WATER);
+            Arrays.fill(row, TypesField.WATER.name);
         }
         return matrix;
     }
@@ -54,35 +53,31 @@ public class BattleField {
         int l = ship.getLength();
         int x = ship.getPosition().getRow();
         int y = ship.getPosition().getColumn();
-        if (ship.getDirection() == Direction.HORIZONTAL) return (length - y + 1) > l;
+        if (ship.getDirection() == TypesDirection.HORIZONTAL) return (length - y + 1) > l;
         else return (length - x + 1) > l;
     }
 
-    public ArrayList<Position> getAdjacentValidPositions(Position position) throws PositionException {
+    public ArrayList<Position> getAdjacentValidPositions(Position position) throws GameException {
         int row = position.getRow(), column = position.getColumn();
         ArrayList<Position> adjacentPositions = new ArrayList<>();
 
-        // Sprawdź północ
         addIfValidAndNotMissOrHit(adjacentPositions, row - 1, column);
-        // Sprawdź zachód
         addIfValidAndNotMissOrHit(adjacentPositions, row, column - 1);
-        // Sprawdź południe
         addIfValidAndNotMissOrHit(adjacentPositions, row + 1, column);
-        // Sprawdź wschód
         addIfValidAndNotMissOrHit(adjacentPositions, row, column + 1);
 
         return adjacentPositions;
     }
 
-    private void addIfValidAndNotMissOrHit(ArrayList<Position> list, int row, int column) throws PositionException {
+    private void addIfValidAndNotMissOrHit(ArrayList<Position> list, int row, int column) throws GameException {
         if (row >= 0 && row < length && column >= 0 && column < length) {
             Position newPosition = new Position(row, column);
-            if (!(at(newPosition) == TypesField.MISS) && !(at(newPosition) == TypesField.HIT))
+            if (!(at(newPosition) == TypesField.MISS.name) && !(at(newPosition) == TypesField.HIT.name))
                 list.add(newPosition);
         }
     }
 
-    public ArrayList<Position> getAdjacentPositions(int row, int column) throws PositionException {
+    public ArrayList<Position> getAdjacentPositions(int row, int column) throws GameException {
         ArrayList<Position> adjacentPositions = new ArrayList<>();
 
         addIfValid(adjacentPositions, row - 1, column); // Północ
@@ -97,78 +92,85 @@ public class BattleField {
         return adjacentPositions;
     }
 
-    private void addIfValid(ArrayList<Position> list, int row, int column) throws PositionException {
+    private void addIfValid(ArrayList<Position> list, int row, int column) throws GameException {
         if (row >= 0 && row < length && column >= 0 && column < length)
             list.add(new Position(row, column));
     }
 
-    private boolean isShipAround(int row, int column) throws PositionException {
+    private boolean isShipAround(int row, int column) throws GameException {
         ArrayList<Position> list = getAdjacentPositions(row, column);
         for (Position position : list)
-            if (at(position) == TypesField.SHIP) return true;
+            if (at(position) == TypesField.SHIP.name) return true;
         return false;
     }
 
-    public boolean isNearShip(Ship ship) throws PositionException {
+    public boolean isNearShip(Ship ship) throws GameException {
         int row = ship.getPosition().getRow();
         int column = ship.getPosition().getColumn();
 
-        int k = (ship.getDirection() == Direction.HORIZONTAL) ? column : row;
+        int k = (ship.getDirection() == TypesDirection.HORIZONTAL) ? column : row;
 
         for (int i = 0; i < ship.getLength() && k + i < length - 1; i++) {
             if (isShipAround(row, column)) {
                 return true;
             }
 
-            if (ship.getDirection() == Direction.HORIZONTAL)
+            if (ship.getDirection() == TypesDirection.HORIZONTAL)
                 column++;
-            else if (ship.getDirection() == Direction.VERTICAL)
+            else if (ship.getDirection() == TypesDirection.VERTICAL)
                 row++;
         }
         return false;
     }
 
-    public BattleField getbattleFieldHideShips() throws PositionException {
+    public BattleField getbattleFieldHideShips() throws GameException {
         char[][] matrix = new char[length][length];
         for (int i = 0; i < length; i++)
             for (int j = 0; j < length; j++)
-                if (!(at(new Position(i, j)) == TypesField.SHIP))
+                if (!(at(new Position(i, j)) == TypesField.SHIP.name))
                     matrix[i][j] = at(new Position(i, j));
-                else matrix[i][j] = TypesField.WATER;
+                else matrix[i][j] = TypesField.WATER.name;
 
         return new BattleField(matrix);
     }
 
-    public boolean addShip(Ship ship) throws BattleFieldException, PositionException {
+    private void checkShipPosition(Ship ship) throws GameException {
+        if (at(ship.getPosition()) == TypesField.SHIP.name)
+            throw new GameException("Błąd: istnieje już statek na tej pozycji");
+
+        if (!IsSpace(ship))
+            throw new GameException("Błąd: twoj statek wystaje poza pole bitwy");
+
+        if (isNearShip(ship))
+            throw new GameException("Błąd: inny statek znajduje się w pobliżu");
+    }
+
+    public boolean addShip(Ship ship) throws GameException {
         int row = ship.getPosition().getRow();
         int column = ship.getPosition().getColumn();
 
-        if (at(ship.getPosition()) == TypesField.SHIP) throw new BattleFieldException("Błąd, istnieje już statek na tej pozycji");
+        checkShipPosition(ship);
 
-        if (IsSpace(ship)) {
-            if (!isNearShip(ship)) {
-                int k = (ship.getDirection() == Direction.HORIZONTAL) ? column : row;
-                for (int i = 0; i < ship.getLength() && k + i < length; i++) {
-                    if (ship.getDirection() == Direction.HORIZONTAL) {
-                        if (i == 0) k = column;
-                        battleField[row][column + i] = TypesField.SHIP;
-                    } else if (ship.getDirection() == Direction.VERTICAL) {
-                        if (i == 0) k = row;
-                        battleField[row + i][column] = TypesField.SHIP;
-                    }
-                    numberShips++;
-                }
-                return true;
-            } else throw new BattleFieldException("Błąd, inny statek znajduje się w pobliżu");
-        } else throw new BattleFieldException("Błąd, inny statek znajduje się w pobliżu");
+        int k = (ship.getDirection() == TypesDirection.HORIZONTAL) ? column : row;
+        for (int i = 0; i < ship.getLength() && k + i < length; i++) {
+            if (ship.getDirection() == TypesDirection.HORIZONTAL) {
+                if (i == 0) k = column;
+                battleField[row][column + i] = TypesField.SHIP.name;
+            } else if (ship.getDirection() == TypesDirection.VERTICAL) {
+                if (i == 0) k = row;
+                battleField[row + i][column] = TypesField.SHIP.name;
+            }
+            numberShips++;
+        }
+        return true;
     }
 
-    public boolean addHit(Position position) throws BattleFieldException {
-        if (at(position) == TypesField.SHIP) {
+    public boolean addHit(Position position) throws GameException {
+        if (at(position) == TypesField.SHIP.name) {
             numberShips--;
-            return set(TypesField.HIT, position);
-        } else if (at(position) == TypesField.WATER) return set(TypesField.MISS, position);
-        else throw new BattleFieldException("Błąd, już strzelałeś w tą pozycję");
+            return set(TypesField.HIT.name, position);
+        } else if (at(position) == TypesField.WATER.name) return set(TypesField.MISS.name, position);
+        else throw new GameException("Błąd: już strzelałeś w tą pozycję");
     }
 
     public void reset() {

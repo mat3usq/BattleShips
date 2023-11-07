@@ -7,10 +7,10 @@ import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.Terminal;
 import kck.battleship.controller.Game;
-import kck.battleship.exceptions.PositionException;
+import kck.battleship.controller.GameException;
 import kck.battleship.model.clases.*;
-import kck.battleship.model.enum_.TypesField;
-import kck.battleship.model.enum_.TypesShips;
+import kck.battleship.model.types.TypesField;
+import kck.battleship.model.types.TypesShips;
 
 import java.io.IOException;
 import java.util.*;
@@ -138,7 +138,7 @@ public class TextView {
         }
     }
 
-    public static void chooseOption(Terminal terminal, int selected) throws IOException, PositionException, InterruptedException {
+    public static void chooseOption(Terminal terminal, int selected) throws IOException, GameException, InterruptedException {
         Boolean b = true;
         while (b) {
             KeyStroke k = terminal.pollInput();
@@ -166,7 +166,7 @@ public class TextView {
         }
     }
 
-    private static void option(int selected, Terminal terminal) throws IOException, PositionException, InterruptedException {
+    private static void option(int selected, Terminal terminal) throws IOException, GameException, InterruptedException {
         for (int i = 0; i < menuList.size(); i++) {
             if (i == selected)
                 switch (menuList.get(i)) {
@@ -197,7 +197,7 @@ public class TextView {
         }
     }
 
-    private static void printRules(Terminal terminal) throws IOException, PositionException, InterruptedException {
+    private static void printRules(Terminal terminal) throws IOException, GameException, InterruptedException {
         printInfoRules(1);
 
         Boolean b = true;
@@ -256,7 +256,7 @@ public class TextView {
                 tg.setForegroundColor(TextColor.ANSI.WHITE);
                 tg.putString(2, 3 + i, "- (", SGR.BOLD);
                 tg.setForegroundColor(TextColor.ANSI.YELLOW_BRIGHT);
-                tg.putString(6, 3 + i, String.valueOf(TypesField.SHIP), SGR.BOLD);
+                tg.putString(6, 3 + i, String.valueOf(TypesField.SHIP.name), SGR.BOLD);
                 tg.setForegroundColor(TextColor.ANSI.WHITE);
                 tg.putString(8, 3 + i, "x", SGR.BOLD);
                 tg.putString(9, 3 + i, String.valueOf(type.getShipLength()), SGR.BOLD);
@@ -267,26 +267,26 @@ public class TextView {
 
             tg.putString(2, 5 + i, "- ( ", SGR.BOLD);
             tg.setForegroundColor(TextColor.ANSI.BLUE_BRIGHT);
-            tg.putString(7, 5 + i, String.valueOf(TypesField.WATER), SGR.BOLD);
+            tg.putString(7, 5 + i, String.valueOf(TypesField.WATER.name), SGR.BOLD);
             tg.setForegroundColor(TextColor.ANSI.WHITE);
             tg.putString(9, 5 + i, " ) : Woda ", SGR.BOLD);
 
             tg.putString(2, 6 + i, "- ( ", SGR.BOLD);
             tg.setForegroundColor(TextColor.ANSI.YELLOW_BRIGHT);
-            tg.putString(7, 6 + i, String.valueOf(TypesField.SHIP), SGR.BOLD);
+            tg.putString(7, 6 + i, String.valueOf(TypesField.SHIP.name), SGR.BOLD);
             tg.setForegroundColor(TextColor.ANSI.WHITE);
             tg.putString(9, 6 + i, " ) : Statek ", SGR.BOLD);
 
 
             tg.putString(2, 7 + i, "- ( ", SGR.BOLD);
             tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
-            tg.putString(7, 7 + i, String.valueOf(TypesField.HIT), SGR.BOLD);
+            tg.putString(7, 7 + i, String.valueOf(TypesField.HIT.name), SGR.BOLD);
             tg.setForegroundColor(TextColor.ANSI.WHITE);
             tg.putString(9, 7 + i, " ) : Trafiony Statek ", SGR.BOLD);
 
 
             tg.putString(2, 8 + i, "- ( ", SGR.BOLD);
-            tg.putString(7, 8 + i, String.valueOf(TypesField.MISS), SGR.BOLD);
+            tg.putString(7, 8 + i, String.valueOf(TypesField.MISS.name), SGR.BOLD);
             tg.putString(9, 8 + i, " ) : Nietrafiony Strzał ", SGR.BOLD);
 
         }
@@ -363,15 +363,14 @@ public class TextView {
         }
     }
 
-    public static void printShip(Ship ship, int numShipLeft) throws IOException {
+    public static void printShip(Ship ship) throws IOException {
         TextGraphics tg = screen.newTextGraphics();
 
         tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
         tg.putString(2, 15, "→ " + ship.getName(), SGR.BOLD);
-        tg.putString(2, 16, numShipLeft + " x ", SGR.BOLD);
 
         tg.setForegroundColor(TextColor.ANSI.YELLOW_BRIGHT);
-        tg.putString(6, 16, ship.toString(), SGR.BOLD);
+        tg.putString(4, 16, ship.toString(), SGR.BOLD);
         tg.setForegroundColor(TextColor.ANSI.WHITE);
 
         screen.refresh();
@@ -397,22 +396,22 @@ public class TextView {
             tg.putString(43 + i * 3, 2, i + "   ", SGR.BOLD);
         }
 
-        for (int i = 0; i < firstBattleField.getLength(); i++) {
+        for (int i = 0; i < BattleField.getLength(); i++) {
             tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
             tg.putString(5, 3 + i, letters.charAt(i) + " ", SGR.BOLD);
 
-            for (int j = 0; j < firstBattleField.getLength(); j++) {
-                if (firstBattleField.getbattleField()[i][j] == TypesField.WATER) {
+            for (int j = 0; j < BattleField.getLength(); j++) {
+                if (firstBattleField.getbattleField()[i][j] == TypesField.WATER.name) {
                     tg.setForegroundColor(TextColor.ANSI.BLUE_BRIGHT);
-                    tg.putString(8 + j * 3, 3 + i, TypesField.WATER + " ", SGR.BOLD);
+                    tg.putString(8 + j * 3, 3 + i, TypesField.WATER.name + " ", SGR.BOLD);
                     tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
-                } else if (firstBattleField.getbattleField()[i][j] == TypesField.HIT) {
+                } else if (firstBattleField.getbattleField()[i][j] == TypesField.HIT.name) {
                     tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
-                    tg.putString(8 + j * 3, 3 + i, TypesField.HIT + " ", SGR.BOLD);
+                    tg.putString(8 + j * 3, 3 + i, TypesField.HIT.name + " ", SGR.BOLD);
                     tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
-                } else if (firstBattleField.getbattleField()[i][j] == TypesField.MISS) {
+                } else if (firstBattleField.getbattleField()[i][j] == TypesField.MISS.name) {
                     tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
-                    tg.putString(8 + j * 3, 3 + i, TypesField.MISS + " ", SGR.BOLD);
+                    tg.putString(8 + j * 3, 3 + i, TypesField.MISS.name + " ", SGR.BOLD);
                     tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
                 } else {
                     tg.setForegroundColor(TextColor.ANSI.YELLOW_BRIGHT);
@@ -425,17 +424,17 @@ public class TextView {
             tg.putString(43, 3 + i, letters.charAt(i) + "   ", SGR.BOLD);
 
             for (int j = 0; j < BattleField.getLength(); j++) {
-                if (secondBattleField.getbattleField()[i][j] == TypesField.WATER) {
+                if (secondBattleField.getbattleField()[i][j] == TypesField.WATER.name) {
                     tg.setForegroundColor(TextColor.ANSI.BLUE_BRIGHT);
-                    tg.putString(46 + j * 3, 3 + i, TypesField.WATER + " ", SGR.BOLD);
+                    tg.putString(46 + j * 3, 3 + i, TypesField.WATER.name + " ", SGR.BOLD);
                     tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
-                } else if (secondBattleField.getbattleField()[i][j] == TypesField.HIT) {
+                } else if (secondBattleField.getbattleField()[i][j] == TypesField.HIT.name) {
                     tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
-                    tg.putString(46 + j * 3, 3 + i, TypesField.HIT + " ", SGR.BOLD);
+                    tg.putString(46 + j * 3, 3 + i, TypesField.HIT.name + " ", SGR.BOLD);
                     tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
-                } else if (secondBattleField.getbattleField()[i][j] == TypesField.MISS) {
+                } else if (secondBattleField.getbattleField()[i][j] == TypesField.MISS.name) {
                     tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
-                    tg.putString(46 + j * 3, 3 + i, TypesField.MISS + " ", SGR.BOLD);
+                    tg.putString(46 + j * 3, 3 + i, TypesField.MISS.name + " ", SGR.BOLD);
                     tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
                 } else {
                     tg.setForegroundColor(TextColor.ANSI.YELLOW_BRIGHT);
@@ -469,17 +468,17 @@ public class TextView {
             tg.putString(5, 3 + i, letters.charAt(i) + " ", SGR.BOLD);
 
             for (int j = 0; j < BattleField.getLength(); j++) {
-                if (battleField.getbattleField()[i][j] == TypesField.WATER) {
+                if (battleField.getbattleField()[i][j] == TypesField.WATER.name) {
                     tg.setForegroundColor(TextColor.ANSI.BLUE_BRIGHT);
-                    tg.putString(8 + j * 3, 3 + i, TypesField.WATER + " ", SGR.BOLD);
+                    tg.putString(8 + j * 3, 3 + i, TypesField.WATER.name + " ", SGR.BOLD);
                     tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
-                } else if (battleField.getbattleField()[i][j] == TypesField.HIT) {
+                } else if (battleField.getbattleField()[i][j] == TypesField.HIT.name) {
                     tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
-                    tg.putString(8 + j * 3, 3 + i, TypesField.HIT + " ", SGR.BOLD);
+                    tg.putString(8 + j * 3, 3 + i, TypesField.HIT.name + " ", SGR.BOLD);
                     tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
-                } else if (battleField.getbattleField()[i][j] == TypesField.MISS) {
+                } else if (battleField.getbattleField()[i][j] == TypesField.MISS.name) {
                     tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
-                    tg.putString(8 + j * 3, 3 + i, TypesField.MISS + " ", SGR.BOLD);
+                    tg.putString(8 + j * 3, 3 + i, TypesField.MISS.name + " ", SGR.BOLD);
                     tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
                 } else {
                     tg.setForegroundColor(TextColor.ANSI.YELLOW_BRIGHT);
@@ -493,7 +492,7 @@ public class TextView {
         screen.refresh();
     }
 
-    public static void printRanking(Terminal terminal, int page) throws IOException, PositionException, InterruptedException {
+    public static void printRanking(Terminal terminal, int page) throws IOException, GameException, InterruptedException {
         List<Ranking> rankings = Ranking.getRanking();
         Collections.sort(rankings, Collections.reverseOrder(Comparator.comparingInt(Ranking::getPoints)));
         TextGraphics tg = screen.newTextGraphics();
@@ -561,7 +560,7 @@ public class TextView {
 
     }
 
-    private static void printShop(Terminal terminal) throws IOException, PositionException, InterruptedException {
+    private static void printShop(Terminal terminal) throws IOException, GameException, InterruptedException {
         int selected = 0;
         printItemsInShop(selected);
         Boolean b = true;

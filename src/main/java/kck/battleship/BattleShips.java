@@ -5,13 +5,14 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 
 import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.screen.Screen;
-import kck.battleship.exceptions.PositionException;
+import kck.battleship.controller.GameException;
+import kck.battleship.model.types.TypesField;
 import kck.battleship.view.TextView;
 
 import java.io.IOException;
 
 public class BattleShips {
-    public static void main(String[] args) throws IOException, PositionException, InterruptedException {
+    public static void main(String[] args) throws IOException, GameException, InterruptedException {
         Terminal terminal = new DefaultTerminalFactory().createTerminal();
         Screen screen = new TerminalScreen(terminal);
         screen.startScreen();

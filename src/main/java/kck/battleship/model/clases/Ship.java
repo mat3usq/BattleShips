@@ -1,19 +1,17 @@
 package kck.battleship.model.clases;
 
-import kck.battleship.model.enum_.Direction;
-import kck.battleship.model.enum_.TypesField;
+import kck.battleship.model.types.TypesDirection;
+import kck.battleship.model.types.TypesField;
 
 public class Ship {
     private final String name;
     private final int length;
     private Position position;
-    private Direction direction;
+    private TypesDirection direction;
 
     public Ship(String name, int length) {
         this.name = name;
         this.length = length;
-        this.position = null;
-        this.direction = null;
     }
 
     public String getName() {
@@ -32,15 +30,15 @@ public class Ship {
         this.position = position;
     }
 
-    public Direction getDirection() {
+    public TypesDirection getDirection() {
         return direction;
     }
 
-    public void setDirection(Direction direction) {
+    public void setDirection(TypesDirection direction) {
         this.direction = direction;
     }
 
     public String toString() {
-        return ("" + TypesField.SHIP).repeat(length);
+        return (" " + TypesField.SHIP.name).repeat(length);
     }
 }

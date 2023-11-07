@@ -8,17 +8,16 @@ import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.Terminal;
-import kck.battleship.exceptions.DirectionException;
-import kck.battleship.exceptions.PositionException;
+import kck.battleship.controller.GameException;
 import kck.battleship.model.clases.BattleField;
-import kck.battleship.model.enum_.Direction;
+import kck.battleship.model.types.TypesDirection;
 import kck.battleship.model.clases.Position;
 
 import java.io.IOException;
 
 public class UserInput {
 
-    public static String getUserInput(Screen screen, Terminal terminal, String message) throws IOException, InterruptedException, PositionException {
+    public static String getUserInput(Screen screen, Terminal terminal, String message) throws IOException, InterruptedException, GameException {
         TextGraphics tg = screen.newTextGraphics();
         StringBuilder userInput = new StringBuilder();
         KeyStroke keyStroke;
@@ -94,10 +93,10 @@ public class UserInput {
             tg.putString(25, 19, "Odpowiedź: ", SGR.BOLD);
             tg.setForegroundColor(TextColor.ANSI.GREEN_BRIGHT);
             tg.putString(36, 19, String.valueOf((userResponse == '\0' ? "" : userResponse)), SGR.BOLD);
-            if(userResponse == '\0')
-                tg.putString(36 , 19, "|  ", SGR.BOLD, SGR.BLINK);
+            if (userResponse == '\0')
+                tg.putString(36, 19, "|  ", SGR.BOLD, SGR.BLINK);
             else
-                tg.putString(37 , 19, "|  ", SGR.BOLD, SGR.BLINK);
+                tg.putString(37, 19, "|  ", SGR.BOLD, SGR.BLINK);
             screen.refresh();
             Thread.sleep(10);
         } while (userResponse == '\0');
@@ -159,18 +158,18 @@ public class UserInput {
             int column = Integer.parseInt(userInput.substring(1));
 
             if (row >= BattleField.getLength() || column > BattleField.getLength() || row < 0 || column < 0)
-                throw new PositionException("Błąd, dozwolone wartości od a1 do j10");
+                throw new GameException(null);
 
             return new Position(row, column - 1);
-        } catch (PositionException | NumberFormatException | StringIndexOutOfBoundsException e) {
-            TextView.printError("Błąd, dozwolone wartości od a1 do j10");
+        } catch (GameException | NumberFormatException | StringIndexOutOfBoundsException e) {
+            TextView.printError("Błąd: " + userInput + " , wybierz od a1 do j10");
             return readPosition(screen, terminal, message);
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static Direction readDirection(Screen screen, Terminal terminal, String message) {
+    public static TypesDirection readDirection(Screen screen, Terminal terminal, String message) {
         TextGraphics tg = screen.newTextGraphics();
         StringBuilder userInput = new StringBuilder();
         KeyStroke keyStroke;
@@ -218,9 +217,12 @@ public class UserInput {
                 screen.refresh();
             } while (!canSubmit);
 
-            return Direction.decode(userInput.charAt(0));
-        } catch (DirectionException | StringIndexOutOfBoundsException e) {
-            TextView.printError("Błąd, dozwolone kierunki to 'h' lub 'v'");
+            if (userInput.charAt(0) == 'h' || userInput.charAt(0) == 'H') return TypesDirection.HORIZONTAL;
+            else if (userInput.charAt(0) == 'v' || userInput.charAt(0) == 'V') return TypesDirection.VERTICAL;
+            else throw new GameException("Podany znak: '" + userInput.charAt(0) + "' nie jest poprawny");
+
+        } catch (GameException | StringIndexOutOfBoundsException e) {
+            TextView.printError(e.getMessage());
             return readDirection(screen, terminal, message);
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);

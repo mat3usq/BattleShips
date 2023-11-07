@@ -1,4 +1,4 @@
-package kck.battleship.model.enum_;
+package kck.battleship.model.types;
 
 public enum TypesShips {
     SUBMARINE(1, 2),

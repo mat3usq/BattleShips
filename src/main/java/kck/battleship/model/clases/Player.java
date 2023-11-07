@@ -2,10 +2,9 @@ package kck.battleship.model.clases;
 
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.Terminal;
-import kck.battleship.exceptions.BattleFieldException;
-import kck.battleship.exceptions.PositionException;
-import kck.battleship.model.enum_.Direction;
-import kck.battleship.model.enum_.TypesShips;
+import kck.battleship.controller.GameException;
+import kck.battleship.model.types.TypesDirection;
+import kck.battleship.model.types.TypesShips;
 import kck.battleship.view.TextView;
 import kck.battleship.view.UserInput;
 
@@ -83,15 +82,15 @@ public class Player {
 
         do {
             TextView.printBoard(battleField);
-            TextView.printShip(ship, countShip(ships, ship.getLength()));
+            TextView.printShip(ship);
 
             ship.setPosition(UserInput.readPosition(screen, terminal, messagePosition));
             ship.setDirection(UserInput.readDirection(screen, terminal, messageDirection));
 
             try {
                 isAdded = battleField.addShip(ship);
-            } catch (BattleFieldException | PositionException e) {
-                TextView.printError(e.toString());
+            } catch (GameException e) {
+                TextView.printError(e.getMessage());
                 isAdded = false;
                 Thread.sleep(2000);
             }
@@ -116,9 +115,9 @@ public class Player {
         while (failedAttempts <= limit) {
             try {
                 ship.setPosition(Position.randPosition());
-                ship.setDirection(random.nextBoolean() ? Direction.VERTICAL : Direction.HORIZONTAL);
+                ship.setDirection(random.nextBoolean() ? TypesDirection.VERTICAL : TypesDirection.HORIZONTAL);
                 addedSuccessfully = battleField.addShip(ship);
-            } catch (BattleFieldException | PositionException e) {
+            } catch (GameException ignored) {
             }
 
             if (addedSuccessfully)
@@ -143,22 +142,15 @@ public class Player {
         return battleField.getNumberShips() > 0;
     }
 
-    private int countShip(ArrayList<Ship> ships, int length) {
-        int count = 0;
-        for (Ship ship : ships)
-            if (ship.getLength() == length) count++;
-        return count;
-    }
-
     public int shipsLeft() {
         return battleField.getNumberShips();
     }
 
-    public boolean addShoot(Position shoot) throws BattleFieldException {
+    public boolean addShoot(Position shoot) throws GameException {
         return battleField.addHit(shoot);
     }
 
-    public Position ComputerShoot(BattleField defenderBattleField) throws PositionException {
+    public Position ComputerShoot(BattleField defenderBattleField) throws GameException {
         if (shoots.isEmpty()) return Position.randPosition();
         else {
             nextShoots.addAll(defenderBattleField.getAdjacentValidPositions(getLastShoot()));
@@ -172,7 +164,7 @@ public class Player {
         }
     }
 
-    public Position shoot(Screen screen, Terminal terminal, BattleField defenderBattleField) throws PositionException {
+    public Position shoot(Screen screen, Terminal terminal, BattleField defenderBattleField) throws GameException {
         if (isAI) return ComputerShoot(defenderBattleField);
         else return UserInput.readPosition(screen, terminal, name + ", gdzie chcesz strzelić? ");
     }
