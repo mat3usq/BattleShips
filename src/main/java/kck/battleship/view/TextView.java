@@ -402,10 +402,10 @@ public class TextView {
     public static void printWinner(Player player, Ranking rank) {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.GREEN_BRIGHT);
-        tg.putString(32, 15, "✔ Właśnie Wygrałeś Gre !!", SGR.BOLD);
+        tg.putString(30, 15, "✔ Wygrałeś Gre !!", SGR.BOLD);
         if (rank != null) {
             tg.setForegroundColor(TextColor.ANSI.YELLOW_BRIGHT);
-            tg.putString(32, 17, "Twoj Wynik(" + player.getName() + "): " + rank.getPoints(), SGR.BOLD);
+            tg.putString(32, 17, "Twoj Wynik: " + rank.getPoints(), SGR.BOLD);
         }
         try {
             screen.refresh();
