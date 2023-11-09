@@ -66,12 +66,13 @@ public class Game {
         }
     }
 
-    private boolean playTurn(Player attacker, Player defender, Boolean reverse) throws GameException {
+    private boolean playTurn(Player attacker, Player defender, Boolean reverse) {
         Position shoot = null;
         boolean isHit, isAddHit;
 
-        if (attacker.areShipsStillSailing()) {
+        TextView.showOptionToPlay();
 
+        if (attacker.areShipsStillSailing()) {
             if (defender.getDurabilityForceField() > 0) {
                 defender.setDurabilityForceField(defender.getDurabilityForceField() - 1);
                 TextGraphics tg = screen.newTextGraphics();
@@ -95,8 +96,8 @@ public class Game {
             } else {
                 do {
                     try {
-//                        shoot = attacker.shoot(screen, terminal, defender.getBattleField().getbattleFieldHideShips());
-                        shoot = attacker.shoot(screen, terminal, defender.getBattleField());
+//                        shoot = attacker.shoot(terminal, defender.getBattleField().getbattleFieldHideShips());
+                        shoot = attacker.shoot(terminal, defender.getBattleField());
                         isAddHit = defender.addShoot(shoot);
                     } catch (GameException e) {
                         if (!attacker.isAI()) TextView.printError(e.getMessage());

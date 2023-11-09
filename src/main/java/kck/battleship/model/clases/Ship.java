@@ -1,6 +1,5 @@
 package kck.battleship.model.clases;
 
-import kck.battleship.controller.GameException;
 import kck.battleship.model.types.TypesDirection;
 import kck.battleship.model.types.TypesField;
 

@@ -1,5 +1,7 @@
 package kck.battleship;
 
+import com.googlecode.lanterna.TerminalPosition;
+import com.googlecode.lanterna.graphics.TextImage;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 
@@ -14,7 +16,7 @@ import java.io.IOException;
 
 public class BattleShips {
     public static void main(String[] args) throws IOException, GameException, InterruptedException {
-        Font myFont = new Font("Monospaced", Font.PLAIN, 27);
+        Font myFont = new Font("Monospaced", Font.PLAIN, 24);
         AWTTerminalFontConfiguration myFontConfiguration = AWTTerminalFontConfiguration.newInstance(myFont);
         DefaultTerminalFactory dtf = new DefaultTerminalFactory();
         dtf.setForceAWTOverSwing(true);

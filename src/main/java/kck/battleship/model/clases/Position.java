@@ -39,6 +39,6 @@ public class Position {
     }
 
     public String toString(Position position) {
-        return "(" + (char) ('a' + position.getRow()) + "," + (position.getColumn() + 1) + ")";
+        return (char) ('a' + position.getRow()) + String.valueOf(position.getColumn() + 1);
     }
 }

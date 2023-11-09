@@ -29,11 +29,12 @@ public class TextView {
         TextGraphics tg = screen.newTextGraphics();
 
         printTitle();
+        printShipImage();
 
         tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
-        tg.putString(16, 16, "Jeśli chcesz przejść dalej, kliknij", SGR.BOLD, SGR.FRAKTUR);
+        tg.putString(16, 11, "Jeśli chcesz przejść dalej, kliknij", SGR.BOLD, SGR.FRAKTUR);
         tg.setForegroundColor(TextColor.ANSI.GREEN_BRIGHT);
-        tg.putString(52, 16, "ENTER", SGR.BLINK, SGR.ITALIC, SGR.BOLD);
+        tg.putString(52, 11, "ENTER", SGR.BLINK, SGR.ITALIC, SGR.BOLD);
 
         try {
             screen.refresh();
@@ -42,27 +43,47 @@ public class TextView {
         }
     }
 
+
+    public static void printShipImage(){
+        TextGraphics tg = screen.newTextGraphics();
+        tg.setForegroundColor(TextColor.ANSI.BLUE_BRIGHT);
+        tg.putString(0, 14, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~o~~o~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", SGR.BOLD);
+        tg.setForegroundColor(TextColor.ANSI.BLACK_BRIGHT);
+        tg.putString(0, 16, "                                               |   #)\n\n", SGR.BOLD);
+        tg.putString(0, 17, "                                              _|_|_#_\n", SGR.BOLD);
+        tg.putString(0, 18, "                                             | 879   |\n", SGR.BOLD);
+        tg.putString(0, 19, "    __                    ___________________|       |_________________", SGR.BOLD);
+        tg.putString(0, 20, "   |   -_______-----------                                              \\\n", SGR.BOLD);
+        tg.putString(0, 21, "  >|    _____                                                   --->     )\n", SGR.BOLD);
+        tg.putString(0, 22, "   |__ -     ---------_________________________________________________ /\n", SGR.BOLD);
+        tg.setForegroundColor(TextColor.ANSI.CYAN);
+        tg.putString(0, 15, "                                  o o\n", SGR.BOLD);
+        tg.putString(0, 16, "                                    o ooo\n", SGR.BOLD);
+        tg.putString(0, 17, "                                       o o o\n", SGR.BOLD);
+        tg.putString(0, 18, "                                           oo\n", SGR.BOLD);
+    }
+
     public static void printTitle() {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
-        tg.putString(3, 3, "                                                                         ", SGR.UNDERLINE);
+        tg.putString(3, 1, "                                                                         ", SGR.UNDERLINE);
         tg.setForegroundColor(TextColor.ANSI.YELLOW_BRIGHT);
-        tg.putString(6, 4, "  ____    _  _____ _____ _     _____   ____  _   _ ___ ____  ____", SGR.BOLD);
-        tg.putString(6, 5, " | __ )  / \\|_   _|_   _| |   | ____| / ___|| | | |_ _|  _ \\/ ___|", SGR.BOLD);
-        tg.putString(6, 6, " |  _ \\ / _ \\ | |   | | | |   |  _|   \\___ \\| |_| || || |_) \\___ \\ \n", SGR.BOLD);
-        tg.putString(6, 7, " | |_) / ___ \\| |   | | | |___| |___   ___) |  _  || ||  __/ ___) |\n", SGR.BOLD);
-        tg.putString(6, 8, " |____/_/   \\_\\_|   |_| |_____|_____| |____/|_| |_|___|_|   |____/ \n", SGR.BOLD);
+        tg.putString(6, 2, "  ____    _  _____ _____ _     _____   ____  _   _ ___ ____  ____", SGR.BOLD);
+        tg.putString(6, 3, " | __ )  / \\|_   _|_   _| |   | ____| / ___|| | | |_ _|  _ \\/ ___|", SGR.BOLD);
+        tg.putString(6, 4, " |  _ \\ / _ \\ | |   | | | |   |  _|   \\___ \\| |_| || || |_) \\___ \\ \n", SGR.BOLD);
+        tg.putString(6, 5, " | |_) / ___ \\| |   | | | |___| |___   ___) |  _  || ||  __/ ___) |\n", SGR.BOLD);
+        tg.putString(6, 6, " |____/_/   \\_\\_|   |_| |_____|_____| |____/|_| |_|___|_|   |____/ \n", SGR.BOLD);
         tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
-        tg.putString(3, 10, "                                                                         ", SGR.CROSSED_OUT);
+        tg.putString(3, 8, "                                                                         ", SGR.CROSSED_OUT);
     }
 
     private static void printMenu() {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.CYAN_BRIGHT);
-        tg.putString(24, 11, " __  __  ____  _  _  __  __ \n", SGR.BOLD);
-        tg.putString(24, 12, "(  \\/  )( ___)( \\( )(  )(  )\n", SGR.BOLD);
-        tg.putString(24, 13, " )    (  )__)  )  (  )(__)( \n", SGR.BOLD);
-        tg.putString(24, 14, "(_/\\/\\_)(____)(_)\\_)(______)\n", SGR.BOLD);
+        tg.putString(24, 10, " __  __  ____  _  _  __  __ \n", SGR.BOLD);
+        tg.putString(24, 11, "(  \\/  )( ___)( \\( )(  )(  )\n", SGR.BOLD);
+        tg.putString(24, 12, " )    (  )__)  )  (  )(__)( \n", SGR.BOLD);
+        tg.putString(24, 13, "(_/\\/\\_)(____)(_)\\_)(______)\n", SGR.BOLD);
     }
 
     public static void waitForKeyHomePage(Terminal terminal) throws IOException {
@@ -123,10 +144,11 @@ public class TextView {
         screen.clear();
 
         printTitle();
+        printShipImage();
         tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
-        tg.putString(30, 15, "Dziekujemy Za     !!!", SGR.BOLD);
+        tg.putString(30, 11, "Dziekujemy Za     !!!", SGR.BOLD);
         tg.setForegroundColor(TextColor.ANSI.GREEN_BRIGHT);
-        tg.putString(44, 15, "Gre", SGR.BOLD, SGR.BLINK);
+        tg.putString(44, 11, "Gre", SGR.BOLD, SGR.BLINK);
 
         try {
             screen.refresh();
@@ -228,68 +250,97 @@ public class TextView {
         if (x == 1) {
             tg.setForegroundColor(TextColor.ANSI.MAGENTA_BRIGHT);
             tg.putString(31, 1, "Jak wygrać?", SGR.BOLD, SGR.ITALIC);
-            tg.setForegroundColor(TextColor.ANSI.WHITE);
-            tg.putString(2, 3, "- Każdy gracz ma pole bitwy reprezentowane przez siatkę 10x10 (domyślną),", SGR.BOLD);
-            tg.putString(2, 4, "   na której rozmieszcza " + TypesShips.countAllShips() + " statków, ukrytych przed przeciwnikiem.", SGR.BOLD);
-            tg.putString(2, 5, "- Celem gry jest zatopienie wszystkich statków przeciwnika!", SGR.BOLD);
-            tg.putString(2, 6, "- Np. statek typu " + TypesShips.values()[0] + ", który zajmuje " + TypesShips.values()[0].getShipLength() + " pól,", SGR.BOLD);
-            tg.putString(2, 7, "   zostaje zatopiony po dwóch trafieniach.", SGR.BOLD);
-            tg.putString(2, 8, "- Wszystkie " + TypesShips.countAllShips() + " statki zajmują łącznie " + TypesShips.lengthAllShips() + " pól,", SGR.BOLD);
-            tg.putString(2, 9, "   więc pierwszy gracz, który odnotuje " + TypesShips.lengthAllShips() + " trafień, wygrywa!", SGR.BOLD, SGR.BOLD);
+            tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+            tg.putString(2, 3, "- Każdy gracz ma pole bitwy reprezentowane przez siatkę 10x10 (domyślną),");
+            tg.putString(2, 4, "   na której rozmieszcza " + TypesShips.countAllShips() + " statków, ukrytych przed przeciwnikiem.");
+            tg.putString(2, 5, "- Celem gry jest zatopienie wszystkich statków przeciwnika!");
+            tg.putString(2, 6, "- Np. statek typu " + TypesShips.values()[0] + ", który zajmuje " + TypesShips.values()[0].getShipLength() + " pól,");
+            tg.putString(2, 7, "   zostaje zatopiony po dwóch trafieniach.");
+            tg.putString(2, 8, "- Wszystkie " + TypesShips.countAllShips() + " statki zajmują łącznie " + TypesShips.lengthAllShips() + " pól,");
+            tg.putString(2, 9, "   więc pierwszy gracz, który odnotuje " + TypesShips.lengthAllShips() + " trafień, wygrywa!");
+
+            tg.setForegroundColor(TextColor.ANSI.MAGENTA_BRIGHT);
+            for (int i = 3; i < 10; i++)
+                tg.putString(2, i, "-", SGR.BOLD);
+            tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
 
             tg.setForegroundColor(TextColor.ANSI.YELLOW_BRIGHT);
             tg.putString(31, 11, "Rozgrywka", SGR.BOLD, SGR.ITALIC);
-            tg.setForegroundColor(TextColor.ANSI.WHITE);
-            tg.putString(2, 13, "- Postępuj zgodnie z instrukcjami w celu skonfigurowania swoich " + TypesShips.countAllShips() + " statków.", SGR.BOLD);
-            tg.putString(2, 14, "- Umieścić statek podając współrzędną początkową (A1-J10) i kierunek (h/v).", SGR.BOLD);
-            tg.putString(2, 15, "- Statki nie mogą na siebie nachodzić ani stykać się.", SGR.BOLD);
-            tg.putString(2, 16, "- Gdy obaj gracze skonfigurują swoje statki, bitwa się rozpoczyna!", SGR.BOLD);
-            tg.putString(2, 17, "- Wystrzel rakiety w statki przeciwnika, zgadując współrzędne.", SGR.BOLD);
-            tg.putString(2, 18, "- Zostaniesz poinformowany, czy trafiłeś w statek, czy nie.", SGR.BOLD);
-            tg.putString(2, 19, "- Zatop wszystkie " + TypesShips.countAllShips() + " statków komputera, aby wygrać!", SGR.BOLD);
+            tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+            tg.putString(2, 13, "- Postępuj zgodnie z instrukcjami w celu skonfigurowania swoich " + TypesShips.countAllShips() + " statków.");
+            tg.putString(2, 14, "- Umieścić statek podając współrzędną początkową (A1-J10) i kierunek (h/v).");
+            tg.putString(2, 15, "- Statki nie mogą na siebie nachodzić ani stykać się.");
+            tg.putString(2, 16, "- Gdy obaj gracze skonfigurują swoje statki, bitwa się rozpoczyna!");
+            tg.putString(2, 17, "- Wystrzel rakiety w statki przeciwnika, zgadując współrzędne.");
+            tg.putString(2, 18, "- Zostaniesz poinformowany, czy trafiłeś w statek, czy nie.");
+            tg.putString(2, 19, "- Zatop wszystkie " + TypesShips.countAllShips() + " statków komputera, aby wygrać!");
+
+            tg.setForegroundColor(TextColor.ANSI.YELLOW_BRIGHT);
+            for (int i = 13; i < 20; i++)
+                tg.putString(2, i, "-", SGR.BOLD);
+            tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+
         } else {
             tg.setForegroundColor(TextColor.ANSI.GREEN_BRIGHT);
             tg.putString(33, 1, "Legenda", SGR.BOLD, SGR.ITALIC);
-            tg.setForegroundColor(TextColor.ANSI.WHITE);
+            tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
 
             int i = 0;
             for (TypesShips type : TypesShips.values()) {
-                tg.setForegroundColor(TextColor.ANSI.WHITE);
-                tg.putString(2, 3 + i, "- (", SGR.BOLD);
+                tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+                tg.putString(2, 3 + i, "- (");
                 tg.setForegroundColor(TextColor.ANSI.YELLOW_BRIGHT);
-                tg.putString(6, 3 + i, String.valueOf(TypesField.SHIP.name), SGR.BOLD);
-                tg.setForegroundColor(TextColor.ANSI.WHITE);
-                tg.putString(8, 3 + i, "x", SGR.BOLD);
-                tg.putString(9, 3 + i, String.valueOf(type.getShipLength()), SGR.BOLD);
-                tg.putString(10, 3 + i, " ) : " + TypesShips.toPolishName(type), SGR.BOLD);
+                tg.putString(6, 3 + i, (TypesField.SHIP.name + " ").repeat(type.getShipLength()), SGR.BOLD);
+                tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+                tg.putString(6 + type.getShipLength() * 2, 3 + i, " ) : " + TypesShips.toPolishName(type));
                 i++;
             }
 
+            tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+            tg.putString(2, 7, "- (");
+            tg.setForegroundColor(TextColor.ANSI.YELLOW_BRIGHT);
+            tg.putString(6, 7, (TypesField.SHIP.name + " ").repeat(6), SGR.BOLD);
+            tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+            tg.putString(18, 7, " ) : LOTNISKOWIEC");
+            tg.setForegroundColor(TextColor.ANSI.YELLOW_BRIGHT);
+            tg.putString(36, 7, "Opcjonalnie", SGR.BOLD);
+            tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
 
-            tg.putString(2, 5 + i, "- ( ", SGR.BOLD);
+            tg.putString(2, 5 + i, "- ( ");
             tg.setForegroundColor(TextColor.ANSI.BLUE_BRIGHT);
             tg.putString(7, 5 + i, String.valueOf(TypesField.WATER.name), SGR.BOLD);
-            tg.setForegroundColor(TextColor.ANSI.WHITE);
-            tg.putString(9, 5 + i, " ) : Woda ", SGR.BOLD);
+            tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+            tg.putString(9, 5 + i, " ) : Woda ");
 
-            tg.putString(2, 6 + i, "- ( ", SGR.BOLD);
+            tg.putString(2, 6 + i, "- ( ");
             tg.setForegroundColor(TextColor.ANSI.YELLOW_BRIGHT);
             tg.putString(7, 6 + i, String.valueOf(TypesField.SHIP.name), SGR.BOLD);
-            tg.setForegroundColor(TextColor.ANSI.WHITE);
-            tg.putString(9, 6 + i, " ) : Statek ", SGR.BOLD);
+            tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+            tg.putString(9, 6 + i, " ) : Statek ");
 
 
-            tg.putString(2, 7 + i, "- ( ", SGR.BOLD);
+            tg.putString(2, 7 + i, "- ( ");
             tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
             tg.putString(7, 7 + i, String.valueOf(TypesField.HIT.name), SGR.BOLD);
-            tg.setForegroundColor(TextColor.ANSI.WHITE);
-            tg.putString(9, 7 + i, " ) : Trafiony Statek ", SGR.BOLD);
+            tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+            tg.putString(9, 7 + i, " ) : Trafiony Statek");
 
 
-            tg.putString(2, 8 + i, "- ( ", SGR.BOLD);
+            tg.putString(2, 8 + i, "- ( ");
             tg.putString(7, 8 + i, String.valueOf(TypesField.MISS.name), SGR.BOLD);
-            tg.putString(9, 8 + i, " ) : Nietrafiony Strzał ", SGR.BOLD);
+            tg.putString(9, 8 + i, " ) : Nietrafiony Strzał ");
 
+            tg.putString(2, 9 + i, "- ( ");
+            tg.setForegroundColor(TextColor.ANSI.CYAN_BRIGHT);
+            tg.putString(7, 9 + i, String.valueOf(TypesField.AIM.name), SGR.BOLD);
+            tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+            tg.putString(9, 9 + i, " ) : Celownik Gracza ");
+
+            tg.setForegroundColor(TextColor.ANSI.GREEN_BRIGHT);
+            for (int j = 3; j < 14; j++)
+                if (j != 8)
+                    tg.putString(2, j, "-", SGR.BOLD);
+            tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
         }
 
         tg.putString(30, 21, "Strona   z 2", SGR.BOLD);
@@ -319,24 +370,24 @@ public class TextView {
         tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
 
         if (player.getName().equals("Wróg") || player.getName().equals("Enemy2")) {
-            tg.putString(48, 15, player.getName() + " strzelił w " + position.toString(position), SGR.BOLD);
+            tg.putString(50, 15, player.getName() + " strzelił w " + position.toString(position), SGR.BOLD);
             tg.setForegroundColor(TextColor.ANSI.MAGENTA_BRIGHT);
             if (isHit) {
                 tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
-                tg.putString(52, 16, "Trafiony!", SGR.BOLD);
+                tg.putString(54, 16, "Trafiony!", SGR.BOLD);
             } else {
                 tg.setForegroundColor(TextColor.ANSI.CYAN_BRIGHT);
-                tg.putString(52, 16, "NieTrafiony!", SGR.BOLD);
+                tg.putString(54, 16, "NieTrafiony!", SGR.BOLD);
             }
             tg.setForegroundColor(TextColor.ANSI.WHITE);
         } else {
-            tg.putString(11, 15, player.getName() + " strzelił w " + position.toString(position), SGR.BOLD);
+            tg.putString(13, 15, "Strzeliłeś w " + position.toString(position), SGR.BOLD);
             if (isHit) {
                 tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
-                tg.putString(15, 16, "Trafiony!", SGR.BOLD);
+                tg.putString(16, 16, "Trafiony!", SGR.BOLD);
             } else {
                 tg.setForegroundColor(TextColor.ANSI.CYAN_BRIGHT);
-                tg.putString(15, 16, "NieTrafiony!", SGR.BOLD);
+                tg.putString(14, 16, "NieTrafiony!", SGR.BOLD);
             }
             tg.setForegroundColor(TextColor.ANSI.WHITE);
         }
@@ -351,10 +402,10 @@ public class TextView {
     public static void printWinner(Player player, Ranking rank) {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.GREEN_BRIGHT);
-        tg.putString(32, 15, "✔ " + player.getName() + " wygrał(a)!", SGR.BOLD);
+        tg.putString(32, 15, "✔ Właśnie Wygrałeś Gre !!", SGR.BOLD);
         if (rank != null) {
             tg.setForegroundColor(TextColor.ANSI.YELLOW_BRIGHT);
-            tg.putString(32, 17, "Twoj Wynik: " + rank.getPoints(), SGR.BOLD);
+            tg.putString(32, 17, "Twoj Wynik(" + player.getName() + "): " + rank.getPoints(), SGR.BOLD);
         }
         try {
             screen.refresh();
@@ -368,10 +419,10 @@ public class TextView {
         TextGraphics tg = screen.newTextGraphics();
 
         tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
-        tg.putString(2, 15, "→ " + ship.getName(), SGR.BOLD);
+        tg.putString(2, 15, "→ " + ship.getName() + ": ", SGR.BOLD);
 
         tg.setForegroundColor(TextColor.ANSI.YELLOW_BRIGHT);
-        tg.putString(4, 16, ship.toString(), SGR.BOLD);
+        tg.putString(2 + ("→ " + ship.getName() + ": ").length(), 15, ship.toString(), SGR.BOLD);
         tg.setForegroundColor(TextColor.ANSI.WHITE);
 
         screen.refresh();
@@ -379,7 +430,12 @@ public class TextView {
 
     public static void printBoards(Player firstPlayer, Player secondPlayer) {
         BattleField firstBattleField = firstPlayer.getBattleField();
-//        BattleField secondBattleField = secondPlayer.getBoard().getbattleFieldHideShips();
+//        BattleField secondBattleField = null;
+//        try {
+//            secondBattleField = secondPlayer.getBattleField().getbattleFieldHideShips();
+//        } catch (GameException e) {
+//            throw new RuntimeException(e);
+//        }
         BattleField secondBattleField = secondPlayer.getBattleField();
 
         TextGraphics tg = screen.newTextGraphics();
@@ -457,8 +513,6 @@ public class TextView {
         TextGraphics tg = screen.newTextGraphics();
         String letters = "abcdefghij";
 
-        screen.clear();
-
         for (int i = 1; i <= 10; i++) {
             tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
             tg.putString(5 + i * 3, 2, i + "   ", SGR.BOLD);
@@ -487,10 +541,45 @@ public class TextView {
                     tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
                 }
             }
-
         }
 
         screen.refresh();
+    }
+
+    public static void showOptionToManuallyAddShip() throws IOException {
+        TextGraphics tg = screen.newTextGraphics();
+        tg.setForegroundColor(TextColor.ANSI.BLUE);
+        tg.putString(0, 17, "-".repeat(100), SGR.BOLD);
+        tg.setForegroundColor(TextColor.ANSI.CYAN);
+        tg.putString(1, 19, "-", SGR.BOLD);
+        tg.putString(1, 20, "-", SGR.BOLD);
+        tg.putString(1, 21, "-", SGR.BOLD);
+        tg.putString(1, 22, "-", SGR.BOLD);
+        tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+        tg.putString(3, 19, "Aby ustawic statek zgodnie z oczekiwaniami nalezy poruszac sie strzalkami.");
+        tg.putString(3, 20, "Poprzez klikniecie klawisza \"r\" mozesz ustawic kierunek statku.");
+        tg.putString(3, 21, "Nie mozna zmieniac kierunku statku gdy sie znajduje blisko krawedzi mapy.");
+        tg.putString(3, 22, "Mozesz zatwierdzic wybor statku na danej pozycji poprzez klikniecie ENTER.");
+        screen.refresh();
+    }
+
+    public static void showOptionToPlay() {
+        TextGraphics tg = screen.newTextGraphics();
+        tg.setForegroundColor(TextColor.ANSI.BLUE);
+        tg.putString(0, 18, "-".repeat(100), SGR.BOLD);
+        tg.setForegroundColor(TextColor.ANSI.CYAN);
+        tg.putString(1, 20, "-", SGR.BOLD);
+        tg.putString(1, 21, "-", SGR.BOLD);
+        tg.putString(1, 22, "-", SGR.BOLD);
+        tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+        tg.putString(3, 20, "Kursor pojawia sie mniej wiecej na srodku planszy.");
+        tg.putString(3, 21, "Aby ustawic celownik zgodnie z oczekiwaniami nalezy poruszac sie strzalkami.");
+        tg.putString(3, 22, "Mozesz zatwierdzic wybor pola strzalu poprzez klikniecie ENTER.");
+        try {
+            screen.refresh();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void printBoardWithFutureShip(BattleField battleField, Ship ship) throws IOException {
@@ -516,7 +605,6 @@ public class TextView {
         else
             for (int i = 0; i < ship.getLength(); i++)
                 tg.putString(ship.getPosition().getRow() * 3 + 8 + i * 3, ship.getPosition().getColumn() + 3, String.valueOf(TypesField.SHIP.name), SGR.BOLD);
-
 
         screen.refresh();
     }
@@ -545,7 +633,7 @@ public class TextView {
                 }
         }
 
-        tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
+        tg.setForegroundColor(TextColor.ANSI.CYAN_BRIGHT);
         tg.putString(46 + shoot.getColumn() * 3, 3 + shoot.getRow(), String.valueOf(TypesField.AIM.name), SGR.BOLD);
 
         try {
@@ -558,7 +646,7 @@ public class TextView {
 
     public static void printRanking(Terminal terminal, int page) throws IOException, GameException, InterruptedException {
         List<Ranking> rankings = Ranking.getRanking();
-        Collections.sort(rankings, Collections.reverseOrder(Comparator.comparingInt(Ranking::getPoints)));
+        rankings.sort(Collections.reverseOrder(Comparator.comparingInt(Ranking::getPoints)));
         TextGraphics tg = screen.newTextGraphics();
         screen.clear();
 
@@ -589,13 +677,20 @@ public class TextView {
                 else if (i == 3)
                     tg.setForegroundColor(TextColor.ANSI.GREEN_BRIGHT);
 
-            tg.putString(23, 6 + i, (j + 1) + ".", SGR.BOLD);
-            tg.putString(33, 6 + i, ranking.getPlayer().getName(), SGR.BOLD);
-            tg.putString(49, 6 + i, String.valueOf(ranking.getPoints()), SGR.BOLD);
-            tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+            if (i == 1 || i == 2 || i == 3) {
+                tg.putString(23, 6 + i, (j + 1) + ".", SGR.BOLD);
+                tg.putString(33, 6 + i, ranking.getPlayer().getName(), SGR.BOLD);
+                tg.putString(49, 6 + i, String.valueOf(ranking.getPoints()), SGR.BOLD);
+                tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+            } else {
+                tg.putString(23, 6 + i, (j + 1) + ".");
+                tg.putString(33, 6 + i, ranking.getPlayer().getName());
+                tg.putString(49, 6 + i, String.valueOf(ranking.getPoints()));
+                tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+            }
         }
 
-        tg.putString(30, 20, "Strona   z " + (rankings.size() / itemsPerPage + 1), SGR.BOLD);
+        tg.putString(30, 20, "Strona   z " + ((rankings.size() - 1) / itemsPerPage + 1), SGR.BOLD);
         tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
         tg.putString(37, 20, String.valueOf(page + 1), SGR.BOLD);
 
@@ -616,7 +711,7 @@ public class TextView {
                             printRanking(terminal, --page);
                     }
                     case ArrowDown -> {
-                        if (page < rankings.size() / itemsPerPage)
+                        if (page < rankings.size() / itemsPerPage && rankings.size() % 10 != 0)
                             printRanking(terminal, ++page);
                     }
                 }
