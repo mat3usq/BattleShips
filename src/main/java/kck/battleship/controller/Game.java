@@ -95,7 +95,8 @@ public class Game {
             } else {
                 do {
                     try {
-                        shoot = attacker.shoot(screen, terminal, defender.getBattleField().getbattleFieldHideShips());
+//                        shoot = attacker.shoot(screen, terminal, defender.getBattleField().getbattleFieldHideShips());
+                        shoot = attacker.shoot(screen, terminal, defender.getBattleField());
                         isAddHit = defender.addShoot(shoot);
                     } catch (GameException e) {
                         if (!attacker.isAI()) TextView.printError(e.getMessage());
@@ -139,7 +140,7 @@ public class Game {
     private void delayForGameplay() {
         try {
             Thread.sleep(2000);
-        } catch (InterruptedException e) {
+        } catch (InterruptedException ignored) {
         }
     }
 

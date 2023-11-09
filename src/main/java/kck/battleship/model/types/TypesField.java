@@ -4,7 +4,8 @@ public enum TypesField {
     HIT('✘'),
     MISS('◉'),
     SHIP ('⎕'),
-    WATER ('ℳ');
+    WATER ('ℳ'),
+    AIM ('✜');
 
     public final char name;
 

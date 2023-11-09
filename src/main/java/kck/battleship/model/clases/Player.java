@@ -69,13 +69,13 @@ public class Player {
                 ships.add(new Ship("LOTNISKOWIEC", 6));
 
             for (Ship ship : ships)
-                addShipManually(screen, terminal, ship, ships);
+                addShipManually(screen, terminal, ship);
 
             TextView.printBoard(battleField);
         } else randAddShips();
     }
 
-    private void addShipManually(Screen screen, Terminal terminal, Ship ship, ArrayList<Ship> ships) throws InterruptedException, IOException {
+    private void addShipManually(Screen screen, Terminal terminal, Ship ship) throws InterruptedException, IOException {
         boolean isAdded;
         String messagePosition = "Wprowadź współrzędną (np. A1): ";
         String messageDirection = "Wprowadź kierunek (h/v): ";
@@ -84,8 +84,10 @@ public class Player {
             TextView.printBoard(battleField);
             TextView.printShip(ship);
 
-            ship.setPosition(UserInput.readPosition(screen, terminal, messagePosition));
-            ship.setDirection(UserInput.readDirection(screen, terminal, messageDirection));
+            UserInput.getMovedShipPosition(ship, terminal, battleField);
+
+//            ship.setPosition(UserInput.readPosition(screen, terminal, messagePosition));
+//            ship.setDirection(UserInput.readDirection(screen, terminal, messageDirection));
 
             try {
                 isAdded = battleField.addShip(ship);
@@ -166,7 +168,8 @@ public class Player {
 
     public Position shoot(Screen screen, Terminal terminal, BattleField defenderBattleField) throws GameException {
         if (isAI) return ComputerShoot(defenderBattleField);
-        else return UserInput.readPosition(screen, terminal, name + ", gdzie chcesz strzelić? ");
+//        else return UserInput.readPosition(screen, terminal, name + ", gdzie chcesz strzelić? ");
+        else return UserInput.readPositionToShot(terminal, defenderBattleField);
     }
 
     public void registerShoot(Position position) {

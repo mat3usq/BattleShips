@@ -9,6 +9,7 @@ import com.googlecode.lanterna.terminal.Terminal;
 import kck.battleship.controller.Game;
 import kck.battleship.controller.GameException;
 import kck.battleship.model.clases.*;
+import kck.battleship.model.types.TypesDirection;
 import kck.battleship.model.types.TypesField;
 import kck.battleship.model.types.TypesShips;
 
@@ -491,6 +492,69 @@ public class TextView {
 
         screen.refresh();
     }
+
+    public static void printBoardWithFutureShip(BattleField battleField, Ship ship) throws IOException {
+        TextGraphics tg = screen.newTextGraphics();
+
+        for (int i = 0; i < BattleField.getLength(); i++)
+            for (int j = 0; j < BattleField.getLength(); j++)
+                if (battleField.getbattleField()[i][j] == TypesField.WATER.name) {
+                    tg.setForegroundColor(TextColor.ANSI.BLUE_BRIGHT);
+                    tg.putString(8 + j * 3, 3 + i, TypesField.WATER.name + " ", SGR.BOLD);
+                    tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+                } else if (battleField.getbattleField()[i][j] == TypesField.SHIP.name) {
+                    tg.setForegroundColor(TextColor.ANSI.YELLOW_BRIGHT);
+                    tg.putString(8 + j * 3, 3 + i, TypesField.SHIP.name + " ", SGR.BOLD);
+                    tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+                }
+
+        tg.setForegroundColor(TextColor.ANSI.MAGENTA_BRIGHT);
+
+        if (ship.getDirection() == TypesDirection.VERTICAL)
+            for (int i = 0; i < ship.getLength(); i++)
+                tg.putString(ship.getPosition().getRow() * 3 + 8, ship.getPosition().getColumn() + 3 + i, String.valueOf(TypesField.SHIP.name), SGR.BOLD);
+        else
+            for (int i = 0; i < ship.getLength(); i++)
+                tg.putString(ship.getPosition().getRow() * 3 + 8 + i * 3, ship.getPosition().getColumn() + 3, String.valueOf(TypesField.SHIP.name), SGR.BOLD);
+
+
+        screen.refresh();
+    }
+
+    public static void printAim(Position shoot, BattleField battleField) {
+        TextGraphics tg = screen.newTextGraphics();
+
+        for (int i = 0; i < BattleField.getLength(); i++) {
+            for (int j = 0; j < BattleField.getLength(); j++)
+                if (battleField.getbattleField()[i][j] == TypesField.WATER.name) {
+                    tg.setForegroundColor(TextColor.ANSI.BLUE_BRIGHT);
+                    tg.putString(46 + j * 3, 3 + i, TypesField.WATER.name + " ", SGR.BOLD);
+                    tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+                } else if (battleField.getbattleField()[i][j] == TypesField.HIT.name) {
+                    tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
+                    tg.putString(46 + j * 3, 3 + i, TypesField.HIT.name + " ", SGR.BOLD);
+                    tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+                } else if (battleField.getbattleField()[i][j] == TypesField.MISS.name) {
+                    tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+                    tg.putString(46 + j * 3, 3 + i, TypesField.MISS.name + " ", SGR.BOLD);
+                    tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+                } else {
+                    tg.setForegroundColor(TextColor.ANSI.YELLOW_BRIGHT);
+                    tg.putString(46 + j * 3, 3 + i, battleField.getbattleField()[i][j] + " ", SGR.BOLD);
+                    tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+                }
+        }
+
+        tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
+        tg.putString(46 + shoot.getColumn() * 3, 3 + shoot.getRow(), String.valueOf(TypesField.AIM.name), SGR.BOLD);
+
+        try {
+            screen.refresh();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     public static void printRanking(Terminal terminal, int page) throws IOException, GameException, InterruptedException {
         List<Ranking> rankings = Ranking.getRanking();

@@ -1,5 +1,5 @@
 159 kgndkfsd
-10 mateusz
+8510 mateusz
 200 asd
 100 sad
 200 d
@@ -7,3 +7,4 @@
 0 asdasd
 505 asdasd
 503 asdsad
+0 mateusz

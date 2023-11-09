@@ -5,8 +5,8 @@ import kck.battleship.controller.GameException;
 import java.util.Random;
 
 public class Position {
-    private final int row;
-    private final int column;
+    private int row;
+    private int column;
 
     public Position(int row, int column) throws GameException {
         if (row < 0 || column < 0)
@@ -21,6 +21,14 @@ public class Position {
 
     public int getColumn() {
         return column;
+    }
+
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    public void setColumn(int column) {
+        this.column = column;
     }
 
     public static Position randPosition() throws GameException {

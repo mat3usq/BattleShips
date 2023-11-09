@@ -1,6 +1,5 @@
 package kck.battleship.view;
 
-
 import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
@@ -10,12 +9,75 @@ import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.Terminal;
 import kck.battleship.controller.GameException;
 import kck.battleship.model.clases.BattleField;
+import kck.battleship.model.clases.Ship;
 import kck.battleship.model.types.TypesDirection;
 import kck.battleship.model.clases.Position;
 
 import java.io.IOException;
 
 public class UserInput {
+    public static void getMovedShipPosition(Ship ship, Terminal terminal, BattleField battleField) throws IOException {
+        KeyStroke keyStroke;
+        boolean canSubmit = true;
+
+        try {
+            if (ship.getPosition() == null) {
+                ship.setPosition(new Position(0, 0));
+                ship.setDirection(TypesDirection.VERTICAL);
+            } else
+                ship.setPosition(new Position(ship.getPosition().getColumn(), ship.getPosition().getRow()));
+        } catch (GameException e) {
+            throw new RuntimeException(e);
+        }
+
+        int x = ship.getLength();
+        int y = 1;
+
+        do {
+            TextView.printBoardWithFutureShip(battleField, ship);
+            keyStroke = terminal.pollInput();
+
+            if (keyStroke != null) {
+                if (keyStroke.getKeyType() == KeyType.Character) {
+                    char c = keyStroke.getCharacter();
+                    if (c == 'r' && ship.getPosition().getColumn() <= 10 - ship.getLength() && ship.getPosition().getRow() <= 10 - ship.getLength())
+                        if (ship.getDirection() == TypesDirection.HORIZONTAL) {
+                            ship.setDirection(TypesDirection.VERTICAL);
+                            x = ship.getLength();
+                            y = 1;
+                        } else {
+                            ship.setDirection(TypesDirection.HORIZONTAL);
+                            x = 1;
+                            y = ship.getLength();
+                        }
+                } else if (keyStroke.getKeyType() == KeyType.ArrowUp) {
+                    if (ship.getPosition().getColumn() != 0) {
+                        ship.getPosition().setColumn(ship.getPosition().getColumn() - 1);
+                    }
+                } else if (keyStroke.getKeyType() == KeyType.ArrowDown) {
+                    if (ship.getPosition().getColumn() < 10 - x) {
+                        ship.getPosition().setColumn(ship.getPosition().getColumn() + 1);
+                    }
+                } else if (keyStroke.getKeyType() == KeyType.ArrowRight) {
+                    if (ship.getPosition().getRow() < 10 - y) {
+                        ship.getPosition().setRow(ship.getPosition().getRow() + 1);
+                    }
+                } else if (keyStroke.getKeyType() == KeyType.ArrowLeft) {
+                    if (ship.getPosition().getRow() != 0) {
+                        ship.getPosition().setRow(ship.getPosition().getRow() - 1);
+                    }
+                } else if (keyStroke.getKeyType() == KeyType.Enter) {
+                    try {
+                        ship.setPosition(new Position(ship.getPosition().getColumn(), ship.getPosition().getRow()));
+                    } catch (GameException e) {
+                        throw new RuntimeException(e);
+                    }
+                    canSubmit = false;
+                }
+            }
+        }
+        while (canSubmit);
+    }
 
     public static String getUserInput(Screen screen, Terminal terminal, String message) throws IOException, InterruptedException, GameException {
         TextGraphics tg = screen.newTextGraphics();
@@ -101,6 +163,52 @@ public class UserInput {
             Thread.sleep(10);
         } while (userResponse == '\0');
         return userResponse == 'y';
+    }
+
+    public static Position readPositionToShot(Terminal terminal, BattleField defenderBattleField) {
+        KeyStroke keyStroke;
+        Position shoot;
+        boolean canSubmit = true;
+        try {
+            shoot = new Position(4, 4);
+        } catch (GameException e) {
+            throw new RuntimeException(e);
+        }
+
+        do {
+            TextView.printAim(shoot, defenderBattleField);
+
+            try {
+                keyStroke = terminal.pollInput();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            if (keyStroke != null) {
+                if (keyStroke.getKeyType() == KeyType.ArrowUp) {
+                    if (shoot.getRow() != 0) {
+                        shoot.setRow(shoot.getRow() - 1);
+                    }
+                } else if (keyStroke.getKeyType() == KeyType.ArrowDown) {
+                    if (shoot.getRow() < 9) {
+                        shoot.setRow(shoot.getRow() + 1);
+                    }
+                } else if (keyStroke.getKeyType() == KeyType.ArrowRight) {
+                    if (shoot.getColumn() < 9) {
+                        shoot.setColumn(shoot.getColumn() + 1);
+                    }
+                } else if (keyStroke.getKeyType() == KeyType.ArrowLeft) {
+                    if (shoot.getColumn() != 0) {
+                        shoot.setColumn(shoot.getColumn() - 1);
+                    }
+                } else if (keyStroke.getKeyType() == KeyType.Enter) {
+                    canSubmit = false;
+                }
+            }
+        }
+        while (canSubmit);
+
+        return shoot;
     }
 
     public static Position readPosition(Screen screen, Terminal terminal, String message) {
