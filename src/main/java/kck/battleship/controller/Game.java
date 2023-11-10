@@ -40,7 +40,6 @@ public class Game {
         this.terminal = terminal;
 
         addAllShips();
-        TextView.printBoards(firstPlayer, secondPlayer);
 
         if (firstPlayer.isAI() && secondPlayer.isAI())
             playGame(firstPlayer, secondPlayer);
