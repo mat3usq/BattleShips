@@ -643,7 +643,6 @@ public class TextView {
         }
     }
 
-
     public static void printRanking(Terminal terminal, int page) throws IOException, GameException, InterruptedException {
         List<Ranking> rankings = Ranking.getRanking();
         rankings.sort(Collections.reverseOrder(Comparator.comparingInt(Ranking::getPoints)));
