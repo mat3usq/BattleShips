@@ -44,7 +44,7 @@ public class TextView {
     }
 
 
-    public static void printShipImage(){
+    public static void printShipImage() {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.BLUE_BRIGHT);
         tg.putString(0, 14, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~o~~o~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", SGR.BOLD);
@@ -223,7 +223,7 @@ public class TextView {
     private static void printRules(Terminal terminal) throws IOException, GameException, InterruptedException {
         printInfoRules(1);
 
-        Boolean b = true;
+        boolean b = true;
         while (b) {
             KeyStroke k = terminal.pollInput();
             if (k != null)
@@ -268,7 +268,7 @@ public class TextView {
             tg.putString(31, 11, "Rozgrywka", SGR.BOLD, SGR.ITALIC);
             tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
             tg.putString(2, 13, "- Postępuj zgodnie z instrukcjami w celu skonfigurowania swoich " + TypesShips.countAllShips() + " statków.");
-            tg.putString(2, 14, "- Umieścić statek podając współrzędną początkową (A1-J10) i kierunek (h/v).");
+            tg.putString(2, 14, "- Umieścić statek ustawiajac go poprzez operowanie strzalkami.");
             tg.putString(2, 15, "- Statki nie mogą na siebie nachodzić ani stykać się.");
             tg.putString(2, 16, "- Gdy obaj gracze skonfigurują swoje statki, bitwa się rozpoczyna!");
             tg.putString(2, 17, "- Wystrzel rakiety w statki przeciwnika, zgadując współrzędne.");
@@ -381,7 +381,11 @@ public class TextView {
             }
             tg.setForegroundColor(TextColor.ANSI.WHITE);
         } else {
-            tg.putString(13, 15, "Strzeliłeś w " + position.toString(position), SGR.BOLD);
+            if (player.getName().equals("Enemy"))
+                tg.putString(13, 15, player.getName() + " strzelił w " + position.toString(position), SGR.BOLD);
+            else
+                tg.putString(13, 15, "Strzeliłeś w " + position.toString(position), SGR.BOLD);
+
             if (isHit) {
                 tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
                 tg.putString(16, 16, "Trafiony!", SGR.BOLD);
@@ -402,7 +406,13 @@ public class TextView {
     public static void printWinner(Player player, Ranking rank) {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.GREEN_BRIGHT);
-        tg.putString(30, 15, "✔ Wygrałeś Gre !!", SGR.BOLD);
+
+        if (player.isAI())
+            tg.putString(30, 15, "✔ " + player.getName() + " Gre !!", SGR.BOLD);
+        else
+            tg.putString(30, 15, "✔ Wygrałeś Gre !!", SGR.BOLD);
+
+
         if (rank != null) {
             tg.setForegroundColor(TextColor.ANSI.YELLOW_BRIGHT);
             tg.putString(32, 17, "Twoj Wynik: " + rank.getPoints(), SGR.BOLD);
@@ -442,6 +452,12 @@ public class TextView {
         String letters = "abcdefghij";
 
         screen.clear();
+
+        tg.setForegroundColor(TextColor.ANSI.MAGENTA_BRIGHT);
+        tg.putString(18, 1, firstPlayer.getName(), SGR.BOLD);
+        tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
+        tg.putString(57, 1, secondPlayer.getName(), SGR.BOLD);
+
 
         for (int i = 1; i <= 10; i++) {
             tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
@@ -575,6 +591,23 @@ public class TextView {
         tg.putString(3, 20, "Kursor pojawia sie mniej wiecej na srodku planszy.");
         tg.putString(3, 21, "Aby ustawic celownik zgodnie z oczekiwaniami nalezy poruszac sie strzalkami.");
         tg.putString(3, 22, "Mozesz zatwierdzic wybor pola strzalu poprzez klikniecie ENTER.");
+        try {
+            screen.refresh();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void showOptionToSimulatedGame() {
+        TextGraphics tg = screen.newTextGraphics();
+        tg.setForegroundColor(TextColor.ANSI.BLUE);
+        tg.putString(0, 18, "-".repeat(100), SGR.BOLD);
+        tg.setForegroundColor(TextColor.ANSI.CYAN);
+        tg.putString(1, 20, "-", SGR.BOLD);
+        tg.putString(1, 21, "-", SGR.BOLD);
+        tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+        tg.putString(3, 20, "W tej grze nie mozesz strzelac, ale mozesz za to obserwowac bitwe!");
+        tg.putString(3, 21, "Symulacja skonczy sie po odpowiednim komunikacie.");
         try {
             screen.refresh();
         } catch (IOException e) {

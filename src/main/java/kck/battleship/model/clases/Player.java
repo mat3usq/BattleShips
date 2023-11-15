@@ -184,7 +184,7 @@ public class Player {
     }
 
     public void getShop() {
-        String fileName = "src/main/java/kck/battleship/model/data/shop.txt"; // Nazwa pliku, w którym zapisywane są wyniki
+        String fileName = "src/main/java/kck/battleship/model/data/shop.txt";
 
         try {
             File plik = new File(fileName);
@@ -220,11 +220,11 @@ public class Player {
     }
 
     private void removeShopEntries() {
-        String fileName = "src/main/java/kck/battleship/model/data/shop.txt"; // Nazwa pliku, w którym zapisywane są wyniki
+        String fileName = "src/main/java/kck/battleship/model/data/shop.txt";
 
         try {
             File inputFile = new File(fileName);
-            File tempFile = new File(fileName + "_temp"); // Tymczasowy plik o innej nazwie
+            File tempFile = new File(fileName + "_temp");
 
             BufferedReader reader = new BufferedReader(new FileReader(inputFile));
             BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
@@ -237,7 +237,6 @@ public class Player {
                         String playerName = parts[0];
                         int shopOption = Integer.parseInt(parts[1]);
 
-                        // Jeśli warunek nie jest spełniony, zapisz wiersz do pliku tymczasowego
                         if (!(playerName.equals(name) && (shopOption == 0 || shopOption == 1))) {
                             writer.write(linia + System.lineSeparator());
                         }
@@ -247,11 +246,9 @@ public class Player {
                 }
             }
 
-            // Zamknij obiekty reader i writer
             reader.close();
             writer.close();
 
-            // Usuń oryginalny plik i zmień nazwę tymczasowego pliku na oryginalny
             if (inputFile.delete() && tempFile.renameTo(inputFile)) {
                 System.out.println("Usunięto wiersze spełniające warunek.");
             } else {

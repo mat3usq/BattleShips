@@ -37,20 +37,16 @@ public class Ranking {
         try {
             File plik = new File("src/main/java/kck/battleship/model/data/ranking.txt");
 
-            // Tworzenie pliku, jeśli nie istnieje
             if (!plik.exists()) {
                 plik.createNewFile();
             }
 
-            // Otwarcie pliku do dopisywania
             FileWriter fileWriter = new FileWriter(plik, true);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
-            // Dopisanie tekstu do pliku
             bufferedWriter.write(points + " " + player.getName());
-            bufferedWriter.newLine(); // Dodanie nowej linii, jeśli to konieczne
+            bufferedWriter.newLine();
 
-            // Zamknięcie strumieni
             bufferedWriter.close();
             fileWriter.close();
         } catch (IOException e) {
@@ -59,7 +55,7 @@ public class Ranking {
     }
 
     public static List<Ranking> getRanking() {
-        String fileName = "src/main/java/kck/battleship/model/data/ranking.txt"; // Nazwa pliku, w którym zapisywane są wyniki
+        String fileName = "src/main/java/kck/battleship/model/data/ranking.txt";
 
         List<Ranking> rankings = new ArrayList<>();
 
@@ -109,20 +105,16 @@ public class Ranking {
         try {
             File plik = new File("src/main/java/kck/battleship/model/data/shop.txt");
 
-            // Tworzenie pliku, jeśli nie istnieje
             if (!plik.exists()) {
                 plik.createNewFile();
             }
 
-            // Otwarcie pliku do dopisywania
             FileWriter fileWriter = new FileWriter(plik, true);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
-            // Dopisanie tekstu do pliku
             bufferedWriter.write(name + " " + x);
-            bufferedWriter.newLine(); // Dodanie nowej linii, jeśli to konieczne
+            bufferedWriter.newLine();
 
-            // Zamknięcie strumieni
             bufferedWriter.close();
             fileWriter.close();
         } catch (IOException e) {
@@ -151,7 +143,6 @@ public class Ranking {
                     } else return "Do Zobaczenia innym razem!";
                 } else return "Masz za malo punktow, aby to kupic!";
             }
-
         return "Nie znaleziono gracza o takim Nick'u!";
     }
 }

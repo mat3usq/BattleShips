@@ -69,7 +69,10 @@ public class Game {
         Position shoot = null;
         boolean isHit, isAddHit;
 
-        TextView.showOptionToPlay();
+        if(attacker.isAI() && defender.isAI())
+            TextView.showOptionToSimulatedGame();
+        else
+            TextView.showOptionToPlay();
 
         if (attacker.areShipsStillSailing()) {
             if (defender.getDurabilityForceField() > 0) {
