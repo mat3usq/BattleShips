@@ -34,21 +34,30 @@ public class Ranking {
     }
 
     public void save() {
-        try {
-            File plik = new File("src/main/java/kck/battleship/model/data/ranking.txt");
-
-            if (!plik.exists()) {
-                plik.createNewFile();
+        List<Ranking> rankings = getRanking();
+        boolean isPlayer = false;
+        for (Ranking r : rankings)
+            if (r.player.getName().equals(player.getName())) {
+                r.setPoints(r.getPoints() + points);
+                isPlayer = true;
+                break;
             }
 
-            FileWriter fileWriter = new FileWriter(plik, true);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+        if (!isPlayer)
+            rankings.add(new Ranking(player, points));
 
-            bufferedWriter.write(points + " " + player.getName());
-            bufferedWriter.newLine();
+        saveRanking(rankings);
+    }
 
-            bufferedWriter.close();
-            fileWriter.close();
+    private static void saveRanking(List<Ranking> rankings) {
+        String fileName = "src/main/java/kck/battleship/model/data/ranking.txt";
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            for (Ranking ranking : rankings) {
+                String line = ranking.points + " " + ranking.player.getName();
+                writer.write(line);
+                writer.newLine();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -87,20 +96,6 @@ public class Ranking {
         return rankings;
     }
 
-    private static void saveRanking(List<Ranking> rankings) {
-        String fileName = "src/main/java/kck/battleship/model/data/ranking.txt";
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            for (Ranking ranking : rankings) {
-                String line = ranking.points + " " + ranking.player.getName();
-                writer.write(line);
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     private static void saveBuyer(String name, int x) {
         try {
             File plik = new File("src/main/java/kck/battleship/model/data/shop.txt");
@@ -123,13 +118,12 @@ public class Ranking {
     }
 
     public static String enoughPoints(String name, int price, Screen screen, Terminal terminal, int x) throws IOException, InterruptedException {
-
         List<Ranking> rankings = getRanking();
 
         for (Ranking r : rankings)
             if (name.equals(r.player.getName())) {
                 if (r.getPoints() >= price) {
-                    Boolean response = UserInput.question(screen, terminal, "Czy chcesz napewno to kupic(y/n)?");
+                    boolean response = UserInput.question(screen, terminal, "Czy chcesz napewno to kupic(y/n)?");
 
                     if (response) {
                         r.setPoints(r.getPoints() - price);

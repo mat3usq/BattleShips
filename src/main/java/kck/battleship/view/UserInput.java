@@ -102,33 +102,26 @@ public class UserInput {
                     if (userInput.toString().trim().length() > 0) {
                         canSubmit = true;
                     }
-                } else if (keyStroke.getKeyType() == KeyType.Escape) {
-                    TextView.printMenuPage(0);
-                    TextView.chooseOption(terminal, 0);
-                    return null;
                 }
             }
 
-            screen.clear();
-            TextView.printTitle();
-
             tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
             if (message.length() > 40)
-                tg.putString(12, 12, message, SGR.BOLD);
+                tg.putString(14, 16, message, SGR.BOLD);
             else
-                tg.putString(20, 12, message, SGR.BOLD);
+                tg.putString(22, 16, message, SGR.BOLD);
 
-            tg.putString(25, 14, "NICK: ", SGR.BOLD);
+            tg.putString(27, 18, "NICK: ", SGR.BOLD);
             tg.setForegroundColor(TextColor.ANSI.GREEN_BRIGHT);
-            tg.putString(31, 14, String.valueOf(userInput), SGR.BOLD);
-            tg.putString(31 + String.valueOf(userInput).length(), 14, "|  ", SGR.BOLD, SGR.BLINK);
+            tg.putString(33, 18, String.valueOf(userInput), SGR.BOLD);
+            tg.putString(33 + String.valueOf(userInput).length(), 18, "|  ", SGR.BOLD, SGR.BLINK);
 
             screen.refresh();
 
             Thread.sleep(10);
         } while (!canSubmit);
 
-        tg.putString(31 + String.valueOf(userInput).length(), 14, "  ");
+        tg.putString(33 + String.valueOf(userInput).length(), 18, "  ");
         screen.refresh();
 
         return userInput.toString();
@@ -149,16 +142,22 @@ public class UserInput {
 
                     if (c == 'y' || c == 'n')
                         userResponse = c;
+                } else if (keyStroke.getKeyType() == KeyType.Escape) {
+                    try {
+                        TextView.printShop(terminal);
+                    } catch (GameException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
 
-            tg.putString(16, 17, message, SGR.BOLD);
-            tg.putString(25, 19, "Odpowiedź: ", SGR.BOLD);
+            tg.putString(20, 11, message, SGR.BOLD);
+            tg.putString(26, 13, "Odpowiedź: ", SGR.BOLD);
             tg.setForegroundColor(TextColor.ANSI.GREEN_BRIGHT);
-            tg.putString(36, 19, String.valueOf((userResponse == '\0' ? "" : userResponse)), SGR.BOLD);
+            tg.putString(37, 13, String.valueOf((userResponse == '\0' ? "" : userResponse)), SGR.BOLD);
             if (userResponse == '\0')
-                tg.putString(36, 19, "|  ", SGR.BOLD, SGR.BLINK);
+                tg.putString(37, 13, "|  ", SGR.BOLD, SGR.BLINK);
             else
-                tg.putString(37, 19, "|  ", SGR.BOLD, SGR.BLINK);
+                tg.putString(38, 13, "|  ", SGR.BOLD, SGR.BLINK);
             screen.refresh();
             Thread.sleep(10);
         } while (userResponse == '\0');

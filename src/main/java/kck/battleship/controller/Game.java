@@ -55,12 +55,12 @@ public class Game {
         TextView.chooseOption(terminal, 0);
     }
 
-    private void playGame(Player player1, Player player2) throws GameException {
+    private void playGame(Player player1, Player player2){
         while (playTurn(player1, player2, false) && playTurn(player2, player1, true)) {
         }
     }
 
-    private void playGameHumanVsAI(Player humanPlayer, Player aiPlayer) throws GameException {
+    private void playGameHumanVsAI(Player humanPlayer, Player aiPlayer){
         while (playTurn(humanPlayer, aiPlayer, false) && playTurn(aiPlayer, humanPlayer, false)) {
         }
     }
@@ -98,8 +98,7 @@ public class Game {
             } else {
                 do {
                     try {
-//                        shoot = attacker.shoot(terminal, defender.getBattleField().getbattleFieldHideShips());
-                        shoot = attacker.shoot(terminal, defender.getBattleField());
+                        shoot = attacker.shoot(terminal, defender.getBattleField().getbattleFieldHideShips());
                         isAddHit = defender.addShoot(shoot);
                     } catch (GameException e) {
                         if (!attacker.isAI()) TextView.printError(e.getMessage());
@@ -171,7 +170,10 @@ public class Game {
     }
 
     private boolean shouldRandomlyArrangeShips() throws IOException, InterruptedException {
-        return UserInput.question(screen, terminal, "Czy chcesz losowo rozmiescic swoje statki (y/n): ");
+        TextGraphics tg = screen.newTextGraphics();
+        for (int i = 9; i <22; i++)
+            tg.putString(1, i, " ".repeat(100), SGR.BOLD);
+        return UserInput.question(screen, terminal, "Czy chcesz losowo rozmiescic statki (y/n)?");
     }
 
     private void printResultGame() {

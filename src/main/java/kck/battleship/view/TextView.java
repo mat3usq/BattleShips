@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.util.*;
 
 public class TextView {
+    private static String name;
+
     private static Screen screen;
 
     private static final List<String> menuList = new ArrayList<>(Arrays.asList("Rozpocznij Grę", "Symuluj Grę", "Sklep", "Ranking", "Zasady Gry", "Wyjście"));
@@ -87,7 +89,7 @@ public class TextView {
     }
 
     public static void waitForKeyHomePage(Terminal terminal) throws IOException {
-        Boolean b = true;
+        boolean b = true;
         while (b) {
             KeyStroke k = terminal.pollInput();
             if (k != null)
@@ -99,10 +101,28 @@ public class TextView {
                         b = false;
                     }
                     case Enter -> {
+                        printLoginPage(terminal);
                         printMenuPage(0);
                         b = false;
                     }
                 }
+        }
+    }
+
+    public static void printLoginPage(Terminal terminal) {
+        screen.clear();
+        printTitle();
+
+        TextGraphics tg = screen.newTextGraphics();
+        tg.setForegroundColor(TextColor.ANSI.CYAN);
+        tg.putString(2,10," ___  _  _  ____  ___  ___     _  _  __  __  _ _   _  _   __   __  __  ___ \n", SGR.BOLD);
+        tg.putString(2,11,"(  _)( \\( )(_  _)(  _)(  ,)   ( \\( )(  )/ _)( ) ) ( \\( ) (  ) (  \\/  )(  _)\n", SGR.BOLD);
+        tg.putString(2,12," ) _) )  (   )(   ) _) )  \\    )  (  )(( (_  )  \\  )  (  /__\\  )    (  ) _)\n", SGR.BOLD);
+        tg.putString(2,13,"(___)(_)\\_) (__) (___)(_)\\_)  (_)\\_)(__)\\__)(_)\\_)(_)\\_)(_)(_)(_/\\/\\_)(___)", SGR.BOLD);
+
+        try {
+            name = UserInput.getUserInput(screen, terminal, "Wprowadź swoj NICK i naciśnij Enter:");
+        } catch (IOException | GameException | InterruptedException ignored) {
         }
     }
 
@@ -146,9 +166,9 @@ public class TextView {
         printTitle();
         printShipImage();
         tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
-        tg.putString(30, 11, "Dziekujemy Za     !!!", SGR.BOLD);
+        tg.putString(28, 11, "Dziekujemy Za     !!!", SGR.BOLD);
         tg.setForegroundColor(TextColor.ANSI.GREEN_BRIGHT);
-        tg.putString(44, 11, "Gre", SGR.BOLD, SGR.BLINK);
+        tg.putString(42, 11, "Gre", SGR.BOLD, SGR.BLINK);
 
         try {
             screen.refresh();
@@ -162,7 +182,7 @@ public class TextView {
     }
 
     public static void chooseOption(Terminal terminal, int selected) throws IOException, GameException, InterruptedException {
-        Boolean b = true;
+        boolean b = true;
         while (b) {
             KeyStroke k = terminal.pollInput();
             if (k != null)
@@ -194,7 +214,6 @@ public class TextView {
             if (i == selected)
                 switch (menuList.get(i)) {
                     case "Rozpocznij Grę" -> {
-                        String name = UserInput.getUserInput(screen, terminal, "Wprowadź swoj NICK i naciśnij Enter:");
                         if (name != null) {
                             Game game = new Game(name);
                             game.run(screen, terminal);
@@ -440,7 +459,7 @@ public class TextView {
 
     public static void printBoards(Player firstPlayer, Player secondPlayer) {
         BattleField firstBattleField = firstPlayer.getBattleField();
-//        BattleField secondBattleField = null;
+//        BattleField secondBattleField;
 //        try {
 //            secondBattleField = secondPlayer.getBattleField().getbattleFieldHideShips();
 //        } catch (GameException e) {
@@ -728,7 +747,7 @@ public class TextView {
 
         screen.refresh();
 
-        Boolean b = true;
+        boolean b = true;
         while (b) {
             KeyStroke k = terminal.pollInput();
             if (k != null)
@@ -751,10 +770,10 @@ public class TextView {
 
     }
 
-    private static void printShop(Terminal terminal) throws IOException, GameException, InterruptedException {
+    public static void printShop(Terminal terminal) throws IOException, GameException, InterruptedException {
         int selected = 0;
         printItemsInShop(selected);
-        Boolean b = true;
+        boolean b = true;
         while (b) {
             KeyStroke k = terminal.pollInput();
             if (k != null)
@@ -773,7 +792,10 @@ public class TextView {
                         selected = 1;
                     }
                     case Enter -> {
-                        String name = UserInput.getUserInput(screen, terminal, "Podaj swoj nick, aby kupic w sklepie wybrana rzecz!");
+                        TextGraphics tg = screen.newTextGraphics();
+                        for (int i = 8; i <21; i++)
+                            tg.putString(1, i, " ".repeat(100), SGR.BOLD);
+
                         String s;
 
                         if (selected == 0)
@@ -781,13 +803,20 @@ public class TextView {
                         else
                             s = Ranking.enoughPoints(name, 300, screen, terminal, selected);
 
-                        TextGraphics tg = screen.newTextGraphics();
                         if (s == null) {
                             tg.setForegroundColor(TextColor.ANSI.GREEN_BRIGHT);
-                            tg.putString(20, 21, "Pomyslnie zakupiono wybrana rzecz!", SGR.BOLD);
+                            tg.putString(20, 15, "Pomyslnie zakupiono wybrana rzecz!", SGR.BOLD);
                         } else {
-                            tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
-                            tg.putString(20, 19, s, SGR.BOLD);
+                            if(s.length() < 28)
+                            {
+                                tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
+                                tg.putString(25, 15, s, SGR.BOLD);
+                            }
+                            else
+                            {
+                                tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
+                                tg.putString(20, 15, s, SGR.BOLD);
+                            }
                         }
 
                         screen.refresh();
@@ -799,7 +828,7 @@ public class TextView {
         }
     }
 
-    private static void printItemsInShop(int x) {
+    static void printItemsInShop(int x) {
         screen.clear();
 
         TextGraphics tg = screen.newTextGraphics();
@@ -820,35 +849,35 @@ public class TextView {
         if (x == 0)
             tg.setForegroundColor(TextColor.ANSI.MAGENTA_BRIGHT);
 
-        tg.putString(1, 9, "+~^~^~^~^^~^~^~^~^~^~^~^~~^~^~^~^~+", SGR.BOLD);
-        tg.putString(1, 10, "|                   _,:`,:'_=-    |", SGR.BOLD);
-        tg.putString(1, 11, "|                ,:',:@,:\"'       |", SGR.BOLD);
-        tg.putString(1, 12, "|             ,:',:`,:',?         |", SGR.BOLD);
-        tg.putString(1, 13, "|         __||_||_||_||__         |", SGR.BOLD);
-        tg.putString(1, 14, "|    ____[\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"]____    |", SGR.BOLD);
-        tg.putString(1, 15, "|    \\ \" '''''''''''''''''''' |   |", SGR.BOLD);
-        tg.putString(1, 16, "+~^~^~^~^^~^LOTNISKOWIEC^~^~^~^~^~+\n", SGR.BOLD);
+        tg.putString(4, 9, "+~^~^~^~^^~^~^~^~^~^~^~^~~^~^~^~^~+", SGR.BOLD);
+        tg.putString(4, 10, "|                   _,:`,:'_=-    |", SGR.BOLD);
+        tg.putString(4, 11, "|                ,:',:@,:\"'       |", SGR.BOLD);
+        tg.putString(4, 12, "|             ,:',:`,:',?         |", SGR.BOLD);
+        tg.putString(4, 13, "|         __||_||_||_||__         |", SGR.BOLD);
+        tg.putString(4, 14, "|    ____[\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"]____    |", SGR.BOLD);
+        tg.putString(4, 15, "|    \\ \" '''''''''''''''''''' |   |", SGR.BOLD);
+        tg.putString(4, 16, "+~^~^~^~^^~^LOTNISKOWIEC^~^~^~^~^~+\n", SGR.BOLD);
         tg.setForegroundColor(TextColor.ANSI.CYAN_BRIGHT);
-        tg.putString(1, 18, "             Cena: 500", SGR.BOLD);
+        tg.putString(4, 18, "             Cena: 500", SGR.BOLD);
         tg.setForegroundColor(TextColor.ANSI.DEFAULT);
 
         tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
 
         if (x == 1)
             tg.setForegroundColor(TextColor.ANSI.MAGENTA);
-        tg.putString(42, 8, "        _.,,,,,,,,,._\n", SGR.BOLD);
-        tg.putString(42, 9, "     .d''            ``b.\n", SGR.BOLD);
-        tg.putString(42, 10, "   .p'     Obiekty     `q.\n", SGR.BOLD);
-        tg.putString(42, 11, " .d'     w magicznym     `b.\n", SGR.BOLD);
-        tg.putString(42, 12, ".d'  polu moga byc mniej  `b.\n", SGR.BOLD);
-        tg.putString(42, 13, " ::  podatne na obrazenia  ::\n", SGR.BOLD);
-        tg.putString(42, 14, " `p.  rakietowe (działa  .q'\n", SGR.BOLD);
-        tg.putString(42, 15, "  `p.    na pierwsze    .q'\n", SGR.BOLD);
-        tg.putString(42, 16, "   `b.    5 strzałów)  .d'\n", SGR.BOLD);
-        tg.putString(42, 17, "     `q..            ..,'\n", SGR.BOLD);
-        tg.putString(42, 18, "        '',,,,,,,,,,''\n", SGR.BOLD);
+        tg.putString(45, 8, "        _.,,,,,,,,,._\n", SGR.BOLD);
+        tg.putString(45, 9, "     .d''            ``b.\n", SGR.BOLD);
+        tg.putString(45, 10, "   .p'     Obiekty     `q.\n", SGR.BOLD);
+        tg.putString(45, 11, " .d'     w magicznym     `b.\n", SGR.BOLD);
+        tg.putString(45, 12, ".d'  polu moga byc mniej  `b.\n", SGR.BOLD);
+        tg.putString(45, 13, " ::  podatne na obrazenia  ::\n", SGR.BOLD);
+        tg.putString(45, 14, " `p.  rakietowe (działa  .q'\n", SGR.BOLD);
+        tg.putString(45, 15, "  `p.    na pierwsze    .q'\n", SGR.BOLD);
+        tg.putString(45, 16, "   `b.    5 strzałów)  .d'\n", SGR.BOLD);
+        tg.putString(45, 17, "     `q..            ..,'\n", SGR.BOLD);
+        tg.putString(45, 18, "        '',,,,,,,,,,''\n", SGR.BOLD);
         tg.setForegroundColor(TextColor.ANSI.CYAN_BRIGHT);
-        tg.putString(42, 20, "           Cena: 300", SGR.BOLD);
+        tg.putString(45, 20, "           Cena: 300", SGR.BOLD);
         tg.setForegroundColor(TextColor.ANSI.DEFAULT);
 
 
