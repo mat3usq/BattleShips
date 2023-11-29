@@ -111,7 +111,7 @@ public class Player {
     private void addShipRandomly(Random random, Ship ship) {
         boolean addedSuccessfully = false;
         int failedAttempts = 0;
-        int limit = 1000;
+        int limit = 10000;
 
         while (failedAttempts <= limit) {
             try {
