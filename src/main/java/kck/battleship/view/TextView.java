@@ -459,13 +459,13 @@ public class TextView {
 
     public static void printBoards(Player firstPlayer, Player secondPlayer) {
         BattleField firstBattleField = firstPlayer.getBattleField();
-//        BattleField secondBattleField;
-//        try {
-//            secondBattleField = secondPlayer.getBattleField().getbattleFieldHideShips();
-//        } catch (GameException e) {
-//            throw new RuntimeException(e);
-//        }
-        BattleField secondBattleField = secondPlayer.getBattleField();
+        BattleField secondBattleField;
+        try {
+            secondBattleField = secondPlayer.getBattleField().getbattleFieldHideShips();
+        } catch (GameException e) {
+            throw new RuntimeException(e);
+        }
+//        BattleField secondBattleField = secondPlayer.getBattleField();
 
         TextGraphics tg = screen.newTextGraphics();
         String letters = "abcdefghij";
