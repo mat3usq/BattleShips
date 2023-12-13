@@ -128,7 +128,10 @@ public class Player {
         }
 
         if (failedAttempts > limit)
+        {
             reset();
+            randAddShips();
+        }
     }
 
     private ArrayList<Ship> createShips() {
