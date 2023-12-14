@@ -7,26 +7,20 @@ import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.swing.AWTTerminalFontConfiguration;
 import kck.battleship.controller.GameException;
+import kck.battleship.controller.ViewController;
 import kck.battleship.view.TextView;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.Scanner;
 
 public class BattleShips {
-    public static void main(String[] args) throws IOException, GameException, InterruptedException {
-        Font myFont = new Font("Monospaced", Font.PLAIN, 24);
-        AWTTerminalFontConfiguration myFontConfiguration = AWTTerminalFontConfiguration.newInstance(myFont);
-        DefaultTerminalFactory dtf = new DefaultTerminalFactory();
-        dtf.setForceAWTOverSwing(true);
-        dtf.setTerminalEmulatorFontConfiguration(myFontConfiguration);
-        Terminal terminal = dtf.createTerminal();
-        Screen screen = new TerminalScreen(terminal);
-        screen.startScreen();
-        screen.setCursorPosition(null);
-        new TextView(screen);
-
-        TextView.printHomePage();
-        TextView.waitForKeyHomePage(terminal);
-        TextView.chooseOption(terminal, 0);
+    public static void main(String[] args) throws IOException, InterruptedException, GameException {
+        System.out.println("Wybierz widok:");
+        System.out.println("1. Widok tekstowy");
+        System.out.println("1. Widok graficzny");
+        Scanner scan = new Scanner(System.in);
+        int x = scan.nextInt();
+        new ViewController(x);
     }
 }

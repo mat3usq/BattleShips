@@ -8,6 +8,7 @@ import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.Terminal;
 import kck.battleship.controller.GameException;
+import kck.battleship.controller.ViewController;
 import kck.battleship.model.clases.BattleField;
 import kck.battleship.model.clases.Ship;
 import kck.battleship.model.types.TypesDirection;
@@ -16,6 +17,8 @@ import kck.battleship.model.clases.Position;
 import java.io.IOException;
 
 public class UserInput {
+    private static final View view = ViewController.getInstance();
+
     public static void getMovedShipPosition(Ship ship, Terminal terminal, BattleField battleField) throws IOException {
         KeyStroke keyStroke;
         boolean canSubmit = true;
@@ -34,7 +37,7 @@ public class UserInput {
         int y = 1;
 
         do {
-            TextView.printBoardWithFutureShip(battleField, ship);
+            view.printBoardWithFutureShip(battleField, ship);
             keyStroke = terminal.pollInput();
 
             if (keyStroke != null) {
@@ -144,7 +147,7 @@ public class UserInput {
                         userResponse = c;
                 } else if (keyStroke.getKeyType() == KeyType.Escape) {
                     try {
-                        TextView.printShop(terminal);
+                        view.printShop(terminal);
                     } catch (GameException e) {
                         throw new RuntimeException(e);
                     }
@@ -175,7 +178,7 @@ public class UserInput {
         }
 
         do {
-            TextView.printAim(shoot, defenderBattleField);
+            view.printAim(shoot, defenderBattleField);
 
             try {
                 keyStroke = terminal.pollInput();

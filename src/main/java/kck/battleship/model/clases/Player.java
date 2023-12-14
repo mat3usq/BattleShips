@@ -3,10 +3,12 @@ package kck.battleship.model.clases;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.Terminal;
 import kck.battleship.controller.GameException;
+import kck.battleship.controller.ViewController;
 import kck.battleship.model.types.TypesDirection;
 import kck.battleship.model.types.TypesShips;
 import kck.battleship.view.TextView;
 import kck.battleship.view.UserInput;
+import kck.battleship.view.View;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ public class Player {
     private final BattleField battleField = new BattleField();
     private final ArrayList<Position> shoots = new ArrayList<>();
     private final ArrayList<Position> nextShoots = new ArrayList<>();
+    private static final View view = ViewController.getInstance();
 
     public Player(String name) {
         this.name = name;
@@ -71,7 +74,7 @@ public class Player {
             for (Ship ship : ships)
                 addShipManually(screen, terminal, ship);
 
-            TextView.printBoard(battleField);
+            view.printBoard(battleField);
         } else randAddShips();
     }
 
@@ -79,19 +82,19 @@ public class Player {
         boolean isAdded;
 
         screen.clear();
-        TextView.showOptionToManuallyAddShip();
+        view.showOptionToManuallyAddShip();
         screen.refresh();
 
         do {
-            TextView.printBoard(battleField);
-            TextView.printShip(ship);
+            view.printBoard(battleField);
+            view.printShip(ship);
 
             UserInput.getMovedShipPosition(ship, terminal, battleField);
 
             try {
                 isAdded = battleField.addShip(ship);
             } catch (GameException e) {
-                TextView.printError(e.getMessage());
+                view.printError(e.getMessage());
                 isAdded = false;
                 Thread.sleep(2000);
             }

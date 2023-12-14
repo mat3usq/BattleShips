@@ -16,7 +16,7 @@ import kck.battleship.model.types.TypesShips;
 import java.io.IOException;
 import java.util.*;
 
-public class TextView {
+public class TextView extends View{
     private static String name;
 
     private static Screen screen;
@@ -27,7 +27,7 @@ public class TextView {
         this.screen = screen;
     }
 
-    public static void printHomePage() {
+    public void printHomePage() {
         TextGraphics tg = screen.newTextGraphics();
 
         printTitle();
@@ -46,7 +46,7 @@ public class TextView {
     }
 
 
-    public static void printShipImage() {
+    public void printShipImage() {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.BLUE_BRIGHT);
         tg.putString(0, 14, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~o~~o~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", SGR.BOLD);
@@ -65,7 +65,7 @@ public class TextView {
         tg.putString(0, 18, "                                           oo\n", SGR.BOLD);
     }
 
-    public static void printTitle() {
+    public void printTitle() {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
         tg.putString(3, 1, "                                                                         ", SGR.UNDERLINE);
@@ -79,7 +79,7 @@ public class TextView {
         tg.putString(3, 8, "                                                                         ", SGR.CROSSED_OUT);
     }
 
-    private static void printMenu() {
+    public void printMenu() {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.CYAN_BRIGHT);
         tg.putString(24, 10, " __  __  ____  _  _  __  __ \n", SGR.BOLD);
@@ -88,7 +88,7 @@ public class TextView {
         tg.putString(24, 13, "(_/\\/\\_)(____)(_)\\_)(______)\n", SGR.BOLD);
     }
 
-    public static void waitForKeyHomePage(Terminal terminal) throws IOException {
+    public void waitForKeyHomePage(Terminal terminal) throws IOException {
         boolean b = true;
         while (b) {
             KeyStroke k = terminal.pollInput();
@@ -109,7 +109,7 @@ public class TextView {
         }
     }
 
-    public static void printLoginPage(Terminal terminal) {
+    public void printLoginPage(Terminal terminal) {
         screen.clear();
         printTitle();
 
@@ -126,7 +126,7 @@ public class TextView {
         }
     }
 
-    public static void printMenuPage(int selected) {
+    public void printMenuPage(int selected) {
         screen.clear();
 
         printTitle();
@@ -159,7 +159,7 @@ public class TextView {
         }
     }
 
-    private static void printExit() {
+    public void printExit() {
         TextGraphics tg = screen.newTextGraphics();
         screen.clear();
 
@@ -181,7 +181,7 @@ public class TextView {
         }
     }
 
-    public static void chooseOption(Terminal terminal, int selected) throws IOException, GameException, InterruptedException {
+    public void chooseOption(Terminal terminal, int selected) throws IOException, GameException, InterruptedException {
         boolean b = true;
         while (b) {
             KeyStroke k = terminal.pollInput();
@@ -209,7 +209,7 @@ public class TextView {
         }
     }
 
-    private static void option(int selected, Terminal terminal) throws IOException, GameException, InterruptedException {
+    public void option(int selected, Terminal terminal) throws IOException, GameException, InterruptedException {
         for (int i = 0; i < menuList.size(); i++) {
             if (i == selected)
                 switch (menuList.get(i)) {
@@ -239,7 +239,7 @@ public class TextView {
         }
     }
 
-    private static void printRules(Terminal terminal) throws IOException, GameException, InterruptedException {
+    public void printRules(Terminal terminal) throws IOException, GameException, InterruptedException {
         printInfoRules(1);
 
         boolean b = true;
@@ -262,7 +262,7 @@ public class TextView {
         }
     }
 
-    private static void printInfoRules(int x) {
+    public void printInfoRules(int x) {
         TextGraphics tg = screen.newTextGraphics();
         screen.clear();
 
@@ -373,7 +373,7 @@ public class TextView {
         }
     }
 
-    public static void printError(String message) {
+    public void printError(String message) {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
         tg.putString(36, 15, message + "                     ", SGR.BOLD);
@@ -384,7 +384,7 @@ public class TextView {
         }
     }
 
-    public static void printShot(Player player, Position position, boolean isHit) {
+    public void printShot(Player player, Position position, boolean isHit) {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
 
@@ -422,7 +422,7 @@ public class TextView {
         }
     }
 
-    public static void printWinner(Player player, Ranking rank) {
+    public void printWinner(Player player, Ranking rank) {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.GREEN_BRIGHT);
 
@@ -444,7 +444,7 @@ public class TextView {
         }
     }
 
-    public static void printShip(Ship ship) throws IOException {
+    public void printShip(Ship ship) throws IOException {
         TextGraphics tg = screen.newTextGraphics();
 
         tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
@@ -457,7 +457,7 @@ public class TextView {
         screen.refresh();
     }
 
-    public static void printBoards(Player firstPlayer, Player secondPlayer) {
+    public void printBoards(Player firstPlayer, Player secondPlayer) {
         BattleField firstBattleField = firstPlayer.getBattleField();
         BattleField secondBattleField;
         try {
@@ -544,7 +544,7 @@ public class TextView {
 
     }
 
-    public static void printBoard(BattleField battleField) throws IOException {
+    public void printBoard(BattleField battleField) throws IOException {
         TextGraphics tg = screen.newTextGraphics();
         String letters = "abcdefghij";
 
@@ -581,7 +581,7 @@ public class TextView {
         screen.refresh();
     }
 
-    public static void showOptionToManuallyAddShip() throws IOException {
+    public void showOptionToManuallyAddShip() throws IOException {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.BLUE);
         tg.putString(0, 17, "-".repeat(100), SGR.BOLD);
@@ -598,7 +598,7 @@ public class TextView {
         screen.refresh();
     }
 
-    public static void showOptionToPlay() {
+    public void showOptionToPlay() {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.BLUE);
         tg.putString(0, 18, "-".repeat(100), SGR.BOLD);
@@ -617,7 +617,7 @@ public class TextView {
         }
     }
 
-    public static void showOptionToSimulatedGame() {
+    public void showOptionToSimulatedGame() {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.BLUE);
         tg.putString(0, 18, "-".repeat(100), SGR.BOLD);
@@ -634,7 +634,7 @@ public class TextView {
         }
     }
 
-    public static void printBoardWithFutureShip(BattleField battleField, Ship ship) throws IOException {
+    public void printBoardWithFutureShip(BattleField battleField, Ship ship) throws IOException {
         TextGraphics tg = screen.newTextGraphics();
 
         for (int i = 0; i < BattleField.getLength(); i++)
@@ -661,7 +661,7 @@ public class TextView {
         screen.refresh();
     }
 
-    public static void printAim(Position shoot, BattleField battleField) {
+    public void printAim(Position shoot, BattleField battleField) {
         TextGraphics tg = screen.newTextGraphics();
 
         for (int i = 0; i < BattleField.getLength(); i++) {
@@ -695,7 +695,7 @@ public class TextView {
         }
     }
 
-    public static void printRanking(Terminal terminal, int page) throws IOException, GameException, InterruptedException {
+    public void printRanking(Terminal terminal, int page) throws IOException, GameException, InterruptedException {
         List<Ranking> rankings = Ranking.getRanking();
         rankings.sort(Collections.reverseOrder(Comparator.comparingInt(Ranking::getPoints)));
         TextGraphics tg = screen.newTextGraphics();
@@ -770,7 +770,7 @@ public class TextView {
 
     }
 
-    public static void printShop(Terminal terminal) throws IOException, GameException, InterruptedException {
+    public void printShop(Terminal terminal) throws IOException, GameException, InterruptedException {
         int selected = 0;
         printItemsInShop(selected);
         boolean b = true;
@@ -828,7 +828,7 @@ public class TextView {
         }
     }
 
-    static void printItemsInShop(int x) {
+    public void printItemsInShop(int x) {
         screen.clear();
 
         TextGraphics tg = screen.newTextGraphics();

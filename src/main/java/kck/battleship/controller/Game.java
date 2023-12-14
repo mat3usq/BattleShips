@@ -11,6 +11,7 @@ import kck.battleship.model.clases.Ranking;
 import kck.battleship.model.types.TypesField;
 import kck.battleship.view.TextView;
 import kck.battleship.view.UserInput;
+import kck.battleship.view.View;
 
 import java.io.IOException;
 import java.util.Date;
@@ -21,6 +22,8 @@ public class Game {
     private final Player secondPlayer;
     private Screen screen;
     private Terminal terminal;
+
+    private final View view = ViewController.getInstance();
 
     public Game(String name) {
         firstPlayer = new Player(name);
@@ -51,8 +54,8 @@ public class Game {
 
         printResultGame();
 
-        TextView.printMenuPage(0);
-        TextView.chooseOption(terminal, 0);
+        view.printMenuPage(0);
+        view.chooseOption(terminal, 0);
     }
 
     private void playGame(Player player1, Player player2){
@@ -70,9 +73,9 @@ public class Game {
         boolean isHit, isAddHit;
 
         if(attacker.isAI() && defender.isAI())
-            TextView.showOptionToSimulatedGame();
+            view.showOptionToSimulatedGame();
         else
-            TextView.showOptionToPlay();
+            view.showOptionToPlay();
 
         if (attacker.areShipsStillSailing()) {
             if (defender.getDurabilityForceField() > 0) {
@@ -101,7 +104,7 @@ public class Game {
                         shoot = attacker.shoot(terminal, defender.getBattleField().getbattleFieldHideShips());
                         isAddHit = defender.addShoot(shoot);
                     } catch (GameException e) {
-                        if (!attacker.isAI()) TextView.printError(e.getMessage());
+                        if (!attacker.isAI()) view.printError(e.getMessage());
                         isAddHit = false;
                     }
                 } while (!isAddHit);
@@ -113,19 +116,19 @@ public class Game {
                     updatePlayerPoints(attacker);
                 }
 
-                TextView.printShot(attacker, shoot, isHit);
+                view.printShot(attacker, shoot, isHit);
             }
 
             delayForGameplay();
 
             if (attacker.isAI() && defender.isAI() && !reverse)
-                TextView.printBoards(attacker, defender);
+                view.printBoards(attacker, defender);
             else if (attacker.isAI() && defender.isAI() && reverse)
-                TextView.printBoards(defender, attacker);
+                view.printBoards(defender, attacker);
             else if (!attacker.isAI())
-                TextView.printBoards(attacker, defender);
+                view.printBoards(attacker, defender);
             else if (!defender.isAI())
-                TextView.printBoards(defender, attacker);
+                view.printBoards(defender, attacker);
 
             return true;
         } else return false;
@@ -157,7 +160,7 @@ public class Game {
 
             secondPlayer.addShips(screen, terminal);
         }
-        TextView.printBoards(firstPlayer, secondPlayer);
+        view.printBoards(firstPlayer, secondPlayer);
     }
 
     private boolean bothPlayersAreAI() {
@@ -178,8 +181,8 @@ public class Game {
 
     private void printResultGame() {
         if (firstPlayer.shipsLeft() > secondPlayer.shipsLeft())
-            TextView.printWinner(firstPlayer, firstPlayerRank);
+            view.printWinner(firstPlayer, firstPlayerRank);
         else
-            TextView.printWinner(secondPlayer, firstPlayerRank);
+            view.printWinner(secondPlayer, firstPlayerRank);
     }
 }
