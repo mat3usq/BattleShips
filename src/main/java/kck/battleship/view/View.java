@@ -59,4 +59,5 @@ public abstract class View {
 
     public abstract void printItemsInShop(int x);
 
+    public abstract void printBarrier(Player defender);
 }

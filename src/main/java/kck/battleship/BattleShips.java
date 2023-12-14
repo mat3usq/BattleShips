@@ -18,7 +18,7 @@ public class BattleShips {
     public static void main(String[] args) throws IOException, InterruptedException, GameException {
         System.out.println("Wybierz widok:");
         System.out.println("1. Widok tekstowy");
-        System.out.println("1. Widok graficzny");
+        System.out.println("2. Widok graficzny");
         Scanner scan = new Scanner(System.in);
         int x = scan.nextInt();
         new ViewController(x);

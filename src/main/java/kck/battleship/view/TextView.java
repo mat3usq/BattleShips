@@ -890,4 +890,20 @@ public class TextView extends View{
             throw new RuntimeException(e);
         }
     }
+
+    public void printBarrier(Player defender) {
+        TextGraphics tg = screen.newTextGraphics();
+        tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+        tg.putString(46, 15, "Wróg nie trafil w ciebie!", SGR.BOLD);
+        tg.setForegroundColor(TextColor.ANSI.CYAN_BRIGHT);
+        if (defender.getDurabilityForceField() == 0)
+            tg.putString(50, 16, "Poniewaz miales bariere!", SGR.BOLD);
+        else {
+            tg.putString(33, 16, "Poniewaz masz bariere jeszcze przez: " + defender.getDurabilityForceField(), SGR.BOLD);
+            tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
+            tg.putString(70, 16, String.valueOf(defender.getDurabilityForceField()), SGR.BOLD);
+            tg.putString(72, 16, "rund", SGR.BOLD);
+        }
+        tg.setForegroundColor(TextColor.ANSI.WHITE);
+    }
 }
