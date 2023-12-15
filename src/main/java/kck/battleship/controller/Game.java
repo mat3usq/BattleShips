@@ -1,16 +1,10 @@
 package kck.battleship.controller;
 
-import com.googlecode.lanterna.SGR;
-import com.googlecode.lanterna.TextColor;
-import com.googlecode.lanterna.graphics.TextGraphics;
-import com.googlecode.lanterna.screen.Screen;
-import com.googlecode.lanterna.terminal.Terminal;
 import kck.battleship.model.clases.Player;
 import kck.battleship.model.clases.Position;
 import kck.battleship.model.clases.Ranking;
 import kck.battleship.model.types.TypesField;
-import kck.battleship.view.TextView;
-import kck.battleship.view.UserInput;
+import kck.battleship.view.textView.UserInput;
 import kck.battleship.view.View;
 
 import java.io.IOException;

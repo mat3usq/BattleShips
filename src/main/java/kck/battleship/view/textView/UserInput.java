@@ -1,4 +1,4 @@
-package kck.battleship.view;
+package kck.battleship.view.textView;
 
 import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.TextColor;
@@ -13,6 +13,7 @@ import kck.battleship.model.clases.BattleField;
 import kck.battleship.model.clases.Ship;
 import kck.battleship.model.types.TypesDirection;
 import kck.battleship.model.clases.Position;
+import kck.battleship.view.View;
 
 import java.io.IOException;
 

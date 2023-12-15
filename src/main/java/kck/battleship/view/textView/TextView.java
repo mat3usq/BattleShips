@@ -1,4 +1,4 @@
-package kck.battleship.view;
+package kck.battleship.view.textView;
 
 import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.TextColor;
@@ -12,13 +12,13 @@ import kck.battleship.model.clases.*;
 import kck.battleship.model.types.TypesDirection;
 import kck.battleship.model.types.TypesField;
 import kck.battleship.model.types.TypesShips;
+import kck.battleship.view.View;
 
 import java.io.IOException;
 import java.util.*;
 
-public class TextView extends View{
+public class TextView extends View {
     private static String name;
-
     private static Screen screen;
     private static Terminal terminal;
 
@@ -29,6 +29,7 @@ public class TextView extends View{
         TextView.terminal = terminal;
     }
 
+    @Override
     public void printHomePage() {
         TextGraphics tg = screen.newTextGraphics();
 
@@ -47,6 +48,7 @@ public class TextView extends View{
         }
     }
 
+    @Override
     public void printShipImage() {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.BLUE_BRIGHT);
@@ -66,6 +68,7 @@ public class TextView extends View{
         tg.putString(0, 18, "                                           oo\n", SGR.BOLD);
     }
 
+    @Override
     public void printTitle() {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
@@ -80,6 +83,7 @@ public class TextView extends View{
         tg.putString(3, 8, "                                                                         ", SGR.CROSSED_OUT);
     }
 
+    @Override
     public void printMenu() {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.CYAN_BRIGHT);
@@ -89,6 +93,7 @@ public class TextView extends View{
         tg.putString(24, 13, "(_/\\/\\_)(____)(_)\\_)(______)\n", SGR.BOLD);
     }
 
+    @Override
     public void waitForKeyHomePage() throws IOException {
         boolean b = true;
         while (b) {
@@ -110,6 +115,7 @@ public class TextView extends View{
         }
     }
 
+    @Override
     public void printLoginPage() {
         screen.clear();
         printTitle();
@@ -127,6 +133,7 @@ public class TextView extends View{
         }
     }
 
+    @Override
     public void printMenuPage(int selected) {
         screen.clear();
 
@@ -160,6 +167,7 @@ public class TextView extends View{
         }
     }
 
+    @Override
     public void printExit() {
         TextGraphics tg = screen.newTextGraphics();
         screen.clear();
@@ -182,6 +190,7 @@ public class TextView extends View{
         }
     }
 
+    @Override
     public void chooseOption(int selected) throws IOException, GameException, InterruptedException {
         boolean b = true;
         while (b) {
@@ -210,6 +219,7 @@ public class TextView extends View{
         }
     }
 
+    @Override
     public void option(int selected) throws IOException, GameException, InterruptedException {
         for (int i = 0; i < menuList.size(); i++) {
             if (i == selected)
@@ -240,6 +250,7 @@ public class TextView extends View{
         }
     }
 
+    @Override
     public void printRules() throws IOException, GameException, InterruptedException {
         printInfoRules(1);
 
@@ -263,6 +274,7 @@ public class TextView extends View{
         }
     }
 
+    @Override
     public void printInfoRules(int x) {
         TextGraphics tg = screen.newTextGraphics();
         screen.clear();
@@ -374,6 +386,7 @@ public class TextView extends View{
         }
     }
 
+    @Override
     public void printError(String message) {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
@@ -385,6 +398,7 @@ public class TextView extends View{
         }
     }
 
+    @Override
     public void printShot(Player player, Position position, boolean isHit) {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
@@ -423,6 +437,7 @@ public class TextView extends View{
         }
     }
 
+    @Override
     public void printWinner(Player player, Ranking rank) {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.GREEN_BRIGHT);
@@ -445,6 +460,7 @@ public class TextView extends View{
         }
     }
 
+    @Override
     public void printShip(Ship ship) throws IOException {
         TextGraphics tg = screen.newTextGraphics();
 
@@ -458,6 +474,7 @@ public class TextView extends View{
         screen.refresh();
     }
 
+    @Override
     public void printBoards(Player firstPlayer, Player secondPlayer) {
         BattleField firstBattleField = firstPlayer.getBattleField();
         BattleField secondBattleField;
@@ -545,6 +562,7 @@ public class TextView extends View{
 
     }
 
+    @Override
     public void printBoard(BattleField battleField) throws IOException {
         TextGraphics tg = screen.newTextGraphics();
         String letters = "abcdefghij";
@@ -582,6 +600,7 @@ public class TextView extends View{
         screen.refresh();
     }
 
+    @Override
     public void showOptionToManuallyAddShip() throws IOException {
         screen.clear();
         TextGraphics tg = screen.newTextGraphics();
@@ -600,6 +619,7 @@ public class TextView extends View{
         screen.refresh();
     }
 
+    @Override
     public void showOptionToPlay() {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.BLUE);
@@ -619,6 +639,7 @@ public class TextView extends View{
         }
     }
 
+    @Override
     public void showOptionToSimulatedGame() {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.BLUE);
@@ -636,6 +657,7 @@ public class TextView extends View{
         }
     }
 
+    @Override
     public void printBoardWithFutureShip(BattleField battleField, Ship ship) throws IOException {
         TextGraphics tg = screen.newTextGraphics();
 
@@ -663,6 +685,7 @@ public class TextView extends View{
         screen.refresh();
     }
 
+    @Override
     public void printAim(Position shoot, BattleField battleField) {
         TextGraphics tg = screen.newTextGraphics();
 
@@ -697,6 +720,7 @@ public class TextView extends View{
         }
     }
 
+    @Override
     public void printRanking(int page) throws IOException, GameException, InterruptedException {
         List<Ranking> rankings = Ranking.getRanking();
         rankings.sort(Collections.reverseOrder(Comparator.comparingInt(Ranking::getPoints)));
@@ -772,6 +796,7 @@ public class TextView extends View{
 
     }
 
+    @Override
     public void printShop() throws IOException, GameException, InterruptedException {
         int selected = 0;
         printItemsInShop(selected);
@@ -830,6 +855,7 @@ public class TextView extends View{
         }
     }
 
+    @Override
     public void printItemsInShop(int x) {
         screen.clear();
 
@@ -893,6 +919,7 @@ public class TextView extends View{
         }
     }
 
+    @Override
     public void printBarrier(Player defender) {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);

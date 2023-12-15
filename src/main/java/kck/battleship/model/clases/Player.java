@@ -1,13 +1,10 @@
 package kck.battleship.model.clases;
 
-import com.googlecode.lanterna.screen.Screen;
-import com.googlecode.lanterna.terminal.Terminal;
 import kck.battleship.controller.GameException;
 import kck.battleship.controller.ViewController;
 import kck.battleship.model.types.TypesDirection;
 import kck.battleship.model.types.TypesShips;
-import kck.battleship.view.TextView;
-import kck.battleship.view.UserInput;
+import kck.battleship.view.textView.UserInput;
 import kck.battleship.view.View;
 
 import java.io.*;

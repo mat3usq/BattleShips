@@ -1,16 +1,14 @@
 package kck.battleship;
 
-import kck.battleship.controller.GameException;
 import kck.battleship.controller.ViewController;
 
-import java.io.IOException;
 import java.util.Scanner;
 
 public class BattleShips {
-    public static void main(String[] args) throws IOException, InterruptedException, GameException {
-        System.out.println("Wybierz widok:");
-        System.out.println("1. Widok tekstowy");
-        System.out.println("2. Widok graficzny");
+    public static void main(String[] args) {
+        System.out.println("Wybierz rodzaj wyswietlania gry:");
+        System.out.println("1. Interfejs Graficzny");
+        System.out.println("2. Interfejs tekstowy");
         new ViewController(new Scanner(System.in).nextInt());
     }
 }

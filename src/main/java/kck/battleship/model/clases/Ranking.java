@@ -1,6 +1,6 @@
 package kck.battleship.model.clases;
 
-import kck.battleship.view.UserInput;
+import kck.battleship.view.textView.UserInput;
 
 import java.io.*;
 import java.util.ArrayList;
