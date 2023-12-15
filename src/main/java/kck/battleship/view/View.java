@@ -1,6 +1,5 @@
 package kck.battleship.view;
 
-import com.googlecode.lanterna.terminal.Terminal;
 import kck.battleship.controller.GameException;
 import kck.battleship.model.clases.*;
 
@@ -15,19 +14,19 @@ public abstract class View {
 
     public abstract void printMenu();
 
-    public abstract void waitForKeyHomePage(Terminal terminal) throws IOException;
+    public abstract void waitForKeyHomePage() throws IOException;
 
-    public abstract void printLoginPage(Terminal terminal);
+    public abstract void printLoginPage();
 
     public abstract void printMenuPage(int selected);
 
     public abstract void printExit();
 
-    public abstract void chooseOption(Terminal terminal, int selected) throws IOException, GameException, InterruptedException;
+    public abstract void chooseOption(int selected) throws IOException, GameException, InterruptedException;
 
-    public abstract void option(int selected, Terminal terminal) throws IOException, GameException, InterruptedException;
+    public abstract void option(int selected) throws IOException, GameException, InterruptedException;
 
-    public abstract void printRules(Terminal terminal) throws IOException, GameException, InterruptedException;
+    public abstract void printRules() throws IOException, GameException, InterruptedException;
 
     public abstract void printInfoRules(int x);
 
@@ -53,9 +52,9 @@ public abstract class View {
 
     public abstract void printAim(Position shoot, BattleField battleField);
 
-    public abstract void printRanking(Terminal terminal, int page) throws IOException, GameException, InterruptedException;
+    public abstract void printRanking(int page) throws IOException, GameException, InterruptedException;
 
-    public abstract void printShop(Terminal terminal) throws IOException, GameException, InterruptedException;
+    public abstract void printShop() throws IOException, GameException, InterruptedException;
 
     public abstract void printItemsInShop(int x);
 

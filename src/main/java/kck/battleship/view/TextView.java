@@ -20,11 +20,13 @@ public class TextView extends View{
     private static String name;
 
     private static Screen screen;
+    private static Terminal terminal;
 
     private static final List<String> menuList = new ArrayList<>(Arrays.asList("Rozpocznij Grę", "Symuluj Grę", "Sklep", "Ranking", "Zasady Gry", "Wyjście"));
 
-    public TextView(Screen screen) {
-        this.screen = screen;
+    public TextView(Terminal terminal, Screen screen) {
+        TextView.screen = screen;
+        TextView.terminal = terminal;
     }
 
     public void printHomePage() {
@@ -44,7 +46,6 @@ public class TextView extends View{
             e.printStackTrace();
         }
     }
-
 
     public void printShipImage() {
         TextGraphics tg = screen.newTextGraphics();
@@ -88,7 +89,7 @@ public class TextView extends View{
         tg.putString(24, 13, "(_/\\/\\_)(____)(_)\\_)(______)\n", SGR.BOLD);
     }
 
-    public void waitForKeyHomePage(Terminal terminal) throws IOException {
+    public void waitForKeyHomePage() throws IOException {
         boolean b = true;
         while (b) {
             KeyStroke k = terminal.pollInput();
@@ -101,7 +102,7 @@ public class TextView extends View{
                         b = false;
                     }
                     case Enter -> {
-                        printLoginPage(terminal);
+                        printLoginPage();
                         printMenuPage(0);
                         b = false;
                     }
@@ -109,7 +110,7 @@ public class TextView extends View{
         }
     }
 
-    public void printLoginPage(Terminal terminal) {
+    public void printLoginPage() {
         screen.clear();
         printTitle();
 
@@ -121,7 +122,7 @@ public class TextView extends View{
         tg.putString(2,13,"(___)(_)\\_) (__) (___)(_)\\_)  (_)\\_)(__)\\__)(_)\\_)(_)\\_)(_)(_)(_/\\/\\_)(___)", SGR.BOLD);
 
         try {
-            name = UserInput.getUserInput(screen, terminal, "Wprowadź swoj NICK i naciśnij Enter:");
+            name = UserInput.getUserInput("Wprowadź swoj NICK i naciśnij Enter:");
         } catch (IOException | GameException | InterruptedException ignored) {
         }
     }
@@ -181,7 +182,7 @@ public class TextView extends View{
         }
     }
 
-    public void chooseOption(Terminal terminal, int selected) throws IOException, GameException, InterruptedException {
+    public void chooseOption(int selected) throws IOException, GameException, InterruptedException {
         boolean b = true;
         while (b) {
             KeyStroke k = terminal.pollInput();
@@ -202,35 +203,35 @@ public class TextView extends View{
                             printMenuPage(--selected);
                     }
                     case Enter -> {
-                        option(selected, terminal);
+                        option(selected);
                         b = false;
                     }
                 }
         }
     }
 
-    public void option(int selected, Terminal terminal) throws IOException, GameException, InterruptedException {
+    public void option(int selected) throws IOException, GameException, InterruptedException {
         for (int i = 0; i < menuList.size(); i++) {
             if (i == selected)
                 switch (menuList.get(i)) {
                     case "Rozpocznij Grę" -> {
                         if (name != null) {
                             Game game = new Game(name);
-                            game.run(screen, terminal);
+                            game.run();
                         }
                     }
                     case "Symuluj Grę" -> {
                         Game game = new Game();
-                        game.run(screen, terminal);
+                        game.run();
                     }
                     case "Sklep" -> {
-                        printShop(terminal);
+                        printShop();
                     }
                     case "Ranking" -> {
-                        printRanking(terminal, 0);
+                        printRanking(0);
                     }
                     case "Zasady Gry" -> {
-                        printRules(terminal);
+                        printRules();
                     }
                     case "Wyjście" -> {
                         printExit();
@@ -239,7 +240,7 @@ public class TextView extends View{
         }
     }
 
-    public void printRules(Terminal terminal) throws IOException, GameException, InterruptedException {
+    public void printRules() throws IOException, GameException, InterruptedException {
         printInfoRules(1);
 
         boolean b = true;
@@ -249,7 +250,7 @@ public class TextView extends View{
                 switch (k.getKeyType()) {
                     case Escape -> {
                         printMenuPage(4);
-                        chooseOption(terminal, 4);
+                        chooseOption(4);
                         b = false;
                     }
                     case ArrowUp -> {
@@ -582,6 +583,7 @@ public class TextView extends View{
     }
 
     public void showOptionToManuallyAddShip() throws IOException {
+        screen.clear();
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.BLUE);
         tg.putString(0, 17, "-".repeat(100), SGR.BOLD);
@@ -695,7 +697,7 @@ public class TextView extends View{
         }
     }
 
-    public void printRanking(Terminal terminal, int page) throws IOException, GameException, InterruptedException {
+    public void printRanking(int page) throws IOException, GameException, InterruptedException {
         List<Ranking> rankings = Ranking.getRanking();
         rankings.sort(Collections.reverseOrder(Comparator.comparingInt(Ranking::getPoints)));
         TextGraphics tg = screen.newTextGraphics();
@@ -754,23 +756,23 @@ public class TextView extends View{
                 switch (k.getKeyType()) {
                     case Escape -> {
                         printMenuPage(3);
-                        chooseOption(terminal, 3);
+                        chooseOption(3);
                         b = false;
                     }
                     case ArrowUp -> {
                         if (page > 0)
-                            printRanking(terminal, --page);
+                            printRanking(--page);
                     }
                     case ArrowDown -> {
                         if (page < rankings.size() / itemsPerPage && rankings.size() % 10 != 0)
-                            printRanking(terminal, ++page);
+                            printRanking(++page);
                     }
                 }
         }
 
     }
 
-    public void printShop(Terminal terminal) throws IOException, GameException, InterruptedException {
+    public void printShop() throws IOException, GameException, InterruptedException {
         int selected = 0;
         printItemsInShop(selected);
         boolean b = true;
@@ -780,7 +782,7 @@ public class TextView extends View{
                 switch (k.getKeyType()) {
                     case Escape -> {
                         printMenuPage(2);
-                        chooseOption(terminal, 2);
+                        chooseOption(2);
                         b = false;
                     }
                     case ArrowLeft -> {
@@ -799,9 +801,9 @@ public class TextView extends View{
                         String s;
 
                         if (selected == 0)
-                            s = Ranking.enoughPoints(name, 500, screen, terminal, selected);
+                            s = Ranking.enoughPoints(name, 500, selected);
                         else
-                            s = Ranking.enoughPoints(name, 300, screen, terminal, selected);
+                            s = Ranking.enoughPoints(name, 300, selected);
 
                         if (s == null) {
                             tg.setForegroundColor(TextColor.ANSI.GREEN_BRIGHT);
@@ -905,5 +907,19 @@ public class TextView extends View{
             tg.putString(72, 16, "rund", SGR.BOLD);
         }
         tg.setForegroundColor(TextColor.ANSI.WHITE);
+
+        try {
+            screen.refresh();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Screen getScreen() {
+        return screen;
+    }
+
+    public static Terminal getTerminal() {
+        return terminal;
     }
 }

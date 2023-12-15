@@ -65,31 +65,29 @@ public class Player {
         this.durabilityForceField = durabilityForceField;
     }
 
-    public void addShips(Screen screen, Terminal terminal) throws IOException, InterruptedException {
+    public void addShips() throws IOException, InterruptedException {
         if (!isAI) {
             ArrayList<Ship> ships = createShips();
             if (hasAirCrafter)
                 ships.add(new Ship("LOTNISKOWIEC", 6));
 
             for (Ship ship : ships)
-                addShipManually(screen, terminal, ship);
+                addShipManually(ship);
 
             view.printBoard(battleField);
         } else randAddShips();
     }
 
-    private void addShipManually(Screen screen, Terminal terminal, Ship ship) throws InterruptedException, IOException {
+    private void addShipManually(Ship ship) throws InterruptedException, IOException {
         boolean isAdded;
 
-        screen.clear();
         view.showOptionToManuallyAddShip();
-        screen.refresh();
 
         do {
             view.printBoard(battleField);
             view.printShip(ship);
 
-            UserInput.getMovedShipPosition(ship, terminal, battleField);
+            UserInput.getMovedShipPosition(ship, battleField);
 
             try {
                 isAdded = battleField.addShip(ship);
@@ -171,9 +169,9 @@ public class Player {
         }
     }
 
-    public Position shoot(Terminal terminal, BattleField defenderBattleField) throws GameException {
+    public Position shoot(BattleField defenderBattleField) throws GameException {
         if (isAI) return ComputerShoot(defenderBattleField);
-        else return UserInput.readPositionToShot(terminal, defenderBattleField);
+        else return UserInput.readPositionToShot(defenderBattleField);
     }
 
     public void registerShoot(Position position) {

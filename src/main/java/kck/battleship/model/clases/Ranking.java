@@ -1,7 +1,5 @@
 package kck.battleship.model.clases;
 
-import com.googlecode.lanterna.screen.Screen;
-import com.googlecode.lanterna.terminal.Terminal;
 import kck.battleship.view.UserInput;
 
 import java.io.*;
@@ -117,13 +115,13 @@ public class Ranking {
         }
     }
 
-    public static String enoughPoints(String name, int price, Screen screen, Terminal terminal, int x) throws IOException, InterruptedException {
+    public static String enoughPoints(String name, int price, int x) throws IOException, InterruptedException {
         List<Ranking> rankings = getRanking();
 
         for (Ranking r : rankings)
             if (name.equals(r.player.getName())) {
                 if (r.getPoints() >= price) {
-                    boolean response = UserInput.question(screen, terminal, "Czy chcesz napewno to kupic(y/n)?");
+                    boolean response = UserInput.question("Czy chcesz napewno to kupic(y/n)?");
 
                     if (response) {
                         r.setPoints(r.getPoints() - price);

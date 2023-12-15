@@ -6,17 +6,19 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.terminal.swing.AWTTerminalFontConfiguration;
 import kck.battleship.view.TextView;
+import kck.battleship.view.View;
 
 import java.awt.*;
 import java.io.IOException;
 
 public class ViewController {
-    int choice;
-    static TextView tv;
-    public ViewController(int x) throws IOException, InterruptedException, GameException {
-        choice = x;
-        if( x == 1 )
-        {
+    private static int choice;
+    private static TextView textView;
+//    private static GraphicView graphicView;
+
+    public ViewController(int choice) throws IOException, InterruptedException, GameException {
+        ViewController.choice = choice;
+        if (choice == 1) {
             Font myFont = new Font("Monospaced", Font.PLAIN, 24);
             AWTTerminalFontConfiguration myFontConfiguration = AWTTerminalFontConfiguration.newInstance(myFont);
             DefaultTerminalFactory dtf = new DefaultTerminalFactory();
@@ -26,16 +28,20 @@ public class ViewController {
             Screen screen = new TerminalScreen(terminal);
             screen.startScreen();
             screen.setCursorPosition(null);
-            tv = new TextView(screen);
 
-            tv.printHomePage();
-            tv.waitForKeyHomePage(terminal);
-            tv.chooseOption(terminal, 0);
+            textView = new TextView(terminal, screen);
+
+            textView.printHomePage();
+            textView.waitForKeyHomePage();
+            textView.chooseOption(0);
         }
     }
 
 
-    public static TextView getInstance(){
-        return tv;
+    public static View getInstance() {
+//        if (choice == 1)
+            return textView;
+//        else if (choice == 2)
+//            return graphicView;
     }
 }

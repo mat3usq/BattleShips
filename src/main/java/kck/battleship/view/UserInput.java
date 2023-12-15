@@ -18,8 +18,10 @@ import java.io.IOException;
 
 public class UserInput {
     private static final View view = ViewController.getInstance();
+    private static final Screen screen = TextView.getScreen();
+    private static final Terminal terminal = TextView.getTerminal();
 
-    public static void getMovedShipPosition(Ship ship, Terminal terminal, BattleField battleField) throws IOException {
+    public static void getMovedShipPosition(Ship ship, BattleField battleField) throws IOException {
         KeyStroke keyStroke;
         boolean canSubmit = true;
 
@@ -82,7 +84,7 @@ public class UserInput {
         while (canSubmit);
     }
 
-    public static String getUserInput(Screen screen, Terminal terminal, String message) throws IOException, InterruptedException, GameException {
+    public static String getUserInput(String message) throws IOException, InterruptedException, GameException {
         TextGraphics tg = screen.newTextGraphics();
         StringBuilder userInput = new StringBuilder();
         KeyStroke keyStroke;
@@ -130,9 +132,12 @@ public class UserInput {
         return userInput.toString();
     }
 
-    public static boolean question(Screen screen, Terminal terminal, String message) throws IOException, InterruptedException {
-        char userResponse = '\0';
+    public static boolean question(String message) throws IOException, InterruptedException {
         TextGraphics tg = screen.newTextGraphics();
+        for (int i = 9; i <22; i++)
+            tg.putString(1, i, " ".repeat(100), SGR.BOLD);
+
+        char userResponse = '\0';
         KeyStroke keyStroke;
 
         do {
@@ -147,7 +152,7 @@ public class UserInput {
                         userResponse = c;
                 } else if (keyStroke.getKeyType() == KeyType.Escape) {
                     try {
-                        view.printShop(terminal);
+                        view.printShop();
                     } catch (GameException e) {
                         throw new RuntimeException(e);
                     }
@@ -167,7 +172,7 @@ public class UserInput {
         return userResponse == 'y';
     }
 
-    public static Position readPositionToShot(Terminal terminal, BattleField defenderBattleField) {
+    public static Position readPositionToShot(BattleField defenderBattleField) {
         KeyStroke keyStroke;
         Position shoot;
         boolean canSubmit = true;

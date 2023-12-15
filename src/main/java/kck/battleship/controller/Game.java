@@ -20,9 +20,6 @@ public class Game {
     private final Player firstPlayer;
     private final Ranking firstPlayerRank;
     private final Player secondPlayer;
-    private Screen screen;
-    private Terminal terminal;
-
     private final View view = ViewController.getInstance();
 
     public Game(String name) {
@@ -38,10 +35,7 @@ public class Game {
         firstPlayerRank = null;
     }
 
-    public void run(Screen screen, Terminal terminal) throws GameException, IOException, InterruptedException {
-        this.screen = screen;
-        this.terminal = terminal;
-
+    public void run() throws GameException, IOException, InterruptedException {
         addAllShips();
 
         if (firstPlayer.isAI() && secondPlayer.isAI())
@@ -55,7 +49,7 @@ public class Game {
         printResultGame();
 
         view.printMenuPage(0);
-        view.chooseOption(terminal, 0);
+        view.chooseOption(0);
     }
 
     private void playGame(Player player1, Player player2){
@@ -81,15 +75,10 @@ public class Game {
             if (defender.getDurabilityForceField() > 0) {
                 defender.setDurabilityForceField(defender.getDurabilityForceField() - 1);
                 view.printBarrier(defender);
-                try {
-                    screen.refresh();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
             } else {
                 do {
                     try {
-                        shoot = attacker.shoot(terminal, defender.getBattleField().getbattleFieldHideShips());
+                        shoot = attacker.shoot(defender.getBattleField().getbattleFieldHideShips());
                         isAddHit = defender.addShoot(shoot);
                     } catch (GameException e) {
                         if (!attacker.isAI()) view.printError(e.getMessage());
@@ -141,12 +130,12 @@ public class Game {
         if (bothPlayersAreAI()) {
             addShipsForAIPlayers();
         } else {
-            if (shouldRandomlyArrangeShips())
+            if (UserInput.question("Czy chcesz losowo rozmiescic statki (y/n)?"))
                 firstPlayer.randAddShips();
             else
-                firstPlayer.addShips(screen, terminal);
+                firstPlayer.addShips();
 
-            secondPlayer.addShips(screen, terminal);
+            secondPlayer.addShips();
         }
         view.printBoards(firstPlayer, secondPlayer);
     }
@@ -156,15 +145,8 @@ public class Game {
     }
 
     private void addShipsForAIPlayers() throws IOException, InterruptedException {
-        firstPlayer.addShips(screen, terminal);
-        secondPlayer.addShips(screen, terminal);
-    }
-
-    private boolean shouldRandomlyArrangeShips() throws IOException, InterruptedException {
-        TextGraphics tg = screen.newTextGraphics();
-        for (int i = 9; i <22; i++)
-            tg.putString(1, i, " ".repeat(100), SGR.BOLD);
-        return UserInput.question(screen, terminal, "Czy chcesz losowo rozmiescic statki (y/n)?");
+        firstPlayer.addShips();
+        secondPlayer.addShips();
     }
 
     private void printResultGame() {
