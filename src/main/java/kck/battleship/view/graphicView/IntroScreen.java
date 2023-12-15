@@ -74,13 +74,9 @@ public class IntroScreen extends JFrame {
         nicknameField.setForeground(new Color(0, 0, 0));
         nicknameField.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
         nicknameField.setBounds(220, 190, 160, 20);
-        int topPadding = 5;
-        int leftPadding = 5;
-        int bottomPadding = 5;
-        int rightPadding = 5;
         nicknameField.setBorder(BorderFactory.createCompoundBorder(
                 nicknameField.getBorder(),
-                BorderFactory.createEmptyBorder(topPadding, leftPadding, bottomPadding, rightPadding)
+                BorderFactory.createEmptyBorder(5, 5, 5, 5)
         ));
         container.add(nicknameField, 4);
 
