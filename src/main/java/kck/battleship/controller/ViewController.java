@@ -6,7 +6,6 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.terminal.swing.AWTTerminalFontConfiguration;
 import kck.battleship.view.graphicView.GraphicView;
-import kck.battleship.view.graphicView.IntroScreen;
 import kck.battleship.view.textView.TextView;
 import kck.battleship.view.View;
 
@@ -23,8 +22,10 @@ public class ViewController {
         choice = x;
 
         if (x == 1) {
-            new IntroScreen();
-        } else {
+            graphicView = new GraphicView();
+            graphicView.printHomePage();
+            graphicView.waitForKeyHomePage();
+        } else if (x == 2) {
             try {
                 Font myFont = new Font("Monospaced", Font.PLAIN, 24);
                 AWTTerminalFontConfiguration myFontConfiguration = AWTTerminalFontConfiguration.newInstance(myFont);
@@ -45,7 +46,6 @@ public class ViewController {
             } catch (IOException | InterruptedException | GameException ex) {
                 throw new RuntimeException(ex);
             }
-
         }
     }
 

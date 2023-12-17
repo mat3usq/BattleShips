@@ -3,15 +3,47 @@ package kck.battleship.view.graphicView;
 import kck.battleship.model.clases.*;
 import kck.battleship.view.View;
 
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
 public class GraphicView extends View {
+    private static String name;
+    private LoginScreen loginScreen;
+    private HomeScreen homeScreen;
+
     @Override
     public void printHomePage() {
+        homeScreen = new HomeScreen();
+    }
 
+    @Override
+    public void printLoginPage() {
+        loginScreen = new LoginScreen();
+    }
+
+    @Override
+    public void waitForKeyHomePage() {
+        homeScreen.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_ENTER:
+                        printLoginPage();
+                        homeScreen.setVisible(false);
+                        break;
+                    case KeyEvent.VK_ESCAPE:
+                        printExit();
+                        homeScreen.dispose();
+                        System.exit(0);
+                        break;
+                }
+            }
+        });
     }
 
     @Override
     public void printShipImage() {
-
     }
 
     @Override
@@ -25,18 +57,7 @@ public class GraphicView extends View {
     }
 
     @Override
-    public void waitForKeyHomePage() {
-
-    }
-
-    @Override
-    public void printLoginPage() {
-
-    }
-
-    @Override
     public void printMenuPage(int selected) {
-
     }
 
     @Override
@@ -137,5 +158,9 @@ public class GraphicView extends View {
     @Override
     public void printBarrier(Player defender) {
 
+    }
+
+    public static void setName(String name) {
+        GraphicView.name = name;
     }
 }

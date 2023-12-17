@@ -4,13 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
 
-public class IntroScreen extends JFrame {
+public class LoginScreen extends JFrame {
     Cursor cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
     public JButton play;
     public JButton exit;
     public JTextField nicknameField;
 
-    public IntroScreen() {
+    public LoginScreen() {
         super("BattleShips - Pirate Edition");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
@@ -81,7 +81,8 @@ public class IntroScreen extends JFrame {
         container.add(nicknameField, 4);
 
         play.addActionListener(e -> {
-            String nickname = nicknameField.getText();
+            if(!nicknameField.getText().isEmpty())
+                GraphicView.setName(nicknameField.getText());
         });
 
         exit.addActionListener(e -> dispose());
