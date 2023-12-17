@@ -7,9 +7,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class GraphicView extends View {
-    private static String name;
-    private LoginScreen loginScreen;
+    private  String name;
     private HomeScreen homeScreen;
+    private LoginScreen loginScreen;
+    private MainScreen mainScreen;
 
     @Override
     public void printHomePage() {
@@ -19,6 +20,15 @@ public class GraphicView extends View {
     @Override
     public void printLoginPage() {
         loginScreen = new LoginScreen();
+        loginScreen.play.addActionListener(e -> {
+            if(!loginScreen.nicknameField.getText().isEmpty()){
+                name = loginScreen.nicknameField.getText();
+                loginScreen.setVisible(false);
+                mainScreen = new MainScreen();
+            }
+        });
+
+        loginScreen.exit.addActionListener(e -> loginScreen.dispose());
     }
 
     @Override
@@ -158,9 +168,5 @@ public class GraphicView extends View {
     @Override
     public void printBarrier(Player defender) {
 
-    }
-
-    public static void setName(String name) {
-        GraphicView.name = name;
     }
 }

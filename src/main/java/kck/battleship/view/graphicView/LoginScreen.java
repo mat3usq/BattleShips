@@ -80,13 +80,6 @@ public class LoginScreen extends JFrame {
         ));
         container.add(nicknameField, 4);
 
-        play.addActionListener(e -> {
-            if(!nicknameField.getText().isEmpty())
-                GraphicView.setName(nicknameField.getText());
-        });
-
-        exit.addActionListener(e -> dispose());
-
         this.add(container);
         this.setVisible(true);
     }
