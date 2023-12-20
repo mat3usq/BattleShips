@@ -7,7 +7,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class GraphicView extends View {
-    private  String name;
+    private int selected = 0;
+    private final int sizeOptions = 6;
+    private String name;
     private HomeScreen homeScreen;
     private LoginScreen loginScreen;
     private MainScreen mainScreen;
@@ -21,14 +23,87 @@ public class GraphicView extends View {
     public void printLoginPage() {
         loginScreen = new LoginScreen();
         loginScreen.play.addActionListener(e -> {
-            if(!loginScreen.nicknameField.getText().isEmpty()){
+            if (!loginScreen.nicknameField.getText().isEmpty()) {
                 name = loginScreen.nicknameField.getText();
                 loginScreen.setVisible(false);
                 mainScreen = new MainScreen();
+                printMenuPage(0);
+                addActionsListeners();
+                addKeyListeners();
             }
         });
 
-        loginScreen.exit.addActionListener(e -> loginScreen.dispose());
+        loginScreen.exit.addActionListener(e -> {
+            homeScreen.dispose();
+            loginScreen.dispose();
+            System.exit(0);
+        });
+    }
+
+    private void addActionsListeners() {
+        mainScreen.playGame.addActionListener(ev -> {
+            mainScreen.requestFocusInWindow();
+            printMenuPage(0);
+        });
+
+        mainScreen.simulateGame.addActionListener(ev -> {
+            mainScreen.requestFocusInWindow();
+            printMenuPage(1);
+        });
+
+        mainScreen.shop.addActionListener(ev -> {
+            mainScreen.requestFocusInWindow();
+            printMenuPage(2);
+        });
+
+        mainScreen.rules.addActionListener(ev -> {
+            mainScreen.requestFocusInWindow();
+            printMenuPage(3);
+        });
+
+        mainScreen.ranking.addActionListener(ev -> {
+            mainScreen.requestFocusInWindow();
+            printMenuPage(4);
+        });
+
+        mainScreen.exit.addActionListener(ev -> {
+            mainScreen.requestFocusInWindow();
+            printMenuPage(5);
+            printExit();
+            mainScreen.dispose();
+            loginScreen.dispose();
+            homeScreen.dispose();
+            System.exit(0);
+        });
+    }
+
+    private void addKeyListeners() {
+        mainScreen.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_ENTER:
+                        option(selected);
+                        break;
+                    case KeyEvent.VK_ESCAPE:
+                        printExit();
+                        mainScreen.dispose();
+                        loginScreen.dispose();
+                        homeScreen.dispose();
+                        System.exit(0);
+                        break;
+                    case KeyEvent.VK_DOWN:
+                        if (selected + 1 < sizeOptions)
+                            printMenuPage(++selected);
+                        break;
+                    case KeyEvent.VK_UP:
+                        if (selected - 1 >= 0)
+                            printMenuPage(--selected);
+                        break;
+                }
+            }
+        });
     }
 
     @Override
@@ -68,6 +143,38 @@ public class GraphicView extends View {
 
     @Override
     public void printMenuPage(int selected) {
+        this.selected = selected;
+        mainScreen.leftLabel.setVisible(true);
+        mainScreen.rightLabel.setVisible(true);
+        mainScreen.upLabel.setVisible(false);
+        switch (selected) {
+            case 0:
+                mainScreen.leftLabel.setBounds(185, 220, 30, 30);
+                mainScreen.rightLabel.setBounds(385, 220, 30, 30);
+                break;
+            case 1:
+                mainScreen.leftLabel.setBounds(185, 320, 30, 30);
+                mainScreen.rightLabel.setBounds(385, 320, 30, 30);
+                break;
+            case 2:
+                mainScreen.leftLabel.setBounds(185, 430, 30, 30);
+                mainScreen.rightLabel.setBounds(385, 430, 30, 30);
+                break;
+            case 3:
+                mainScreen.leftLabel.setBounds(185, 550, 30, 30);
+                mainScreen.rightLabel.setBounds(385, 550, 30, 30);
+                break;
+            case 4:
+                mainScreen.upLabel.setVisible(true);
+                mainScreen.leftLabel.setVisible(false);
+                mainScreen.rightLabel.setVisible(false);
+                mainScreen.upLabel.setBounds(520, 120, 30, 30);
+                break;
+            case 5:
+                mainScreen.leftLabel.setBounds(185, 670, 30, 30);
+                mainScreen.rightLabel.setBounds(385, 670, 30, 30);
+                break;
+        }
     }
 
     @Override
@@ -76,17 +183,44 @@ public class GraphicView extends View {
     }
 
     @Override
-    public void chooseOption(int selected){
+    public void chooseOption(int selected) {
 
     }
 
     @Override
     public void option(int selected) {
-
+        switch(selected) {
+            case 0 -> {
+//                if (name != null) {
+//                    Game game = new Game(name);
+//                    game.run();
+//                }
+            }
+            case 1 -> {
+//                Game game = new Game();
+//                game.run();
+            }
+            case 2 -> {
+                printShop();
+            }
+            case 3 -> {
+                printRanking(0);
+            }
+            case 4 -> {
+                printRules();
+            }
+            case 5 -> {
+                printExit();
+                mainScreen.dispose();
+                loginScreen.dispose();
+                homeScreen.dispose();
+                System.exit(0);
+            }
+        }
     }
 
     @Override
-    public void printRules()  {
+    public void printRules() {
 
     }
 
@@ -111,7 +245,7 @@ public class GraphicView extends View {
     }
 
     @Override
-    public void printShip(Ship ship){
+    public void printShip(Ship ship) {
 
     }
 
@@ -121,12 +255,12 @@ public class GraphicView extends View {
     }
 
     @Override
-    public void printBoard(BattleField battleField){
+    public void printBoard(BattleField battleField) {
 
     }
 
     @Override
-    public void showOptionToManuallyAddShip(){
+    public void showOptionToManuallyAddShip() {
 
     }
 
@@ -141,7 +275,7 @@ public class GraphicView extends View {
     }
 
     @Override
-    public void printBoardWithFutureShip(BattleField battleField, Ship ship){
+    public void printBoardWithFutureShip(BattleField battleField, Ship ship) {
 
     }
 
@@ -151,12 +285,12 @@ public class GraphicView extends View {
     }
 
     @Override
-    public void printRanking(int page){
+    public void printRanking(int page) {
 
     }
 
     @Override
-    public void printShop(){
+    public void printShop() {
 
     }
 

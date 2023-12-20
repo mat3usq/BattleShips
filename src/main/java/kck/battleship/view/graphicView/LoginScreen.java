@@ -26,54 +26,53 @@ public class LoginScreen extends JFrame {
         ImageIcon loadingIMG = new ImageIcon(Objects.requireNonNull(getClass().getResource("/loading.gif")));
         JLabel loadingLabel = new JLabel(loadingIMG);
 
-        ImageIcon graphicViewImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/random.png")));
-        ImageIcon graphicViewImgHover = new ImageIcon(Objects.requireNonNull(getClass().getResource("/randomOver.png")));
-        play = new JButton(graphicViewImg);
-        play.setRolloverIcon(graphicViewImgHover);
+        ImageIcon playViewImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/grajMenu.png")));
+//        ImageIcon playViewImgHover = new ImageIcon(Objects.requireNonNull(getClass().getResource("/menu.png")));
+        play = new JButton(playViewImg);
+//        play.setRolloverIcon(playViewImgHover);
         play.setBorder(null);
         play.setOpaque(false);
         play.setBorderPainted(false);
         play.setContentAreaFilled(false);
         play.setCursor(cursor);
-        play.setText("graphicViewButton");
+        play.setText("playViewImg");
 
-        ImageIcon textViewImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/random.png")));
-        ImageIcon textViewImgHover = new ImageIcon(Objects.requireNonNull(getClass().getResource("/randomOver.png")));
-        exit = new JButton(textViewImg);
-        exit.setRolloverIcon(textViewImgHover);
+        ImageIcon exitViewImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/wyjscieMenu.png")));
+//        ImageIcon exitViewImgHover = new ImageIcon(Objects.requireNonNull(getClass().getResource("/wyjscie.png")));
+        exit = new JButton(exitViewImg);
+//        exit.setRolloverIcon(exitViewImgHover);
         exit.setBorder(null);
         exit.setOpaque(false);
         exit.setBorderPainted(false);
         exit.setContentAreaFilled(false);
         exit.setCursor(cursor);
-        exit.setText("textViewButton");
+        exit.setText("exitViewImg");
 
-        JLabel chooseViewLabel = new JLabel("Wprowadz swoj nick piracie!");
-        chooseViewLabel.setForeground(Color.WHITE);
-        chooseViewLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        JLabel chooseNickLabel = new JLabel("Wprowadz swoj nick piracie!");
+        chooseNickLabel.setForeground(Color.WHITE);
+        chooseNickLabel.setFont(new Font("Arial", Font.BOLD, 18));
 
         container.add(splashPanel);
         splashPanel.setBounds(0, 0, 600, 400);
 
         container.add(loadingLabel, 0);
-        loadingLabel.setBounds(280, 220, 40, 40);
+        loadingLabel.setBounds(280, 200, 40, 40);
 
         container.add(play, 1);
-        play.setBounds(80, 280, 200, 30);
+        play.setBounds(150, 250, 100, 100);
 
         container.add(exit, 2);
-        exit.setBounds(320, 280, 200, 30);
+        exit.setBounds(380, 250, 100, 100);
 
-        container.add(chooseViewLabel, 3);
-        chooseViewLabel.setBounds(185, 130, 300, 20);
+        container.add(chooseNickLabel, 3);
+        chooseNickLabel.setBounds(185, 90, 300, 20);
 
         nicknameField = new JTextField();
-        nicknameField.setBounds(220, 160, 160, 30);
+        nicknameField.setBounds(220, 140, 160, 30);
         nicknameField.setFont(new Font("Arial", Font.PLAIN, 14));
         nicknameField.setBackground(new Color(255, 255, 255));
         nicknameField.setForeground(new Color(0, 0, 0));
         nicknameField.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
-        nicknameField.setBounds(220, 190, 160, 20);
         nicknameField.setBorder(BorderFactory.createCompoundBorder(
                 nicknameField.getBorder(),
                 BorderFactory.createEmptyBorder(5, 5, 5, 5)
@@ -82,5 +81,7 @@ public class LoginScreen extends JFrame {
 
         this.add(container);
         this.setVisible(true);
+        setFocusable(true);
+        requestFocusInWindow();
     }
 }

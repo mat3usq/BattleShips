@@ -25,6 +25,7 @@ public class ViewController {
             graphicView = new GraphicView();
             graphicView.printHomePage();
             graphicView.waitForKeyHomePage();
+            graphicView.chooseOption(0);
         } else if (x == 2) {
             try {
                 Font myFont = new Font("Monospaced", Font.PLAIN, 24);
