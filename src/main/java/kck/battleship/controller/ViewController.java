@@ -18,7 +18,6 @@ public class ViewController {
     private static GraphicView graphicView;
 
     public ViewController(int x) {
-
         choice = x;
 
         if (x == 1) {

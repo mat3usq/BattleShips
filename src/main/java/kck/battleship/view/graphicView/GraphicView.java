@@ -7,13 +7,12 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class GraphicView extends View {
-    private int selected = 0;
+    private int menuSelected = 0;
     private final int sizeOptions = 6;
     private String name;
     private HomeScreen homeScreen;
     private LoginScreen loginScreen;
     private MainScreen mainScreen;
-    private boolean listen = true;
 
     @Override
     public void printHomePage() {
@@ -32,6 +31,9 @@ public class GraphicView extends View {
 
                 addMenuActionsListeners();
                 addMenuKeyListeners();
+
+                addShopActionsListeners();
+                addShopKeyListeners();
             }
         });
 
@@ -43,35 +45,28 @@ public class GraphicView extends View {
     }
 
     private void addMenuActionsListeners() {
-        mainScreen.playGame.addActionListener(ev -> {
-            mainScreen.requestFocusInWindow();
+        mainScreen.menuPanel.playGame.addActionListener(ev -> {
             printMenuPage(0);
         });
 
-        mainScreen.simulateGame.addActionListener(ev -> {
-            mainScreen.requestFocusInWindow();
+        mainScreen.menuPanel.simulateGame.addActionListener(ev -> {
             printMenuPage(1);
         });
 
-        mainScreen.shop.addActionListener(ev -> {
-            listen = false;
-            mainScreen.requestFocusInWindow();
+        mainScreen.menuPanel.shop.addActionListener(ev -> {
             printMenuPage(2);
             printShop();
         });
 
-        mainScreen.rules.addActionListener(ev -> {
-            mainScreen.requestFocusInWindow();
+        mainScreen.menuPanel.rules.addActionListener(ev -> {
             printMenuPage(3);
         });
 
-        mainScreen.ranking.addActionListener(ev -> {
-            mainScreen.requestFocusInWindow();
+        mainScreen.menuPanel.ranking.addActionListener(ev -> {
             printMenuPage(4);
         });
 
-        mainScreen.exit.addActionListener(ev -> {
-            mainScreen.requestFocusInWindow();
+        mainScreen.menuPanel.exit.addActionListener(ev -> {
             printMenuPage(5);
             printExit();
             mainScreen.dispose();
@@ -82,35 +77,52 @@ public class GraphicView extends View {
     }
 
     private void addMenuKeyListeners() {
-        mainScreen.addKeyListener(new KeyAdapter() {
+        mainScreen.menuPanel.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
-               if(listen)
-               {
-                   switch (e.getKeyCode()) {
-                       case KeyEvent.VK_ENTER:
-                           option(selected);
-                           break;
-                       case KeyEvent.VK_ESCAPE:
-                           printExit();
-                           mainScreen.dispose();
-                           loginScreen.dispose();
-                           homeScreen.dispose();
-                           System.exit(0);
-                           break;
-                       case KeyEvent.VK_DOWN:
-                           if (selected + 1 < sizeOptions)
-                               printMenuPage(++selected);
-                           break;
-                       case KeyEvent.VK_UP:
-                           if (selected - 1 >= 0)
-                               printMenuPage(--selected);
-                           break;
-                   }
-               }
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_ENTER:
+                        option(menuSelected);
+                        break;
+                    case KeyEvent.VK_ESCAPE:
+                        printExit();
+                        mainScreen.dispose();
+                        loginScreen.dispose();
+                        homeScreen.dispose();
+                        System.exit(0);
+                        break;
+                    case KeyEvent.VK_DOWN:
+                        if (menuSelected + 1 < sizeOptions)
+                            printMenuPage(++menuSelected);
+                        break;
+                    case KeyEvent.VK_UP:
+                        if (menuSelected - 1 >= 0)
+                            printMenuPage(--menuSelected);
+                        break;
+                }
             }
         });
+    }
+
+    private void addShopActionsListeners(){
+        mainScreen.shopPanel.barrierShop.addActionListener(ev -> {
+//                s = Ranking.enoughPoints(name, 500, selected);
+//                s = Ranking.enoughPoints(name, 300, selected);
+        });
+
+        mainScreen.shopPanel.extraShip.addActionListener(ev -> {
+        });
+
+        mainScreen.shopPanel.backShop.addActionListener(ev -> {
+            mainScreen.menuPanel.setVisible(true);
+            mainScreen.shopPanel.setVisible(false);
+            printMenuPage(2);
+        });
+    }
+
+    private void addShopKeyListeners(){
+
     }
 
     @Override
@@ -150,36 +162,37 @@ public class GraphicView extends View {
 
     @Override
     public void printMenuPage(int selected) {
-        this.selected = selected;
-        mainScreen.leftLabel.setVisible(true);
-        mainScreen.rightLabel.setVisible(true);
-        mainScreen.upLabel.setVisible(false);
+        this.menuSelected = selected;
+        mainScreen.menuPanel.requestFocusInWindow();
+        mainScreen.menuPanel.upLabel.setVisible(false);
+        mainScreen.menuPanel.leftLabel.setVisible(true);
+        mainScreen.menuPanel.rightLabel.setVisible(true);
         switch (selected) {
             case 0:
-                mainScreen.leftLabel.setBounds(185, 220, 30, 30);
-                mainScreen.rightLabel.setBounds(385, 220, 30, 30);
+                mainScreen.menuPanel.leftLabel.setBounds(185, 220, 30, 30);
+                mainScreen.menuPanel.rightLabel.setBounds(385, 220, 30, 30);
                 break;
             case 1:
-                mainScreen.leftLabel.setBounds(185, 320, 30, 30);
-                mainScreen.rightLabel.setBounds(385, 320, 30, 30);
+                mainScreen.menuPanel.leftLabel.setBounds(185, 320, 30, 30);
+                mainScreen.menuPanel.rightLabel.setBounds(385, 320, 30, 30);
                 break;
             case 2:
-                mainScreen.leftLabel.setBounds(185, 430, 30, 30);
-                mainScreen.rightLabel.setBounds(385, 430, 30, 30);
+                mainScreen.menuPanel.leftLabel.setBounds(185, 430, 30, 30);
+                mainScreen.menuPanel.rightLabel.setBounds(385, 430, 30, 30);
                 break;
             case 3:
-                mainScreen.leftLabel.setBounds(185, 550, 30, 30);
-                mainScreen.rightLabel.setBounds(385, 550, 30, 30);
+                mainScreen.menuPanel.leftLabel.setBounds(185, 550, 30, 30);
+                mainScreen.menuPanel.rightLabel.setBounds(385, 550, 30, 30);
                 break;
             case 4:
-                mainScreen.upLabel.setVisible(true);
-                mainScreen.leftLabel.setVisible(false);
-                mainScreen.rightLabel.setVisible(false);
-                mainScreen.upLabel.setBounds(520, 120, 30, 30);
+                mainScreen.menuPanel.upLabel.setBounds(520, 120, 30, 30);
+                mainScreen.menuPanel.upLabel.setVisible(true);
+                mainScreen.menuPanel.leftLabel.setVisible(false);
+                mainScreen.menuPanel.rightLabel.setVisible(false);
                 break;
             case 5:
-                mainScreen.leftLabel.setBounds(185, 670, 30, 30);
-                mainScreen.rightLabel.setBounds(385, 670, 30, 30);
+                mainScreen.menuPanel.leftLabel.setBounds(185, 670, 30, 30);
+                mainScreen.menuPanel.rightLabel.setBounds(385, 670, 30, 30);
                 break;
         }
     }
@@ -196,7 +209,7 @@ public class GraphicView extends View {
 
     @Override
     public void option(int selected) {
-        switch(selected) {
+        switch (selected) {
             case 0 -> {
 //                if (name != null) {
 //                    Game game = new Game(name);
@@ -298,25 +311,8 @@ public class GraphicView extends View {
 
     @Override
     public void printShop() {
-        shopButtons();
-    }
-
-    private void shopButtons(){
-        mainScreen.playGame.setVisible(false);
-        mainScreen.simulateGame.setVisible(false);
-        mainScreen.shop.setVisible(false);
-        mainScreen.rules.setVisible(false);
-        mainScreen.exit.setVisible(false);
-        mainScreen.ranking.setVisible(false);
-        mainScreen.menuTitle.setVisible(false);
-        mainScreen.upLabel.setVisible(false);
-        mainScreen.leftLabel.setVisible(false);
-        mainScreen.rightLabel.setVisible(false);
-
-        mainScreen.backShop.setVisible(true);
-        mainScreen.extraShip.setVisible(true);
-        mainScreen.barrierShop.setVisible(true);
-        mainScreen.shopTitle.setVisible(true);
+        mainScreen.menuPanel.setVisible(false);
+        mainScreen.shopPanel.setVisible(true);
     }
 
     @Override
