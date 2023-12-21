@@ -13,6 +13,7 @@ public class GraphicView extends View {
     private HomeScreen homeScreen;
     private LoginScreen loginScreen;
     private MainScreen mainScreen;
+    private boolean listen = true;
 
     @Override
     public void printHomePage() {
@@ -28,8 +29,9 @@ public class GraphicView extends View {
                 loginScreen.setVisible(false);
                 mainScreen = new MainScreen();
                 printMenuPage(0);
-                addActionsListeners();
-                addKeyListeners();
+
+                addMenuActionsListeners();
+                addMenuKeyListeners();
             }
         });
 
@@ -40,7 +42,7 @@ public class GraphicView extends View {
         });
     }
 
-    private void addActionsListeners() {
+    private void addMenuActionsListeners() {
         mainScreen.playGame.addActionListener(ev -> {
             mainScreen.requestFocusInWindow();
             printMenuPage(0);
@@ -52,8 +54,10 @@ public class GraphicView extends View {
         });
 
         mainScreen.shop.addActionListener(ev -> {
+            listen = false;
             mainScreen.requestFocusInWindow();
             printMenuPage(2);
+            printShop();
         });
 
         mainScreen.rules.addActionListener(ev -> {
@@ -77,31 +81,34 @@ public class GraphicView extends View {
         });
     }
 
-    private void addKeyListeners() {
+    private void addMenuKeyListeners() {
         mainScreen.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_ENTER:
-                        option(selected);
-                        break;
-                    case KeyEvent.VK_ESCAPE:
-                        printExit();
-                        mainScreen.dispose();
-                        loginScreen.dispose();
-                        homeScreen.dispose();
-                        System.exit(0);
-                        break;
-                    case KeyEvent.VK_DOWN:
-                        if (selected + 1 < sizeOptions)
-                            printMenuPage(++selected);
-                        break;
-                    case KeyEvent.VK_UP:
-                        if (selected - 1 >= 0)
-                            printMenuPage(--selected);
-                        break;
-                }
+               if(listen)
+               {
+                   switch (e.getKeyCode()) {
+                       case KeyEvent.VK_ENTER:
+                           option(selected);
+                           break;
+                       case KeyEvent.VK_ESCAPE:
+                           printExit();
+                           mainScreen.dispose();
+                           loginScreen.dispose();
+                           homeScreen.dispose();
+                           System.exit(0);
+                           break;
+                       case KeyEvent.VK_DOWN:
+                           if (selected + 1 < sizeOptions)
+                               printMenuPage(++selected);
+                           break;
+                       case KeyEvent.VK_UP:
+                           if (selected - 1 >= 0)
+                               printMenuPage(--selected);
+                           break;
+                   }
+               }
             }
         });
     }
@@ -291,7 +298,25 @@ public class GraphicView extends View {
 
     @Override
     public void printShop() {
+        shopButtons();
+    }
 
+    private void shopButtons(){
+        mainScreen.playGame.setVisible(false);
+        mainScreen.simulateGame.setVisible(false);
+        mainScreen.shop.setVisible(false);
+        mainScreen.rules.setVisible(false);
+        mainScreen.exit.setVisible(false);
+        mainScreen.ranking.setVisible(false);
+        mainScreen.menuTitle.setVisible(false);
+        mainScreen.upLabel.setVisible(false);
+        mainScreen.leftLabel.setVisible(false);
+        mainScreen.rightLabel.setVisible(false);
+
+        mainScreen.backShop.setVisible(true);
+        mainScreen.extraShip.setVisible(true);
+        mainScreen.barrierShop.setVisible(true);
+        mainScreen.shopTitle.setVisible(true);
     }
 
     @Override
