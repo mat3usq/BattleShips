@@ -14,20 +14,22 @@ public class JDialogPopup extends JDialog {
     public JDialogPopup(JFrame parentFrame, String title, String message) {
         super(parentFrame, title, false);
         this.setLayout(null);
+        this.setResizable(false);
+        this.setSize(600, 400);
 
         JLayeredPane layeredPane = new JLayeredPane();
         this.add(layeredPane);
-        layeredPane.setBounds(0, 0, 500, 300);
+        layeredPane.setBounds(0, 0, 600, 400);
 
         JPanelBG background = new JPanelBG(Toolkit.getDefaultToolkit()
                 .createImage(MainScreen.class.getResource("/backgroundPopup.png")));
 
         questionLabel = new JLabel(message);
-        questionLabel.setForeground(Color.ORANGE);
+        questionLabel.setForeground(Color.white);
         questionLabel.setFont(new Font("Arial", Font.BOLD, 18));
 
         confrimLabel = new JLabel();
-        confrimLabel.setForeground(Color.CYAN);
+        confrimLabel.setForeground(Color.white);
         confrimLabel.setFont(new Font("Arial", Font.BOLD, 18));
 
         ImageIcon okPopupImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/kupie.png")));
@@ -43,22 +45,21 @@ public class JDialogPopup extends JDialog {
 //        play.setRolloverIcon(playViewImgHover);
 
         layeredPane.add(background, Integer.valueOf(1));
-        background.setBounds(0, 0, 500, 300);
+        background.setBounds(0, 0, 600, 400);
 
         layeredPane.add(questionLabel, Integer.valueOf(2));
-        questionLabel.setBounds(100, 50, 500, 50);
+        questionLabel.setBounds(150, 60, 500, 50);
 
         layeredPane.add(confrimLabel, Integer.valueOf(2));
-        confrimLabel.setBounds(100, 150, 500, 50);
+        confrimLabel.setBounds(150, 170, 500, 50);
         confrimLabel.setVisible(false);
 
         layeredPane.add(okButton, Integer.valueOf(2));
-        okButton.setBounds(100, 150, 100, 100);
+        okButton.setBounds(50, 220, 100, 100);
 
         layeredPane.add(cancelButton, Integer.valueOf(2));
-        cancelButton.setBounds(320, 150, 100, 100);
+        cancelButton.setBounds(450, 220, 100, 100);
 
-        this.setSize(500, 300);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
