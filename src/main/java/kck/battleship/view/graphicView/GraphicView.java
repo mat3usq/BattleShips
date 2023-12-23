@@ -44,12 +44,13 @@ public class GraphicView extends View {
 
                 addRulesActionsListeners();
                 addRulesKeyListeners();
+
+                addRankingActionsListeners();
+                addRankingKeyListeners();
             }
         });
 
         loginScreen.exit.addActionListener(e -> {
-            homeScreen.dispose();
-            loginScreen.dispose();
             System.exit(0);
         });
     }
@@ -76,14 +77,11 @@ public class GraphicView extends View {
 
         mainScreen.menuPanel.ranking.addActionListener(ev -> {
             printMenuPage(4);
+            printRanking(0);
         });
 
         mainScreen.menuPanel.exit.addActionListener(ev -> {
             printMenuPage(5);
-            printExit();
-            mainScreen.dispose();
-            loginScreen.dispose();
-            homeScreen.dispose();
             System.exit(0);
         });
     }
@@ -98,10 +96,6 @@ public class GraphicView extends View {
                         option(menuSelected);
                         break;
                     case KeyEvent.VK_ESCAPE:
-                        printExit();
-                        mainScreen.dispose();
-                        loginScreen.dispose();
-                        homeScreen.dispose();
                         System.exit(0);
                         break;
                     case KeyEvent.VK_DOWN:
@@ -175,7 +169,7 @@ public class GraphicView extends View {
         });
     }
 
-    private void addShopPopupKeyListeners(){
+    private void addShopPopupKeyListeners() {
         mainScreen.popup.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -200,7 +194,7 @@ public class GraphicView extends View {
         });
     }
 
-    private void addRulesKeyListeners(){
+    private void addRulesKeyListeners() {
         mainScreen.rules.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -209,6 +203,28 @@ public class GraphicView extends View {
                     mainScreen.menuPanel.setVisible(true);
                     mainScreen.rules.setVisible(false);
                     printMenuPage(3);
+                }
+            }
+        });
+    }
+
+    private void addRankingActionsListeners() {
+        mainScreen.ranking.backRanking.addActionListener(ev -> {
+            mainScreen.menuPanel.setVisible(true);
+            mainScreen.ranking.setVisible(false);
+            printMenuPage(4);
+        });
+    }
+
+    private void addRankingKeyListeners() {
+        mainScreen.ranking.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    mainScreen.menuPanel.setVisible(true);
+                    mainScreen.ranking.setVisible(false);
+                    printMenuPage(4);
                 }
             }
         });
@@ -226,8 +242,6 @@ public class GraphicView extends View {
                         homeScreen.setVisible(false);
                         break;
                     case KeyEvent.VK_ESCAPE:
-                        printExit();
-                        homeScreen.dispose();
                         System.exit(0);
                         break;
                 }
@@ -284,9 +298,6 @@ public class GraphicView extends View {
             }
             case 5 -> {
                 printExit();
-                mainScreen.dispose();
-                loginScreen.dispose();
-                homeScreen.dispose();
                 System.exit(0);
             }
         }
@@ -413,13 +424,15 @@ public class GraphicView extends View {
 
     @Override
     public void printRanking(int page) {
-
+        mainScreen.ranking.setVisible(true);
+        mainScreen.menuPanel.setVisible(false);
+        mainScreen.ranking.requestFocusInWindow();
     }
 
     @Override
     public void printShop() {
-        mainScreen.menuPanel.setVisible(false);
         mainScreen.shopPanel.setVisible(true);
+        mainScreen.menuPanel.setVisible(false);
         mainScreen.shopPanel.requestFocusInWindow();
     }
 
@@ -433,7 +446,7 @@ public class GraphicView extends View {
 
     }
 
-    private void buyItemInShop(){
+    private void buyItemInShop() {
         String s;
         mainScreen.popup.cancelButton.setVisible(false);
         mainScreen.popup.okButton.setVisible(false);

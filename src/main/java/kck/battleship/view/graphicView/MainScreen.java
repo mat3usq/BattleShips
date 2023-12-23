@@ -9,6 +9,7 @@ public class MainScreen extends JFrame {
     public JPanelMenu menuPanel;
     public JDialogPopup popup;
     public JPanelRules rules;
+    public JPanelRanking ranking;
 
     public MainScreen() {
         super("Menu - Pirate Edition");
@@ -37,6 +38,10 @@ public class MainScreen extends JFrame {
         rules = new JPanelRules();
         rules.setVisible(false);
         this.add(rules);
+
+        ranking = new JPanelRanking();
+        ranking.setVisible(false);
+        this.add(ranking);
 
         this.setVisible(true);
     }

@@ -32,6 +32,7 @@ public class JPanelRules extends JPanelBG {
 
         this.add(backRules, 0);
         backRules.setBounds(20, 20, 100, 100);
+
         JLabel rules = new JLabel("<html><body style='width: 220px; color: darkred;'>" +
                 "<div style='text-align: center; font-size: 20px; font-weight: bold; border-bottom: 2px solid brown; margin-bottom: 5px;'>Jak wygrać?</div>" +
                 "<p style='margin: 5px;'>→ Każdy gracz ma pole bitwy reprezentowane przez siatkę 10x10 (domyślną), na której rozmieszcza " + TypesShips.countAllShips() + " statków, ukrytych przed przeciwnikiem.</p>" +
@@ -47,7 +48,6 @@ public class JPanelRules extends JPanelBG {
                 "<p style='margin: 5px;'>→ Zostaniesz poinformowany, czy trafiłeś w statek, czy nie.</p>" +
                 "<p style='margin: 5px;'>→ Zatop wszystkie " + TypesShips.countAllShips() + " statków przeciwnika, aby wygrać!</p>" +
                 "</body></html>");
-
 
         rules.setVerticalAlignment(SwingConstants.TOP);
 
