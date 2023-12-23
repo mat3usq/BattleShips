@@ -8,6 +8,7 @@ public class MainScreen extends JFrame {
     public JPanelShop shopPanel;
     public JPanelMenu menuPanel;
     public JDialogPopup popup;
+    public JPanelRules rules;
 
     public MainScreen() {
         super("Menu - Pirate Edition");
@@ -32,6 +33,10 @@ public class MainScreen extends JFrame {
 
         popup = new JDialogPopup(this, "Sklep", "Czy napewno chcial(a)bys to kupic ?");
         popup.setVisible(false);
+
+        rules = new JPanelRules();
+        rules.setVisible(false);
+        this.add(rules);
 
         this.setVisible(true);
     }

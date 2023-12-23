@@ -41,6 +41,9 @@ public class GraphicView extends View {
 
                 addShopPopupActionsListeners();
                 addShopPopupKeyListeners();
+
+                addRulesActionsListeners();
+                addRulesKeyListeners();
             }
         });
 
@@ -68,6 +71,7 @@ public class GraphicView extends View {
 
         mainScreen.menuPanel.rules.addActionListener(ev -> {
             printMenuPage(3);
+            printRules();
         });
 
         mainScreen.menuPanel.ranking.addActionListener(ev -> {
@@ -188,6 +192,28 @@ public class GraphicView extends View {
         });
     }
 
+    private void addRulesActionsListeners() {
+        mainScreen.rules.backRules.addActionListener(ev -> {
+            mainScreen.menuPanel.setVisible(true);
+            mainScreen.rules.setVisible(false);
+            printMenuPage(3);
+        });
+    }
+
+    private void addRulesKeyListeners(){
+        mainScreen.rules.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    mainScreen.menuPanel.setVisible(true);
+                    mainScreen.rules.setVisible(false);
+                    printMenuPage(3);
+                }
+            }
+        });
+    }
+
     @Override
     public void waitForKeyHomePage() {
         homeScreen.addKeyListener(new KeyAdapter() {
@@ -251,10 +277,10 @@ public class GraphicView extends View {
                 printShopPage(0);
             }
             case 3 -> {
-                printRanking(0);
+                printRules();
             }
             case 4 -> {
-                printRules();
+                printRanking(0);
             }
             case 5 -> {
                 printExit();
@@ -305,7 +331,6 @@ public class GraphicView extends View {
 
     private void printShopPage(int selected) {
         this.shopSelected = selected;
-        mainScreen.shopPanel.requestFocusInWindow();
         switch (selected) {
             case 0:
                 mainScreen.shopPanel.leftLabel.setBounds(125, 360, 30, 30);
@@ -321,7 +346,9 @@ public class GraphicView extends View {
 
     @Override
     public void printRules() {
-
+        mainScreen.menuPanel.setVisible(false);
+        mainScreen.rules.setVisible(true);
+        mainScreen.rules.requestFocusInWindow();
     }
 
     @Override
@@ -393,6 +420,7 @@ public class GraphicView extends View {
     public void printShop() {
         mainScreen.menuPanel.setVisible(false);
         mainScreen.shopPanel.setVisible(true);
+        mainScreen.shopPanel.requestFocusInWindow();
     }
 
     @Override
