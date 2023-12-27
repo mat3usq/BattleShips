@@ -286,8 +286,8 @@ public class GraphicView extends View {
             case 0 -> {
                 try {
                     mainScreen.setVisible(false);
-                    gameScreen = new GameScreen();
                     Game game = new Game(name);
+                    gameScreen = new GameScreen();
                     game.run();
                 } catch (IOException | GameException | InterruptedException ex) {
                     throw new RuntimeException(ex);

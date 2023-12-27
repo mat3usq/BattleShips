@@ -15,7 +15,7 @@ import java.util.Random;
 public class Player {
     private String name;
     private final boolean isAI;
-    private boolean hasAirCrafter = false;
+    public boolean hasAirCrafter = false;
     private int durabilityForceField = 0;
     private Date lastShootTime;
     private final BattleField battleField = new BattleField();
@@ -122,8 +122,7 @@ public class Player {
             failedAttempts++;
         }
 
-        if (failedAttempts > limit)
-        {
+        if (failedAttempts > limit) {
             reset();
             randAddShips();
         }

@@ -9,16 +9,19 @@ import kck.battleship.view.View;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Stack;
 
 public class Game {
     private final Player firstPlayer;
     private final Ranking firstPlayerRank;
     private final Player secondPlayer;
     private final View view = ViewController.getInstance();
+    public static boolean hasExtraShip;
 
     public Game(String name) {
         firstPlayer = new Player(name);
         firstPlayer.getShop();
+        hasExtraShip = firstPlayer.hasAirCrafter;
         firstPlayerRank = new Ranking(firstPlayer, 0);
         secondPlayer = new Player("Wróg", true);
     }

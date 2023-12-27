@@ -1,19 +1,21 @@
 package kck.battleship.view.graphicView;
 
+import kck.battleship.controller.Game;
 import kck.battleship.model.types.TypesShips;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class JPanelOptions extends JPanelBG {
-    JRadioButtonMenuItem[] ships = new JRadioButtonMenuItem[7];
+    JRadioButtonMenuItem[] ships;
     JRadioButton[] directions = new JRadioButton[2];
+
     public JPanelOptions() {
         super(Toolkit.getDefaultToolkit()
                 .createImage(GameScreen.class.getResource("/manageBackground.png")));
         this.setLayout(null);
         this.setOpaque(false);
-        this.setBounds(550, -20, 800,800);
+        this.setBounds(550, -20, 800, 800);
 
 //        JLabel managePanelLabel = new JLabel("Statki oraz Opcje");
 //        managePanelLabel.setForeground(Color.BLACK);
@@ -27,20 +29,27 @@ public class JPanelOptions extends JPanelBG {
         ImageIcon ship3 = new ImageIcon(getClass().getResource("/ship/ship3.png"));
         ImageIcon ship4 = new ImageIcon(getClass().getResource("/ship/ship4.png"));
 
+
+        if (Game.hasExtraShip) {
+            ships = new JRadioButtonMenuItem[7];
+            ships[6] = new JRadioButtonMenuItem(ship4);
+            ships[6].setBounds(270, 600, 160, 40);
+        } else
+            ships = new JRadioButtonMenuItem[6];
+
+
         ships[0] = new JRadioButtonMenuItem(ship1);
-        ships[0].setBounds(150, 500,160, 40);
+        ships[0].setBounds(150, 500, 160, 40);
         ships[1] = new JRadioButtonMenuItem(ship2);
-        ships[1].setBounds(215, 500,160, 40);
+        ships[1].setBounds(215, 500, 160, 40);
         ships[2] = new JRadioButtonMenuItem(ship2);
-        ships[2].setBounds(305, 500,160, 40);
+        ships[2].setBounds(305, 500, 160, 40);
         ships[3] = new JRadioButtonMenuItem(ship3);
-        ships[3].setBounds(400, 500,160, 40);
+        ships[3].setBounds(400, 500, 160, 40);
         ships[4] = new JRadioButtonMenuItem(ship3);
-        ships[4].setBounds(180, 550,160, 40);
+        ships[4].setBounds(180, 550, 160, 40);
         ships[5] = new JRadioButtonMenuItem(ship4);
-        ships[5].setBounds(320, 550,160, 40);
-        ships[6] = new JRadioButtonMenuItem(ship4);
-        ships[6].setBounds(270, 600,160, 40);
+        ships[5].setBounds(320, 550, 160, 40);
 
         for (JRadioButtonMenuItem ship : ships) {
             ship.setOpaque(false);
