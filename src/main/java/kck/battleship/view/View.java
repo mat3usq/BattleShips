@@ -59,4 +59,8 @@ public abstract class View {
     public abstract void printItemsInShop(int x);
 
     public abstract void printBarrier(Player defender);
+
+    public abstract boolean isRandomShipsArranged();
+
+    public abstract void addShipsVisually(BattleField battleField, Ship ship);
 }

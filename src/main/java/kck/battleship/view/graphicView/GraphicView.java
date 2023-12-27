@@ -1,12 +1,17 @@
 package kck.battleship.view.graphicView;
 
+import kck.battleship.controller.Game;
+import kck.battleship.controller.GameException;
 import kck.battleship.model.clases.*;
 import kck.battleship.view.View;
+import kck.battleship.view.textView.UserInput;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GraphicView extends View {
     private int menuSelected = 0;
@@ -17,6 +22,7 @@ public class GraphicView extends View {
     private HomeScreen homeScreen;
     private LoginScreen loginScreen;
     private MainScreen mainScreen;
+    private GameScreen gameScreen;
 
     @Override
     public void printHomePage() {
@@ -58,31 +64,32 @@ public class GraphicView extends View {
     private void addMenuActionsListeners() {
         mainScreen.menuPanel.playGame.addActionListener(ev -> {
             printMenuPage(0);
+            option(0);
         });
 
         mainScreen.menuPanel.simulateGame.addActionListener(ev -> {
             printMenuPage(1);
+            option(1);
         });
 
         mainScreen.menuPanel.shop.addActionListener(ev -> {
             printMenuPage(2);
-            printShop();
-            printShopPage(0);
+            option(2);
         });
 
         mainScreen.menuPanel.rules.addActionListener(ev -> {
             printMenuPage(3);
-            printRules();
+            option(3);
         });
 
         mainScreen.menuPanel.ranking.addActionListener(ev -> {
             printMenuPage(4);
-            printRanking(0);
+            option(4);
         });
 
         mainScreen.menuPanel.exit.addActionListener(ev -> {
             printMenuPage(5);
-            System.exit(0);
+            option(5);
         });
     }
 
@@ -277,10 +284,14 @@ public class GraphicView extends View {
     public void option(int selected) {
         switch (selected) {
             case 0 -> {
-//                if (name != null) {
-//                    Game game = new Game(name);
-//                    game.run();
-//                }
+                try {
+                    mainScreen.setVisible(false);
+                    gameScreen = new GameScreen();
+                    Game game = new Game(name);
+                    game.run();
+                } catch (IOException | GameException | InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
             case 1 -> {
 //                Game game = new Game();
@@ -353,7 +364,6 @@ public class GraphicView extends View {
                 break;
         }
     }
-
 
     @Override
     public void printRules() {
@@ -467,5 +477,31 @@ public class GraphicView extends View {
         });
         timer.setRepeats(false);
         timer.start();
+    }
+
+    @Override
+    public boolean isRandomShipsArranged() {
+        AtomicBoolean isOkPressed = new AtomicBoolean();
+
+        gameScreen.popup.okButton.addActionListener(e -> {
+            isOkPressed.set(true);
+            gameScreen.popup.setVisible(false);
+        });
+
+        gameScreen.popup.cancelButton.addActionListener(e -> {
+            isOkPressed.set(false);
+            gameScreen.popup.setVisible(false);
+        });
+
+        gameScreen.popup.setVisible(true);
+
+        return isOkPressed.get();
+    }
+
+    @Override
+    public void addShipsVisually(BattleField battleField, Ship ship) {
+//        printBoard(battleField);
+//        printShip(ship);
+//        UserInput.getMovedShipPosition(ship, battleField);
     }
 }

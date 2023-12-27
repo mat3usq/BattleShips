@@ -124,7 +124,7 @@ public class Game {
         if (bothPlayersAreAI()) {
             addShipsForAIPlayers();
         } else {
-            if (UserInput.question("Czy chcesz losowo rozmiescic statki (y/n)?"))
+            if (view.isRandomShipsArranged())
                 firstPlayer.randAddShips();
             else
                 firstPlayer.addShips();

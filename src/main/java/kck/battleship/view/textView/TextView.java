@@ -949,4 +949,22 @@ public class TextView extends View {
     public static Terminal getTerminal() {
         return terminal;
     }
+
+    public boolean isRandomShipsArranged() {
+        try {
+            return UserInput.question("Czy chcesz losowo rozmiescic statki (y/n)?");
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void addShipsVisually(BattleField battleField, Ship ship) {
+        try {
+            printBoard(battleField);
+            printShip(ship);
+            UserInput.getMovedShipPosition(ship, battleField);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

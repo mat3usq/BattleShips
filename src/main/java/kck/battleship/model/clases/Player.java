@@ -81,10 +81,7 @@ public class Player {
         view.showOptionToManuallyAddShip();
 
         do {
-            view.printBoard(battleField);
-            view.printShip(ship);
-
-            UserInput.getMovedShipPosition(ship, battleField);
+            view.addShipsVisually(battleField, ship);
 
             try {
                 isAdded = battleField.addShip(ship);
