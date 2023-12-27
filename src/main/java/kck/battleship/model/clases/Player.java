@@ -66,7 +66,7 @@ public class Player {
         if (!isAI) {
             ArrayList<Ship> ships = createShips();
             if (hasAirCrafter)
-                ships.add(new Ship("LOTNISKOWIEC", 6));
+                ships.add(new Ship("LOTNISKOWIEC", 5));
 
             for (Ship ship : ships)
                 addShipManually(ship);
@@ -97,7 +97,7 @@ public class Player {
         Random random = new Random();
         ArrayList<Ship> ships = createShips();
         if (hasAirCrafter)
-            ships.add(new Ship("LOTNISKOWIEC", 6));
+            ships.add(new Ship("LOTNISKOWIEC", 5));
 
         for (Ship ship : ships)
             addShipRandomly(random, ship);

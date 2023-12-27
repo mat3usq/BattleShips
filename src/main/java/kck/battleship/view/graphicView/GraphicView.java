@@ -18,7 +18,7 @@ public class GraphicView extends View {
     private int shopSelected = 0;
     private final int sizeOptions = 6;
     private final int sizeOptionsShop = 2;
-    private String name;
+    public static String name;
     private HomeScreen homeScreen;
     private LoginScreen loginScreen;
     private MainScreen mainScreen;
@@ -409,7 +409,7 @@ public class GraphicView extends View {
 
     @Override
     public void showOptionToManuallyAddShip() {
-
+        gameScreen.setVisible(true);
     }
 
     @Override

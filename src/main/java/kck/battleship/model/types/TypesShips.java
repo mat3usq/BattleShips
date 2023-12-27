@@ -1,10 +1,10 @@
 package kck.battleship.model.types;
 
 public enum TypesShips {
-    SUBMARINE(1, 2),
-    CRUISER(2, 3),
-    DESTROYER(2, 4),
-    BATTLESHIP(1, 5);
+    SUBMARINE(1, 1),
+    CRUISER(2, 2),
+    DESTROYER(2, 3),
+    BATTLESHIP(1, 4);
 
     private final int numberOfShips;
     private final int shipLength;
