@@ -1,5 +1,6 @@
 package kck.battleship;
 
+
 import kck.battleship.controller.ViewController;
 
 import java.util.Scanner;

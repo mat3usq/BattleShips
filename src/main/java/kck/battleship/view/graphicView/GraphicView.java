@@ -25,6 +25,7 @@ public class GraphicView extends View {
     private LoginScreen loginScreen;
     private MainScreen mainScreen;
     private GameScreen gameScreen;
+    private Game game;
 
     @Override
     public void printHomePage() {
@@ -288,10 +289,10 @@ public class GraphicView extends View {
             case 0 -> {
                 try {
                     mainScreen.setVisible(false);
-                    Game game = new Game(name);
+                    game = new Game(name);
                     gameScreen = new GameScreen();
-                    game.run();
-                } catch (IOException | GameException | InterruptedException ex) {
+                    game.addAllShips();
+                } catch (IOException | InterruptedException ex) {
                     throw new RuntimeException(ex);
                 }
             }
@@ -425,7 +426,8 @@ public class GraphicView extends View {
             if (dir == 0)
                 gameScreen.manage.map.jButtons[x][y].setDisabledIcon(new ImageIcon(
                         getClass().getResource("/ship/ship1_hori.png")));
-            else gameScreen.manage.map.jButtons[x][y].setDisabledIcon(new ImageIcon(getClass().getResource("/ship/ship1_vert.png")));
+            else
+                gameScreen.manage.map.jButtons[x][y].setDisabledIcon(new ImageIcon(getClass().getResource("/ship/ship1_vert.png")));
         } else {
             ImageIcon shipHeadLeft = new ImageIcon(
                     getClass().getResource("/ship/shipHeadLeft.png"));
@@ -560,12 +562,10 @@ public class GraphicView extends View {
 
     @Override
     public void addShipsVisually(BattleField battleField, Ship ship, ArrayList<Ship> ships) {
+        gameScreen.manage.currentShip = ship;
+        gameScreen.manage.ships = ships;
+        gameScreen.manage.battleField = battleField;
         printBoard(battleField, ships);
-//        printShip(ship);
-        choosePositionToLocateShip(ship);
-    }
-
-    private void choosePositionToLocateShip(Ship ship){
-
+        printShip(ship);
     }
 }

@@ -5,12 +5,16 @@ import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.terminal.swing.AWTTerminalFontConfiguration;
+import kck.battleship.model.clases.BattleField;
+import kck.battleship.model.clases.Ship;
 import kck.battleship.view.graphicView.GraphicView;
 import kck.battleship.view.textView.TextView;
 import kck.battleship.view.View;
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class ViewController {
     public static int choice;
@@ -55,6 +59,54 @@ public class ViewController {
             return graphicView;
 
         return textView;
+    }
+
+    public static void addShipManually(BattleField battleField, ArrayList<Ship> ships) {
+        if (choice == 1) {
+            getInstance().addShipsVisually(battleField, ships.get(0), ships);
+        } else {
+            for (Ship ship : ships)
+                addShipText(battleField, ship, ships);
+        }
+    }
+
+//        SwingWorker<Boolean, Void> worker = new SwingWorker<>() {
+//            @Override
+//            protected Boolean doInBackground() throws Exception {
+//                boolean isAdded;
+//                do {
+//                    getInstance().addShipsVisually(battleField, ship, ships);
+//                    try {
+//                        isAdded = battleField.addShip(ship);
+//                    } catch (GameException e) {
+//                        getInstance().printError(e.getMessage());
+//                        isAdded = false;
+//                        Thread.sleep(2000);
+//                    }
+//                } while (!isAdded);
+//                return isAdded;
+//            }
+//        };
+//        worker.execute();
+
+    private static void addShipText(BattleField battleField, Ship ship, ArrayList<Ship> ships) {
+        boolean isAdded;
+        do {
+            getInstance().addShipsVisually(battleField, ship, ships);
+
+            try {
+                isAdded = battleField.addShip(ship);
+            } catch (GameException e) {
+                getInstance().printError(e.getMessage());
+                isAdded = false;
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+
+        } while (!isAdded);
     }
 }
 

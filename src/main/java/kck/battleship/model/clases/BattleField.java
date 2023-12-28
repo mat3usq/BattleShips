@@ -120,6 +120,9 @@ public class BattleField {
     }
 
     public boolean addShip(Ship ship) throws GameException {
+        if(ship.getPosition() == null)
+            return false;
+
         int row = ship.getPosition().getRow();
         int column = ship.getPosition().getColumn();
 

@@ -1,4 +1,4 @@
-3230 Mateusz
+230 Mateusz
 200 Julka
 100 Kuba
 200 Adam
@@ -10,3 +10,9 @@
 53 Andrzej
 75 Pawel
 44 Dominika
+0 sadsad
+0 asdasd
+0 asdsad
+0 asdds
+0 adsad
+0 sadasd

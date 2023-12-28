@@ -63,34 +63,20 @@ public class Player {
         this.durabilityForceField = durabilityForceField;
     }
 
-    public void addShips() throws IOException, InterruptedException {
+    public void addShips() throws IOException{
         if (!isAI) {
             if (hasAirCrafter)
                 ships.add(new Ship("LOTNISKOWIEC", 5));
 
-            for (Ship ship : ships)
-                addShipManually(ship);
+            addShipManually();
 
             view.printBoard(battleField, ships);
         } else randAddShips();
     }
 
-    private void addShipManually(Ship ship) throws InterruptedException, IOException {
-        boolean isAdded;
-
+    private void addShipManually() throws IOException {
         view.showOptionToManuallyAddShip();
-
-        do {
-            view.addShipsVisually(battleField, ship, ships);
-
-            try {
-                isAdded = battleField.addShip(ship);
-            } catch (GameException e) {
-                view.printError(e.getMessage());
-                isAdded = false;
-                Thread.sleep(2000);
-            }
-        } while (!isAdded);
+        ViewController.addShipManually(battleField, ships);
     }
 
     public void randAddShips() {

@@ -123,7 +123,7 @@ public class Game {
         }
     }
 
-    private void addAllShips() throws IOException, InterruptedException {
+    public void addAllShips() throws IOException, InterruptedException {
         if (bothPlayersAreAI()) {
             addShipsForAIPlayers();
         } else {
