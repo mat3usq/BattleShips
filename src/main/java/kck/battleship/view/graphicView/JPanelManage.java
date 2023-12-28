@@ -68,8 +68,9 @@ public class JPanelManage extends JPanelBG implements ActionListener {
         game.setContentAreaFilled(false);
         game.setCursor(cursor);
         game.setText("playGame");
-        game.setBounds(400, 600, 175,100);
-        this.add(game);
+        game.setBounds(250, 610, 175, 100);
+        this.add(game, 0);
+        game.setVisible(false);
     }
 
     @Override
@@ -112,6 +113,7 @@ public class JPanelManage extends JPanelBG implements ActionListener {
                     options.directions[0].setEnabled(false);
                     options.directions[1].setEnabled(false);
                     options.ships[counter].setEnabled(false);
+                    game.setVisible(true);
                 }
 
                 options.ships[counter - 1].setEnabled(false);
