@@ -8,6 +8,7 @@ import kck.battleship.view.View;
 import kck.battleship.view.textView.UserInput;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
@@ -382,7 +383,8 @@ public class GraphicView extends View {
 
     @Override
     public void printError(String message) {
-
+        gameScreen.manage.errorPage.setVisible(true);
+        gameScreen.manage.label.setText(message);
     }
 
     @Override

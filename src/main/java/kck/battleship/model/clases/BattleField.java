@@ -103,14 +103,14 @@ public class BattleField {
         else constraint = (length - row + 1) > ship.getLength();
 
         if (!constraint)
-            throw new GameException("Błąd: twoj statek wystaje poza pole bitwy");
+            throw new GameException("Twoj statek wystaje poza pole bitwy");
 
         if (at(ship.getPosition()) == TypesField.SHIP.name)
-            throw new GameException("Błąd: istnieje już statek na tej pozycji");
+            throw new GameException("Istnieje już statek na tej pozycji");
 
         for (int i = 0; i < ship.getLength() && k + i < length - 1; i++) {
             if (isShipAround(row, column))
-                throw new GameException("Błąd: inny statek znajduje się w pobliżu");
+                throw new GameException("Inny statek znajduje się w pobliżu");
 
             if (ship.getDirection() == TypesDirection.HORIZONTAL)
                 column++;
@@ -151,7 +151,7 @@ public class BattleField {
             numberShips--;
             return set(TypesField.HIT.name, position);
         } else if (at(position) == TypesField.WATER.name) return set(TypesField.MISS.name, position);
-        else throw new GameException("Błąd: już strzelałeś w tą pozycję");
+        else throw new GameException("Już strzelałeś w tą pozycję");
     }
 
     public BattleField getbattleFieldHideShips() throws GameException {

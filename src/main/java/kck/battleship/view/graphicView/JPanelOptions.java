@@ -17,18 +17,10 @@ public class JPanelOptions extends JPanelBG {
         this.setOpaque(false);
         this.setBounds(550, -20, 800, 800);
 
-//        JLabel managePanelLabel = new JLabel("Statki oraz Opcje");
-//        managePanelLabel.setForeground(Color.BLACK);
-//        managePanelLabel.setFont(new Font("Arial", Font.BOLD, 24));
-//        managePanelLabel.setBounds(260, 140, 200, 50);
-//        this.add(managePanelLabel);
-
-
         ImageIcon ship1 = new ImageIcon(getClass().getResource("/ship/ship1.png"));
         ImageIcon ship2 = new ImageIcon(getClass().getResource("/ship/ship2.png"));
         ImageIcon ship3 = new ImageIcon(getClass().getResource("/ship/ship3.png"));
         ImageIcon ship4 = new ImageIcon(getClass().getResource("/ship/ship4.png"));
-
 
         if (Game.hasExtraShip) {
             ships = new JRadioButtonMenuItem[7];
@@ -92,5 +84,6 @@ public class JPanelOptions extends JPanelBG {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setBorder(null);
         this.add(scrollPane);
+
     }
 }
