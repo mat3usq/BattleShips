@@ -4,6 +4,7 @@ import kck.battleship.controller.GameException;
 import kck.battleship.model.clases.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public abstract class View {
     public abstract void printHomePage();
@@ -40,7 +41,7 @@ public abstract class View {
 
     public abstract void printBoards(Player firstPlayer, Player secondPlayer);
 
-    public abstract void printBoard(BattleField battleField) throws IOException;
+    public abstract void printBoard(BattleField battleField, ArrayList<Ship> ships) throws IOException;
 
     public abstract void showOptionToManuallyAddShip() throws IOException;
 
@@ -62,5 +63,5 @@ public abstract class View {
 
     public abstract boolean isRandomShipsArranged();
 
-    public abstract void addShipsVisually(BattleField battleField, Ship ship);
+    public abstract void addShipsVisually(BattleField battleField, Ship ship, ArrayList<Ship> ships);
 }

@@ -3,6 +3,7 @@ package kck.battleship.view.graphicView;
 import kck.battleship.controller.Game;
 import kck.battleship.controller.GameException;
 import kck.battleship.model.clases.*;
+import kck.battleship.model.types.TypesDirection;
 import kck.battleship.view.View;
 import kck.battleship.view.textView.UserInput;
 
@@ -10,6 +11,7 @@ import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -403,8 +405,66 @@ public class GraphicView extends View {
     }
 
     @Override
-    public void printBoard(BattleField battleField) {
+    public void printBoard(BattleField battleField, ArrayList<Ship> ships) {
+        for (Ship ship : ships) {
+            if (ship.getPosition() != null)
+                printShip(ship.getPosition().getRow(), ship.getPosition().getColumn(), ship.getLength(), ship.getDirection());
+            else break;
+        }
+    }
 
+    void printShip(int x, int y, int dim, TypesDirection typesDirection) {
+        int dir;
+        if (typesDirection == TypesDirection.HORIZONTAL)
+            dir = 0;
+        else
+            dir = 1;
+
+        if (dim == 1) {
+            gameScreen.manage.map.jButtons[x][y].setEnabled(false);
+            if (dir == 0)
+                gameScreen.manage.map.jButtons[x][y].setDisabledIcon(new ImageIcon(
+                        getClass().getResource("/ship/ship1_hori.png")));
+            else gameScreen.manage.map.jButtons[x][y].setDisabledIcon(new ImageIcon(getClass().getResource("/ship/ship1_vert.png")));
+        } else {
+            ImageIcon shipHeadLeft = new ImageIcon(
+                    getClass().getResource("/ship/shipHeadLeft.png"));
+            ImageIcon shipHeadTop = new ImageIcon(
+                    getClass().getResource("/ship/shipHeadTop.png"));
+            ImageIcon shipBodyLeft = new ImageIcon(
+                    getClass().getResource("/ship/shipBodyLeft.png"));
+            ImageIcon shipBodyTop = new ImageIcon(
+                    getClass().getResource("/ship/shipBodyTop.png"));
+            ImageIcon shipFootLeft = new ImageIcon(
+                    getClass().getResource("/ship/shipFootLeft.png"));
+            ImageIcon shipFootTop = new ImageIcon(
+                    getClass().getResource("/ship/shipFootTop.png"));
+            if (dir == 0) {// horizontal
+                // Ship Head
+                gameScreen.manage.map.jButtons[x][y].setDisabledIcon(shipHeadLeft);
+                gameScreen.manage.map.jButtons[x][y].setEnabled(false);
+                // Ship Body
+                for (int i = 1; i < dim - 1; i++) {
+                    gameScreen.manage.map.jButtons[x][y + i].setDisabledIcon(shipBodyLeft);
+                    gameScreen.manage.map.jButtons[x][y + i].setEnabled(false);
+                }
+                // Ship Foot
+                gameScreen.manage.map.jButtons[x][y + dim - 1].setDisabledIcon(shipFootLeft);
+                gameScreen.manage.map.jButtons[x][y + dim - 1].setEnabled(false);
+            } else { // vertical
+                // Ship Head
+                gameScreen.manage.map.jButtons[x][y].setDisabledIcon(shipHeadTop);
+                gameScreen.manage.map.jButtons[x][y].setEnabled(false);
+                // Ship Body
+                for (int i = 1; i < dim - 1; i++) {
+                    gameScreen.manage.map.jButtons[x + i][y].setDisabledIcon(shipBodyTop);
+                    gameScreen.manage.map.jButtons[x + i][y].setEnabled(false);
+                }
+                // Ship Foot
+                gameScreen.manage.map.jButtons[x + dim - 1][y].setDisabledIcon(shipFootTop);
+                gameScreen.manage.map.jButtons[x + dim - 1][y].setEnabled(false);
+            }
+        }
     }
 
     @Override
@@ -499,9 +559,13 @@ public class GraphicView extends View {
     }
 
     @Override
-    public void addShipsVisually(BattleField battleField, Ship ship) {
-//        printBoard(battleField);
+    public void addShipsVisually(BattleField battleField, Ship ship, ArrayList<Ship> ships) {
+        printBoard(battleField, ships);
 //        printShip(ship);
-//        UserInput.getMovedShipPosition(ship, battleField);
+        choosePositionToLocateShip(ship);
+    }
+
+    private void choosePositionToLocateShip(Ship ship){
+
     }
 }

@@ -11,7 +11,7 @@ public class JPanelMap extends JPanel {
     private int fieldDim = 48;
     private int offX = 2;
     private int offY = 2;
-    private JButton[][] jButtons = new JButton[10][10];
+    public JButton[][] jButtons = new JButton[10][10];
     private JLabel[] labelX = new JLabel[10];
     private JLabel[] labelY = new JLabel[10];
 

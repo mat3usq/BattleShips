@@ -563,7 +563,7 @@ public class TextView extends View {
     }
 
     @Override
-    public void printBoard(BattleField battleField) throws IOException {
+    public void printBoard(BattleField battleField, ArrayList<Ship> ships) throws IOException {
         TextGraphics tg = screen.newTextGraphics();
         String letters = "abcdefghij";
 
@@ -958,9 +958,9 @@ public class TextView extends View {
         }
     }
 
-    public void addShipsVisually(BattleField battleField, Ship ship) {
+    public void addShipsVisually(BattleField battleField, Ship ship, ArrayList<Ship> ships) {
         try {
-            printBoard(battleField);
+            printBoard(battleField, ships);
             printShip(ship);
             UserInput.getMovedShipPosition(ship, battleField);
         } catch (IOException e) {

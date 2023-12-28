@@ -21,6 +21,7 @@ public class Player {
     private final BattleField battleField = new BattleField();
     private final ArrayList<Position> shoots = new ArrayList<>();
     private final ArrayList<Position> nextShoots = new ArrayList<>();
+    private final ArrayList<Ship> ships = createShips();
     private static final View view = ViewController.getInstance();
 
     public Player(String name) {
@@ -64,14 +65,13 @@ public class Player {
 
     public void addShips() throws IOException, InterruptedException {
         if (!isAI) {
-            ArrayList<Ship> ships = createShips();
             if (hasAirCrafter)
                 ships.add(new Ship("LOTNISKOWIEC", 5));
 
             for (Ship ship : ships)
                 addShipManually(ship);
 
-            view.printBoard(battleField);
+            view.printBoard(battleField, ships);
         } else randAddShips();
     }
 
@@ -81,7 +81,7 @@ public class Player {
         view.showOptionToManuallyAddShip();
 
         do {
-            view.addShipsVisually(battleField, ship);
+            view.addShipsVisually(battleField, ship, ships);
 
             try {
                 isAdded = battleField.addShip(ship);
@@ -95,7 +95,6 @@ public class Player {
 
     public void randAddShips() {
         Random random = new Random();
-        ArrayList<Ship> ships = createShips();
         if (hasAirCrafter)
             ships.add(new Ship("LOTNISKOWIEC", 5));
 

@@ -37,7 +37,6 @@ public class JPanelOptions extends JPanelBG {
         } else
             ships = new JRadioButtonMenuItem[6];
 
-
         ships[0] = new JRadioButtonMenuItem(ship1);
         ships[0].setBounds(150, 500, 160, 40);
         ships[1] = new JRadioButtonMenuItem(ship2);

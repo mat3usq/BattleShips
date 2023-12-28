@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class JPanelManage extends JPanelBG {
-    private JPanelMap map;
+    public JPanelMap map;
     private JPanelOptions options;
 
     public JPanelManage() {
