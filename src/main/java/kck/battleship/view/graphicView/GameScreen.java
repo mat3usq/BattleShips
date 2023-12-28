@@ -6,6 +6,8 @@ import java.awt.*;
 public class GameScreen extends JFrame {
     public JDialogPopupShip popup;
     public JPanelManage manage;
+    public JPanelBattle playerBattle;
+
     public GameScreen() {
         super("Game - Pirate Edition");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -23,8 +25,12 @@ public class GameScreen extends JFrame {
         popup.setVisible(false);
 
         manage = new JPanelManage();
-        manage.setVisible(true);
+        manage.setVisible(false);
         this.add(manage);
+
+        playerBattle = new JPanelBattle(true);
+        playerBattle.setVisible(false);
+        this.add(playerBattle);
 
         this.setVisible(false);
     }

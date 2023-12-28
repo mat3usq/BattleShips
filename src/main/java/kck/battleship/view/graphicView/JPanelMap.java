@@ -20,7 +20,10 @@ public class JPanelMap extends JPanel {
         this.setLayout(null);
         this.setOpaque(false);
 
-        nameLabel = new JLabel(GraphicView.name);
+        if (player.equals("player") || player.equals("manager"))
+            nameLabel = new JLabel(GraphicView.name);
+        else
+            nameLabel = new JLabel("Computer");
         nameLabel.setForeground(Color.BLACK);
         nameLabel.setFont(new Font("Arial", Font.BOLD, 24));
         nameLabel.setBounds(80, -5, 500, 50);

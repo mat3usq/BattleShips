@@ -474,6 +474,7 @@ public class GraphicView extends View {
     @Override
     public void showOptionToManuallyAddShip() {
         gameScreen.setVisible(true);
+        gameScreen.manage.setVisible(true);
     }
 
     @Override
@@ -549,12 +550,20 @@ public class GraphicView extends View {
 
         gameScreen.popup.okButton.addActionListener(e -> {
             isOkPressed.set(true);
+            gameScreen.setVisible(true);
             gameScreen.popup.setVisible(false);
+            gameScreen.playerBattle.setVisible(true);
         });
 
         gameScreen.popup.cancelButton.addActionListener(e -> {
             isOkPressed.set(false);
             gameScreen.popup.setVisible(false);
+
+            gameScreen.manage.game.addActionListener(ev -> {
+                gameScreen.manage.game.setVisible(false);
+                gameScreen.manage.setVisible(false);
+                gameScreen.playerBattle.setVisible(true);
+            });
         });
 
         gameScreen.popup.setVisible(true);

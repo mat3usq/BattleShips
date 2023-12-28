@@ -33,6 +33,8 @@ public class JPanelManage extends JPanelBG implements ActionListener {
     public JPanelManage() {
         super(Toolkit.getDefaultToolkit()
                 .createImage(MainScreen.class.getResource("/backgroundManageShips.png")));
+        this.setSize(1200, 750);
+
         map = new JPanelMap("manager");
         this.add(map);
 
