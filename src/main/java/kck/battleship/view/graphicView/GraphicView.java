@@ -412,7 +412,21 @@ public class GraphicView extends View {
 
     @Override
     public void printWinner(Player player, Ranking rank) {
+        mainScreen.setVisible(true);
+        mainScreen.menuPanel.setVisible(false);
+        gameScreen.setVisible(false);
+        mainScreen.results.setVisible(true);
+        mainScreen.results.winnerName.setText("Zwyciezca: " + player.getName());
+        if(!player.getName().equals("Enemy2"))
+            mainScreen.results.points.setText("Twoj wynik: " + rank.getPoints());
 
+        Timer timer = new Timer(8000, e -> {
+            mainScreen.results.setVisible(false);
+            mainScreen.menuPanel.setVisible(true);
+            printMenuPage(0);
+        });
+        timer.setRepeats(false);
+        timer.start();
     }
 
     @Override

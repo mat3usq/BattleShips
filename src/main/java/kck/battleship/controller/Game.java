@@ -4,13 +4,11 @@ import kck.battleship.model.clases.Player;
 import kck.battleship.model.clases.Position;
 import kck.battleship.model.clases.Ranking;
 import kck.battleship.model.types.TypesField;
-import kck.battleship.view.textView.UserInput;
 import kck.battleship.view.View;
 
 import javax.swing.*;
 import java.io.IOException;
 import java.util.Date;
-import java.util.Stack;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Game {
@@ -102,20 +100,16 @@ public class Game {
         } else return false;
     }
 
-    public void playRound(){
+    public void playRound() {
         boolean attacker = playTurn(Game.getFirstPlayer(), Game.getSecondPlayer(), false);
-        AtomicBoolean defender = new AtomicBoolean(false);
+        boolean defender = false;
         if (attacker) {
-            Timer timer = new Timer(2000, e -> defender.set(playTurn(Game.getSecondPlayer(), Game.getFirstPlayer(), false)));
-            timer.setRepeats(false);
-            timer.start();
-        }else{
-            saveRanking();
-            printResultGame();
+            defender = playTurn(Game.getSecondPlayer(), Game.getFirstPlayer(), false);
         }
 
-        if(defender.get()){
-
+        if (!defender || !attacker) {
+            saveRanking();
+            printResultGame();
         }
     }
 
@@ -160,7 +154,7 @@ public class Game {
             view.printWinner(secondPlayer, firstPlayerRank);
     }
 
-    public void saveRanking(){
+    public void saveRanking() {
         if (!firstPlayer.isAI())
             firstPlayerRank.save();
     }
