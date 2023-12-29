@@ -16,7 +16,7 @@ public class JPanelMap extends JPanel {
     private JLabel[] labelY = new JLabel[10];
 
     public JPanelMap(String player) {
-        this.setSize(700, 700);
+        this.setSize(600, 600);
         this.setLayout(null);
         this.setOpaque(false);
 
@@ -53,8 +53,7 @@ public class JPanelMap extends JPanel {
                     jButtons[i][j].setCursor(cursorDefault);
                     jButtons[i][j].setDisabledIcon(gray);
                     jButtons[i][j].setEnabled(false);
-                } else
-                    jButtons[i][j].setCursor(cursorHand);
+                } else jButtons[i][j].setCursor(cursorHand);
                 offX += fieldDim + 2;
             }
             offY += fieldDim + 2;

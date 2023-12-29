@@ -1,10 +1,12 @@
 package kck.battleship.view.graphicView;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.StringTokenizer;
 
-public class JPanelBattle extends JPanelBG implements ActionListener{
+public class JPanelBattle extends JPanelBG implements ActionListener {
     public JPanelMap firstMap;
     public JPanelMap secondMap;
 
@@ -17,7 +19,7 @@ public class JPanelBattle extends JPanelBG implements ActionListener{
         this.add(firstMap);
 
         secondMap = new JPanelMap("computer");
-        secondMap.setBounds(550,0,700,700);
+        secondMap.setBounds(550, 0, 600, 600);
         this.add(secondMap);
 
         if (type) {
@@ -32,6 +34,11 @@ public class JPanelBattle extends JPanelBG implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        JButton source = (JButton) e.getSource();
+        StringTokenizer st = new StringTokenizer(source.getActionCommand(), " ");
+        int x = Integer.parseInt(st.nextToken());
+        int y = Integer.parseInt(st.nextToken());
 
+        System.out.println(x + " " + y);
     }
 }

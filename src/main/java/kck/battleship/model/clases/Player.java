@@ -69,8 +69,6 @@ public class Player {
                 ships.add(new Ship("LOTNISKOWIEC", 5));
 
             addShipManually();
-
-            view.printBoard(battleField, ships);
         } else randAddShips();
     }
 
@@ -240,5 +238,9 @@ public class Player {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public ArrayList<Ship> getShips() {
+        return ships;
     }
 }

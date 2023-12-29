@@ -64,4 +64,6 @@ public abstract class View {
     public abstract boolean isRandomShipsArranged();
 
     public abstract void addShipsVisually(BattleField battleField, Ship ship, ArrayList<Ship> ships);
+
+//    public abstract Position getPositionToShot(BattleField defenderBattleField);
 }

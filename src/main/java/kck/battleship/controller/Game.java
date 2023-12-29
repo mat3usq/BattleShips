@@ -34,6 +34,7 @@ public class Game {
 
     public void run() throws GameException, IOException, InterruptedException {
         addAllShips();
+        view.printBoards(firstPlayer, secondPlayer);
 
         if (firstPlayer.isAI() && secondPlayer.isAI())
             playGame(firstPlayer, secondPlayer);
@@ -49,12 +50,12 @@ public class Game {
         view.chooseOption(0);
     }
 
-    private void playGame(Player player1, Player player2){
+    private void playGame(Player player1, Player player2) {
         while (playTurn(player1, player2, false) && playTurn(player2, player1, true)) {
         }
     }
 
-    private void playGameHumanVsAI(Player humanPlayer, Player aiPlayer){
+    private void playGameHumanVsAI(Player humanPlayer, Player aiPlayer) {
         while (playTurn(humanPlayer, aiPlayer, false) && playTurn(aiPlayer, humanPlayer, false)) {
         }
     }
@@ -63,7 +64,7 @@ public class Game {
         Position shoot = null;
         boolean isHit, isAddHit;
 
-        if(attacker.isAI() && defender.isAI())
+        if (attacker.isAI() && defender.isAI())
             view.showOptionToSimulatedGame();
         else
             view.showOptionToPlay();
@@ -127,21 +128,24 @@ public class Game {
         if (bothPlayersAreAI()) {
             addShipsForAIPlayers();
         } else {
-            if (view.isRandomShipsArranged())
+            boolean random = view.isRandomShipsArranged();
+            if (random)
                 firstPlayer.randAddShips();
             else
                 firstPlayer.addShips();
 
             secondPlayer.addShips();
+
+            if (random)
+                view.printBoards(getFirstPlayer(), getSecondPlayer());
         }
-        view.printBoards(firstPlayer, secondPlayer);
     }
 
     private boolean bothPlayersAreAI() {
         return firstPlayer.isAI() && secondPlayer.isAI();
     }
 
-    private void addShipsForAIPlayers() throws IOException, InterruptedException {
+    private void addShipsForAIPlayers() throws IOException {
         firstPlayer.addShips();
         secondPlayer.addShips();
     }
@@ -151,5 +155,13 @@ public class Game {
             view.printWinner(firstPlayer, firstPlayerRank);
         else
             view.printWinner(secondPlayer, firstPlayerRank);
+    }
+
+    public Player getFirstPlayer() {
+        return firstPlayer;
+    }
+
+    public Player getSecondPlayer() {
+        return secondPlayer;
     }
 }
