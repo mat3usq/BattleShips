@@ -431,6 +431,11 @@ public class TextView extends View {
         }
 
         try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ignored) {
+        }
+
+        try {
             screen.refresh();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -965,6 +970,31 @@ public class TextView extends View {
             UserInput.getMovedShipPosition(ship, battleField);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Position getPositionToShot(Player defender, Player attacker) {
+        Position shoot = null;
+        boolean isAddHit;
+        do {
+            try {
+                shoot = attacker.shoot(defender.getBattleField().getbattleFieldHideShips());
+                isAddHit = defender.addShoot(shoot);
+            } catch (GameException e) {
+                if (!attacker.isAI()) printError(e.getMessage());
+                isAddHit = false;
+            }
+        } while (!isAddHit);
+
+        return shoot;
+    }
+
+    @Override
+    public void delayForGameplay() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ignored) {
         }
     }
 }

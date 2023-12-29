@@ -67,10 +67,10 @@ public class JPanelMap extends JPanel {
             labelY[i] = new JLabel();
             this.add(labelX[i]);
             this.add(labelY[i]);
-            labelY[i].setIcon(new ImageIcon(getClass().getResource((("/coordinates/" + (i + 1) + ".png")))));
-            labelY[i].setBounds(offY, offX, fieldDim, fieldDim);
-            labelX[i].setIcon(new ImageIcon(getClass().getResource((("/coordinates/" + (i + 11) + ".png")))));
+            labelX[i].setIcon(new ImageIcon(getClass().getResource((("/coordinates/" + (i + 1) + ".png")))));
             labelX[i].setBounds(offX, offY, fieldDim, fieldDim);
+            labelY[i].setIcon(new ImageIcon(getClass().getResource((("/coordinates/" + (i + 11) + ".png")))));
+            labelY[i].setBounds(offY, offX, fieldDim, fieldDim);
             offX += 50;
         }
     }

@@ -12,9 +12,9 @@ import java.util.Date;
 import java.util.Stack;
 
 public class Game {
-    private final Player firstPlayer;
+    private static Player firstPlayer = null;
     private final Ranking firstPlayerRank;
-    private final Player secondPlayer;
+    private static Player secondPlayer = null;
     private final View view = ViewController.getInstance();
     public static boolean hasExtraShip;
 
@@ -60,9 +60,9 @@ public class Game {
         }
     }
 
-    private boolean playTurn(Player attacker, Player defender, Boolean reverse) {
-        Position shoot = null;
-        boolean isHit, isAddHit;
+    public boolean playTurn(Player attacker, Player defender, Boolean reverse) {
+        Position shoot;
+        boolean isHit;
 
         if (attacker.isAI() && defender.isAI())
             view.showOptionToSimulatedGame();
@@ -74,19 +74,12 @@ public class Game {
                 defender.setDurabilityForceField(defender.getDurabilityForceField() - 1);
                 view.printBarrier(defender);
             } else {
-                do {
-                    try {
-                        shoot = attacker.shoot(defender.getBattleField().getbattleFieldHideShips());
-                        isAddHit = defender.addShoot(shoot);
-                    } catch (GameException e) {
-                        if (!attacker.isAI()) view.printError(e.getMessage());
-                        isAddHit = false;
-                    }
-                } while (!isAddHit);
+                shoot = view.getPositionToShot(defender, attacker);
 
                 isHit = defender.getBattleField().at(shoot) == TypesField.HIT.name;
 
                 if (isHit) {
+//                    System.out.println(attacker.getName() + " game:" + shoot.getColumn() + " " + shoot.getRow());
                     attacker.registerShoot(shoot);
                     updatePlayerPoints(attacker);
                 }
@@ -94,7 +87,7 @@ public class Game {
                 view.printShot(attacker, shoot, isHit);
             }
 
-            delayForGameplay();
+            view.delayForGameplay();
 
             if (attacker.isAI() && defender.isAI() && !reverse)
                 view.printBoards(attacker, defender);
@@ -114,13 +107,6 @@ public class Game {
             long diff = (new Date().getTime() - player.getLastShootTime().getTime()) / 1000;
             firstPlayerRank.addPoints((int) (100 / diff));
             player.setLastShootTime(new Date());
-        }
-    }
-
-    private void delayForGameplay() {
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException ignored) {
         }
     }
 
@@ -157,11 +143,11 @@ public class Game {
             view.printWinner(secondPlayer, firstPlayerRank);
     }
 
-    public Player getFirstPlayer() {
+    public static Player getFirstPlayer() {
         return firstPlayer;
     }
 
-    public Player getSecondPlayer() {
+    public static Player getSecondPlayer() {
         return secondPlayer;
     }
 }

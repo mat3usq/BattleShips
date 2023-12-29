@@ -63,7 +63,7 @@ public class Player {
         this.durabilityForceField = durabilityForceField;
     }
 
-    public void addShips() throws IOException{
+    public void addShips() throws IOException {
         if (!isAI) {
             if (hasAirCrafter)
                 ships.add(new Ship("LOTNISKOWIEC", 5));
@@ -84,6 +84,7 @@ public class Player {
 
         for (Ship ship : ships)
             addShipRandomly(random, ship);
+
     }
 
     private void addShipRandomly(Random random, Ship ship) {

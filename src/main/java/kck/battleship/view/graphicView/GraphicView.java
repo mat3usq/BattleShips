@@ -5,11 +5,8 @@ import kck.battleship.controller.GameException;
 import kck.battleship.model.clases.*;
 import kck.battleship.model.types.TypesDirection;
 import kck.battleship.view.View;
-import kck.battleship.view.textView.UserInput;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
@@ -390,8 +387,25 @@ public class GraphicView extends View {
 
     @Override
     public void printShot(Player player, Position position, boolean isHit) {
-
+        if (player.getName().equals("Wróg") || player.getName().equals("Enemy2")) {
+            if (isHit) {
+                gameScreen.playerBattle.shotLabelDefender.setText(position.toString(position));
+                gameScreen.playerBattle.shotImgDefender.setVisible(true);
+            } else {
+                gameScreen.playerBattle.missLabelDefender.setText(position.toString(position));
+                gameScreen.playerBattle.missImgDefender.setVisible(true);
+            }
+        } else {
+            if (isHit) {
+                gameScreen.playerBattle.shotLabelAttacker.setText(position.toString(position));
+                gameScreen.playerBattle.shotImgAttacker.setVisible(true);
+            } else {
+                gameScreen.playerBattle.missLabelAttacker.setText(position.toString(position));
+                gameScreen.playerBattle.missImgAttacker.setVisible(true);
+            }
+        }
     }
+
 
     @Override
     public void printWinner(Player player, Ranking rank) {
@@ -407,7 +421,6 @@ public class GraphicView extends View {
     public void printBoards(Player firstPlayer, Player secondPlayer) {
         ArrayList<Ship> firstPlayerShips = firstPlayer.getShips();
         ArrayList<Ship> secondPlayerShips = secondPlayer.getShips();
-        ImageIcon fire = new ImageIcon(getClass().getResource("/ship/fireButton.gif"));
         ImageIcon ship1_Hori = new ImageIcon(getClass().getResource("/ship/ship1_hori.png"));
         ImageIcon ship1_Vert = new ImageIcon(getClass().getResource("/ship/ship1_vert.png"));
         ImageIcon shipHeadLeft = new ImageIcon(getClass().getResource("/ship/shipHeadLeft.png"));
@@ -607,7 +620,10 @@ public class GraphicView extends View {
 
     @Override
     public void printBarrier(Player defender) {
-
+        gameScreen.playerBattle.barrier.setVisible(true);
+        if (defender.getDurabilityForceField() == 0)
+            gameScreen.playerBattle.countBarrier.setIcon(new ImageIcon(getClass().getResource("/ship/fireButton.gif")));
+        else gameScreen.playerBattle.countBarrier.setText(String.valueOf(defender.getDurabilityForceField()));
     }
 
     private void buyItemInShop() {
@@ -652,7 +668,7 @@ public class GraphicView extends View {
                 gameScreen.manage.game.setVisible(false);
                 gameScreen.manage.setVisible(false);
                 gameScreen.playerBattle.setVisible(true);
-                printBoards(game.getFirstPlayer(), game.getSecondPlayer());
+                printBoards(Game.getFirstPlayer(), Game.getSecondPlayer());
             });
         });
 
@@ -668,5 +684,54 @@ public class GraphicView extends View {
         gameScreen.manage.battleField = battleField;
         printBoard(battleField, ships);
         printShip(ship);
+    }
+
+    @Override
+    public Position getPositionToShot(Player defender, Player attacker) {
+        Position shoot = null;
+
+        if (attacker.isAI()) {
+            boolean isAddHit;
+            do {
+                try {
+                    shoot = attacker.shoot(defender.getBattleField().getbattleFieldHideShips());
+                    isAddHit = defender.addShoot(shoot);
+                } catch (GameException e) {
+                    isAddHit = false;
+                }
+            } while (!isAddHit);
+        } else {
+            try {
+                shoot = new Position(gameScreen.playerBattle.x, gameScreen.playerBattle.y);
+                defender.addShoot(shoot);
+            } catch (GameException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return shoot;
+    }
+
+    public void playTurn() {
+        boolean attacker = game.playTurn(Game.getFirstPlayer(), Game.getSecondPlayer(), false);
+        AtomicBoolean defender = new AtomicBoolean(false);
+        if (attacker) {
+            Timer timer = new Timer(2000, e -> defender.set(game.playTurn(Game.getSecondPlayer(), Game.getFirstPlayer(), false))); // 1000 ms = 1 sekunda
+            timer.setRepeats(false);
+            timer.start();
+        } else {
+        }
+    }
+
+    @Override
+    public void delayForGameplay() {
+        Timer timer = new Timer(2000, e -> {
+            gameScreen.playerBattle.missImgAttacker.setVisible(false);
+            gameScreen.playerBattle.shotImgAttacker.setVisible(false);
+            gameScreen.playerBattle.missImgDefender.setVisible(false);
+            gameScreen.playerBattle.shotImgDefender.setVisible(false);
+            gameScreen.playerBattle.barrier.setVisible(false);
+        });
+        timer.setRepeats(false);
+        timer.start();
     }
 }
