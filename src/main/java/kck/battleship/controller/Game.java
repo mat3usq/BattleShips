@@ -7,9 +7,11 @@ import kck.battleship.model.types.TypesField;
 import kck.battleship.view.textView.UserInput;
 import kck.battleship.view.View;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Stack;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Game {
     private static Player firstPlayer = null;
@@ -41,9 +43,7 @@ public class Game {
         else
             playGameHumanVsAI(firstPlayer, secondPlayer);
 
-        if (!firstPlayer.isAI())
-            firstPlayerRank.save();
-
+        saveRanking();
         printResultGame();
 
         view.printMenuPage(0);
@@ -74,7 +74,7 @@ public class Game {
                 defender.setDurabilityForceField(defender.getDurabilityForceField() - 1);
                 view.printBarrier(defender);
             } else {
-                shoot = view.getPositionToShot(defender, attacker);
+                shoot = ViewController.getPositionToShot(defender, attacker);
 
                 isHit = defender.getBattleField().at(shoot) == TypesField.HIT.name;
 
@@ -100,6 +100,23 @@ public class Game {
 
             return true;
         } else return false;
+    }
+
+    public void playRound(){
+        boolean attacker = playTurn(Game.getFirstPlayer(), Game.getSecondPlayer(), false);
+        AtomicBoolean defender = new AtomicBoolean(false);
+        if (attacker) {
+            Timer timer = new Timer(2000, e -> defender.set(playTurn(Game.getSecondPlayer(), Game.getFirstPlayer(), false)));
+            timer.setRepeats(false);
+            timer.start();
+        }else{
+            saveRanking();
+            printResultGame();
+        }
+
+        if(defender.get()){
+
+        }
     }
 
     private void updatePlayerPoints(Player player) {
@@ -136,11 +153,16 @@ public class Game {
         secondPlayer.addShips();
     }
 
-    private void printResultGame() {
+    public void printResultGame() {
         if (firstPlayer.shipsLeft() > secondPlayer.shipsLeft())
             view.printWinner(firstPlayer, firstPlayerRank);
         else
             view.printWinner(secondPlayer, firstPlayerRank);
+    }
+
+    public void saveRanking(){
+        if (!firstPlayer.isAI())
+            firstPlayerRank.save();
     }
 
     public static Player getFirstPlayer() {

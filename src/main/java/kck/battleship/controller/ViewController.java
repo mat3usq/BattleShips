@@ -6,6 +6,8 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.terminal.swing.AWTTerminalFontConfiguration;
 import kck.battleship.model.clases.BattleField;
+import kck.battleship.model.clases.Player;
+import kck.battleship.model.clases.Position;
 import kck.battleship.model.clases.Ship;
 import kck.battleship.view.graphicView.GraphicView;
 import kck.battleship.view.textView.TextView;
@@ -53,7 +55,6 @@ public class ViewController {
         }
     }
 
-
     public static View getInstance() {
         if (choice == 1)
             return graphicView;
@@ -69,25 +70,6 @@ public class ViewController {
                 addShipText(battleField, ship, ships);
         }
     }
-
-//        SwingWorker<Boolean, Void> worker = new SwingWorker<>() {
-//            @Override
-//            protected Boolean doInBackground() throws Exception {
-//                boolean isAdded;
-//                do {
-//                    getInstance().addShipsVisually(battleField, ship, ships);
-//                    try {
-//                        isAdded = battleField.addShip(ship);
-//                    } catch (GameException e) {
-//                        getInstance().printError(e.getMessage());
-//                        isAdded = false;
-//                        Thread.sleep(2000);
-//                    }
-//                } while (!isAdded);
-//                return isAdded;
-//            }
-//        };
-//        worker.execute();
 
     private static void addShipText(BattleField battleField, Ship ship, ArrayList<Ship> ships) {
         boolean isAdded;
@@ -107,6 +89,45 @@ public class ViewController {
             }
 
         } while (!isAdded);
+    }
+
+    public static Position getPositionToShot(Player defender, Player attacker) {
+        Position shoot = null;
+
+        if (choice == 1) {
+            if (attacker.isAI()) {
+                boolean isAddHit;
+                do {
+                    try {
+                        shoot = attacker.shoot(defender.getBattleField().getbattleFieldHideShips());
+                        isAddHit = defender.addShoot(shoot);
+                    } catch (GameException e) {
+                        isAddHit = false;
+                    }
+                } while (!isAddHit);
+            } else {
+                try {
+                    shoot = graphicView.getPositionToShot();
+                    defender.addShoot(shoot);
+                } catch (GameException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        } else if (choice == 2) {
+            boolean isAddHit;
+            do {
+                
+                try {
+                    shoot = attacker.shoot(defender.getBattleField().getbattleFieldHideShips());
+                    isAddHit = defender.addShoot(shoot);
+                } catch (GameException e) {
+                    if (!attacker.isAI()) textView.printError(e.getMessage());
+                    isAddHit = false;
+                }
+            } while (!isAddHit);
+        }
+
+        return shoot;
     }
 }
 

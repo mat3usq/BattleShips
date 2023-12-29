@@ -974,23 +974,6 @@ public class TextView extends View {
     }
 
     @Override
-    public Position getPositionToShot(Player defender, Player attacker) {
-        Position shoot = null;
-        boolean isAddHit;
-        do {
-            try {
-                shoot = attacker.shoot(defender.getBattleField().getbattleFieldHideShips());
-                isAddHit = defender.addShoot(shoot);
-            } catch (GameException e) {
-                if (!attacker.isAI()) printError(e.getMessage());
-                isAddHit = false;
-            }
-        } while (!isAddHit);
-
-        return shoot;
-    }
-
-    @Override
     public void delayForGameplay() {
         try {
             Thread.sleep(1000);

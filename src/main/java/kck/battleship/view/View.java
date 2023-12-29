@@ -65,7 +65,5 @@ public abstract class View {
 
     public abstract void addShipsVisually(BattleField battleField, Ship ship, ArrayList<Ship> ships);
 
-    public abstract Position getPositionToShot(Player defender, Player attacker);
-
     public abstract void delayForGameplay();
 }

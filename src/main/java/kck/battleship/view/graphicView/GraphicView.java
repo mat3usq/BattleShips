@@ -1,9 +1,12 @@
 package kck.battleship.view.graphicView;
 
+import com.googlecode.lanterna.SGR;
+import com.googlecode.lanterna.TextColor;
 import kck.battleship.controller.Game;
 import kck.battleship.controller.GameException;
 import kck.battleship.model.clases.*;
 import kck.battleship.model.types.TypesDirection;
+import kck.battleship.model.types.TypesField;
 import kck.battleship.view.View;
 
 import javax.swing.*;
@@ -421,6 +424,11 @@ public class GraphicView extends View {
     public void printBoards(Player firstPlayer, Player secondPlayer) {
         ArrayList<Ship> firstPlayerShips = firstPlayer.getShips();
         ArrayList<Ship> secondPlayerShips = secondPlayer.getShips();
+        BattleField firstBattleField = firstPlayer.getBattleField();
+        BattleField secondBattleField = secondPlayer.getBattleField();
+        ImageIcon wreck = new ImageIcon(getClass().getResource("/ship/wreck.gif"));
+        ImageIcon fire = new ImageIcon(getClass().getResource("/ship/fireButton.gif"));
+        ImageIcon water = new ImageIcon(getClass().getResource("/ship/grayButton.gif"));
         ImageIcon ship1_Hori = new ImageIcon(getClass().getResource("/ship/ship1_hori.png"));
         ImageIcon ship1_Vert = new ImageIcon(getClass().getResource("/ship/ship1_vert.png"));
         ImageIcon shipHeadLeft = new ImageIcon(getClass().getResource("/ship/shipHeadLeft.png"));
@@ -474,6 +482,71 @@ public class GraphicView extends View {
             }
         }
 
+        showEnemyShips(secondPlayerShips);
+
+        for (int i = 0; i < BattleField.getLength(); i++) {
+            for (int j = 0; j < BattleField.getLength(); j++) {
+                if (firstBattleField.getbattleField()[i][j] == TypesField.HIT.name) {
+                    gameScreen.playerBattle.firstMap.jButtons[i][j].setDisabledIcon(fire);
+                    gameScreen.playerBattle.firstMap.jButtons[i][j].setEnabled(false);
+                } else if (firstBattleField.getbattleField()[i][j] == TypesField.MISS.name) {
+                    gameScreen.playerBattle.firstMap.jButtons[i][j].setDisabledIcon(water);
+                    gameScreen.playerBattle.firstMap.jButtons[i][j].setEnabled(false);
+                }
+
+                if (secondBattleField.getbattleField()[i][j] == TypesField.HIT.name) {
+                    gameScreen.playerBattle.secondMap.jButtons[i][j].setDisabledIcon(fire);
+                    gameScreen.playerBattle.secondMap.jButtons[i][j].setEnabled(false);
+                } else if (secondBattleField.getbattleField()[i][j] == TypesField.MISS.name) {
+                    gameScreen.playerBattle.secondMap.jButtons[i][j].setDisabledIcon(water);
+                    gameScreen.playerBattle.secondMap.jButtons[i][j].setEnabled(false);
+                }
+            }
+        }
+
+        for (Ship ship : firstPlayerShips) {
+            if (firstBattleField.isShipSunk(ship)) {
+                int startX = ship.getPosition().getRow();
+                int startY = ship.getPosition().getColumn();
+                TypesDirection direction = ship.getDirection();
+
+                for (int k = 0; k < ship.getLength(); k++) {
+                    int X = direction == TypesDirection.HORIZONTAL ? startX : startX + k;
+                    int Y = direction == TypesDirection.HORIZONTAL ? startY + k : startY;
+
+                    gameScreen.playerBattle.firstMap.jButtons[X][Y].setDisabledIcon(wreck);
+                    gameScreen.playerBattle.firstMap.jButtons[X][Y].setEnabled(false);
+                }
+            }
+        }
+
+        for (Ship ship : secondPlayerShips) {
+            if (secondBattleField.isShipSunk(ship)) {
+                int startX = ship.getPosition().getRow();
+                int startY = ship.getPosition().getColumn();
+                TypesDirection direction = ship.getDirection();
+
+                for (int k = 0; k < ship.getLength(); k++) {
+                    int X = direction == TypesDirection.HORIZONTAL ? startX : startX + k;
+                    int Y = direction == TypesDirection.HORIZONTAL ? startY + k : startY;
+
+                    gameScreen.playerBattle.secondMap.jButtons[X][Y].setDisabledIcon(wreck);
+                    gameScreen.playerBattle.secondMap.jButtons[X][Y].setEnabled(false);
+                }
+            }
+        }
+    }
+
+    private void showEnemyShips(ArrayList<Ship> secondPlayerShips) {
+        ImageIcon ship1_Hori = new ImageIcon(getClass().getResource("/ship/ship1_hori.png"));
+        ImageIcon ship1_Vert = new ImageIcon(getClass().getResource("/ship/ship1_vert.png"));
+        ImageIcon shipHeadLeft = new ImageIcon(getClass().getResource("/ship/shipHeadLeft.png"));
+        ImageIcon shipHeadTop = new ImageIcon(getClass().getResource("/ship/shipHeadTop.png"));
+        ImageIcon shipBodyLeft = new ImageIcon(getClass().getResource("/ship/shipBodyLeft.png"));
+        ImageIcon shipBodyTop = new ImageIcon(getClass().getResource("/ship/shipBodyTop.png"));
+        ImageIcon shipFootLeft = new ImageIcon(getClass().getResource("/ship/shipFootLeft.png"));
+        ImageIcon shipFootTop = new ImageIcon(getClass().getResource("/ship/shipFootTop.png"));
+
         for (Ship ship : secondPlayerShips) {
             int x = ship.getPosition().getRow();
             int y = ship.getPosition().getColumn();
@@ -505,8 +578,6 @@ public class GraphicView extends View {
                 }
             }
         }
-
-
     }
 
     @Override
@@ -686,40 +757,16 @@ public class GraphicView extends View {
         printShip(ship);
     }
 
-    @Override
-    public Position getPositionToShot(Player defender, Player attacker) {
-        Position shoot = null;
-
-        if (attacker.isAI()) {
-            boolean isAddHit;
-            do {
-                try {
-                    shoot = attacker.shoot(defender.getBattleField().getbattleFieldHideShips());
-                    isAddHit = defender.addShoot(shoot);
-                } catch (GameException e) {
-                    isAddHit = false;
-                }
-            } while (!isAddHit);
-        } else {
-            try {
-                shoot = new Position(gameScreen.playerBattle.x, gameScreen.playerBattle.y);
-                defender.addShoot(shoot);
-            } catch (GameException e) {
-                throw new RuntimeException(e);
-            }
+    public Position getPositionToShot() {
+        try {
+            return new Position(gameScreen.playerBattle.x, gameScreen.playerBattle.y);
+        } catch (GameException e) {
+            throw new RuntimeException(e);
         }
-        return shoot;
     }
 
     public void playTurn() {
-        boolean attacker = game.playTurn(Game.getFirstPlayer(), Game.getSecondPlayer(), false);
-        AtomicBoolean defender = new AtomicBoolean(false);
-        if (attacker) {
-            Timer timer = new Timer(2000, e -> defender.set(game.playTurn(Game.getSecondPlayer(), Game.getFirstPlayer(), false))); // 1000 ms = 1 sekunda
-            timer.setRepeats(false);
-            timer.start();
-        } else {
-        }
+        game.playRound();
     }
 
     @Override

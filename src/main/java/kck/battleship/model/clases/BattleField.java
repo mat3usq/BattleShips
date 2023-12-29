@@ -169,4 +169,25 @@ public class BattleField {
         battleField = fillWater();
         numberShips = 0;
     }
+
+    public boolean isShipSunk(Ship ship) {
+        int hitCount = 0;
+        int startX = ship.getPosition().getRow();
+        int startY = ship.getPosition().getColumn();
+        TypesDirection dir = ship.getDirection();
+
+        for (int i = 0; i < ship.getLength(); i++) {
+            if (dir == TypesDirection.HORIZONTAL) {
+                if (battleField[startX][startY + i] == TypesField.HIT.name) {
+                    hitCount++;
+                }
+            } else {
+                if (battleField[startX + i][startY] == TypesField.HIT.name) {
+                    hitCount++;
+                }
+            }
+        }
+
+        return hitCount == ship.getLength();
+    }
 }
