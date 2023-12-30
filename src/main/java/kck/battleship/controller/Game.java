@@ -116,10 +116,11 @@ public class Game {
 
     private void updatePlayerPoints(Player player) {
         if (!player.isAI()) {
-            long diff = (new Date().getTime() - player.getLastShootTime().getTime()) / 1000;
-            firstPlayerRank.addPoints((int) (100 / diff));
+            long diff = new Date().getTime() - player.getLastShootTime().getTime();
+            firstPlayerRank.addPoints((int) (100 / (diff / 400.0)));
             player.setLastShootTime(new Date());
         }
+
     }
 
     public void addAllShips() throws IOException, InterruptedException {

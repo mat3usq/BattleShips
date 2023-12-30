@@ -174,10 +174,12 @@ public class GraphicView extends View {
     private void addShopPopupActionsListeners() {
         mainScreen.popup.okButton.addActionListener(ev -> {
             buyItemInShop();
+            mainScreen.shopPanel.requestFocusInWindow();
         });
 
         mainScreen.popup.cancelButton.addActionListener(ev -> {
             mainScreen.popup.setVisible(false);
+            mainScreen.shopPanel.requestFocusInWindow();
         });
     }
 
@@ -189,9 +191,11 @@ public class GraphicView extends View {
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_ENTER:
                         buyItemInShop();
+                        mainScreen.shopPanel.requestFocusInWindow();
                         break;
                     case KeyEvent.VK_ESCAPE:
                         mainScreen.popup.setVisible(false);
+                        mainScreen.shopPanel.requestFocusInWindow();
                         break;
                 }
             }
@@ -417,10 +421,10 @@ public class GraphicView extends View {
         gameScreen.setVisible(false);
         mainScreen.results.setVisible(true);
         mainScreen.results.winnerName.setText("Zwyciezca: " + player.getName());
-        if(!player.getName().equals("Enemy2"))
+        if (!player.getName().equals("Enemy2") && !player.getName().equals("Enemy") && !player.getName().equals("Wróg"))
             mainScreen.results.points.setText("Twoj wynik: " + rank.getPoints());
 
-        Timer timer = new Timer(8000, e -> {
+        Timer timer = new Timer(5000, e -> {
             mainScreen.results.setVisible(false);
             mainScreen.menuPanel.setVisible(true);
             printMenuPage(0);
@@ -686,6 +690,7 @@ public class GraphicView extends View {
 
     @Override
     public void printRanking(int page) {
+        mainScreen.ranking.updateRanking();
         mainScreen.ranking.setVisible(true);
         mainScreen.menuPanel.setVisible(false);
         mainScreen.ranking.requestFocusInWindow();
@@ -739,27 +744,34 @@ public class GraphicView extends View {
         AtomicBoolean isOkPressed = new AtomicBoolean();
 
         gameScreen.popup.okButton.addActionListener(e -> {
-            isOkPressed.set(true);
-            gameScreen.setVisible(true);
-            gameScreen.popup.setVisible(false);
-            gameScreen.playerBattle.setVisible(true);
+            addRandomShipsListenersOK(isOkPressed);
         });
 
         gameScreen.popup.cancelButton.addActionListener(e -> {
-            isOkPressed.set(false);
-            gameScreen.popup.setVisible(false);
-
-            gameScreen.manage.game.addActionListener(ev -> {
-                gameScreen.manage.game.setVisible(false);
-                gameScreen.manage.setVisible(false);
-                gameScreen.playerBattle.setVisible(true);
-                printBoards(Game.getFirstPlayer(), Game.getSecondPlayer());
-            });
+            addRandomShipsListenersCANCEL(isOkPressed);
         });
 
         gameScreen.popup.setVisible(true);
 
         return isOkPressed.get();
+    }
+
+    private void addRandomShipsListenersOK(AtomicBoolean isOkPressed){
+        isOkPressed.set(true);
+        gameScreen.setVisible(true);
+        gameScreen.popup.setVisible(false);
+        gameScreen.playerBattle.setVisible(true);
+    }
+    private void addRandomShipsListenersCANCEL(AtomicBoolean isOkPressed) {
+        isOkPressed.set(false);
+        gameScreen.popup.setVisible(false);
+
+        gameScreen.manage.game.addActionListener(ev -> {
+            gameScreen.manage.game.setVisible(false);
+            gameScreen.manage.setVisible(false);
+            gameScreen.playerBattle.setVisible(true);
+            printBoards(Game.getFirstPlayer(), Game.getSecondPlayer());
+        });
     }
 
     @Override

@@ -75,6 +75,7 @@ public class JPanelManage extends JPanelBG implements ActionListener {
         game.setVisible(false);
     }
 
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (noAdd) {

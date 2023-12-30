@@ -69,7 +69,6 @@ public class JPanelOptions extends JPanelBG {
                 "<p style='margin: 5px;'>→ Klikniecie na mapie wskazuje poczatek statku.</p>" +
                 "<p style='margin: 5px;'>→ Mozna rowniez wybierac kierunek poprzez klikniecie w dany guzik.</p>" +
                 "<p style='margin: 5px;'>→ Nie mozna zmieniac kierunku statku gdy sie znajduje blisko krawedzi mapy.</p>" +
-                "<p style='margin: 5px;'>→ Mozna rowniez rotowac statek poprzez klikniecie klawisza \"r\".</p>" +
                 "<p style='margin: 5px;'>→ Po ustawieniu wszystkich statków na wybranych pozycjach gra rozpoczyna sie automatycznie.</p>" +
                 "<p style='margin: 5px;'>→ Nie daj sie zatopic piracie!</p>" +
                 "</body></html>");

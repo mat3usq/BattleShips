@@ -15,6 +15,7 @@ public class JPanelRanking extends JPanelBG {
     public Cursor cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
     public JButton backRanking;
     public JLabel rankingTitle;
+    public JScrollPane scrollPane;
 
     public JPanelRanking() {
         super(Toolkit.getDefaultToolkit()
@@ -36,7 +37,17 @@ public class JPanelRanking extends JPanelBG {
         backRanking.setCursor(cursor);
         backRanking.setText("backRanking");
 
-        DefaultTableModel rankingModel = new DefaultTableModel(new String[]{"Pozycja", "Nick", "Punkty"}, 0 );
+        updateRanking();
+
+        this.add(backRanking, 0);
+        backRanking.setBounds(55, 123, 100, 100);
+
+        rankingTitle.setBounds(200, 35, 200, 200);
+        this.add(rankingTitle);
+    }
+
+    public void updateRanking() {
+        DefaultTableModel rankingModel = new DefaultTableModel(new String[]{"Pozycja", "Nick", "Punkty"}, 0);
         List<Ranking> rankings = Ranking.getRanking();
         rankings.sort(Collections.reverseOrder(Comparator.comparingInt(Ranking::getPoints)));
         for (int i = 0; i < rankings.size(); i++)
@@ -62,7 +73,7 @@ public class JPanelRanking extends JPanelBG {
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 
-        for (int i = 0; i < rankingTable.getColumnCount(); i++){
+        for (int i = 0; i < rankingTable.getColumnCount(); i++) {
             rankingTable.getColumnModel().getColumn(i).setHeaderRenderer(centerRenderer);
             rankingTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
@@ -71,12 +82,15 @@ public class JPanelRanking extends JPanelBG {
         rankingTable.setRowHeight(20);
         rankingTable.setOpaque(false);
         rankingTable.setBackground(new Color(0, 0, 0, 0));
-        ((DefaultTableCellRenderer)rankingTable.getDefaultRenderer(Object.class)).setOpaque(false);
+        ((DefaultTableCellRenderer) rankingTable.getDefaultRenderer(Object.class)).setOpaque(false);
 
         rankingTable.getTableHeader().setFont(new Font("Roboto", Font.PLAIN, 19));
         rankingTable.getTableHeader().setPreferredSize(new Dimension(rankingTable.getTableHeader().getWidth(), 22));
 
-        JScrollPane scrollPane = new JScrollPane(rankingTable);
+        if (scrollPane != null)
+            this.remove(scrollPane);
+
+        scrollPane = new JScrollPane(rankingTable);
         rankingTable.setFillsViewportHeight(true);
         scrollPane.setBounds(177, 272, 250, 280);
         scrollPane.setOpaque(false);
@@ -85,11 +99,5 @@ public class JPanelRanking extends JPanelBG {
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
 
         this.add(scrollPane);
-
-        this.add(backRanking, 0);
-        backRanking.setBounds(55, 123, 100, 100);
-
-        rankingTitle.setBounds(200, 35, 200, 200);
-        this.add(rankingTitle);
     }
 }

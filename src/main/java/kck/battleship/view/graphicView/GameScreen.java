@@ -12,7 +12,6 @@ public class GameScreen extends JFrame {
         super("Game - Pirate Edition");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
-        this.requestFocusInWindow();
         this.setFocusable(true);
         this.setSize(1200, 750);
 
