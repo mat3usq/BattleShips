@@ -120,7 +120,6 @@ public class Game {
             firstPlayerRank.addPoints((int) (100 / (diff / 400.0)));
             player.setLastShootTime(new Date());
         }
-
     }
 
     public void addAllShips() throws IOException, InterruptedException {
