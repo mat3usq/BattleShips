@@ -302,19 +302,12 @@ public class GraphicView extends View {
                 }
             }
             case 1 -> {
+                mainScreen.setVisible(false);
                 gameScreen = new GameScreen(true);
                 gameScreen.setVisible(true);
                 gameScreen.battle.setVisible(true);
-                SwingUtilities.invokeLater(() -> {
-                    Game game = new Game();
-                    try {
-                        game.addAllShips();
-                        printBoards(Game.getFirstPlayer(), Game.getSecondPlayer());
-                        game.playSimulateGame();
-                    } catch (IOException | InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+                game = new Game();
+                game.runSimulation();
             }
             case 2 -> {
                 printShop();
@@ -430,7 +423,11 @@ public class GraphicView extends View {
         mainScreen.menuPanel.setVisible(false);
         gameScreen.setVisible(false);
         mainScreen.results.setVisible(true);
-        mainScreen.results.winnerName.setText("Zwyciezca: " + player.getName());
+        if(player.getName().equals("Enemy"))
+            mainScreen.results.winnerName.setText("Zwyciezca: Computer 1");
+        else
+            mainScreen.results.winnerName.setText("Zwyciezca: Computer 2");
+
         if (rank != null)
             mainScreen.results.points.setText("Twoj wynik: " + rank.getPoints());
 
@@ -808,7 +805,7 @@ public class GraphicView extends View {
 
     @Override
     public void delayForGameplay() {
-        Timer timer = new Timer(2000, e -> {
+        Timer timer = new Timer(1000, e -> {
             gameScreen.battle.missImgAttacker.setVisible(false);
             gameScreen.battle.shotImgAttacker.setVisible(false);
             gameScreen.battle.missImgDefender.setVisible(false);

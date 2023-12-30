@@ -114,13 +114,27 @@ public class Game {
         }
     }
 
-    public void playSimulateGame() throws InterruptedException {
-        boolean attacker = playTurn(firstPlayer, secondPlayer, false);
-        if (attacker) {
-            Timer timer = new Timer(2000, e -> playTurn(secondPlayer, firstPlayer, false));
-            timer.setRepeats(false);
-            timer.start();
+    public void runSimulation() {
+        new GameSimulationWorker().execute();
+    }
+
+    private class GameSimulationWorker extends SwingWorker<Void, Void> {
+        @Override
+        protected Void doInBackground() throws Exception {
+            addAllShips();
+            playSimulateGame();
+            return null;
         }
+    }
+
+    private void playSimulateGame() throws InterruptedException {
+        boolean attacker = playTurn(firstPlayer, secondPlayer, false);
+        Thread.sleep(1000);
+
+        if (attacker)
+            playTurn(secondPlayer, firstPlayer, true);
+
+        Thread.sleep(1000);
 
         if (!firstPlayer.areShipsStillSailing() || !secondPlayer.areShipsStillSailing()) {
             saveRanking();
