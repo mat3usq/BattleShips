@@ -101,9 +101,9 @@ public class Game {
     }
 
     public void playRound() {
-        boolean attacker = playTurn(Game.getFirstPlayer(), Game.getSecondPlayer(), false);
+        boolean attacker = playTurn(firstPlayer, secondPlayer, false);
         if (attacker) {
-            Timer timer = new Timer(2000, e -> playTurn(Game.getSecondPlayer(), Game.getFirstPlayer(), false));
+            Timer timer = new Timer(2000, e -> playTurn(secondPlayer, firstPlayer, false));
             timer.setRepeats(false);
             timer.start();
         }
@@ -112,6 +112,20 @@ public class Game {
             saveRanking();
             printResultGame();
         }
+    }
+
+    public void playSimulateGame() throws InterruptedException {
+        boolean attacker = playTurn(firstPlayer, secondPlayer, false);
+        if (attacker) {
+            Timer timer = new Timer(2000, e -> playTurn(secondPlayer, firstPlayer, false));
+            timer.setRepeats(false);
+            timer.start();
+        }
+
+        if (!firstPlayer.areShipsStillSailing() || !secondPlayer.areShipsStillSailing()) {
+            saveRanking();
+            printResultGame();
+        } else playSimulateGame();
     }
 
     private void updatePlayerPoints(Player player) {

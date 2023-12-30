@@ -1,5 +1,6 @@
 package kck.battleship.view.graphicView;
 
+import kck.battleship.controller.Game;
 import kck.battleship.controller.GameException;
 import kck.battleship.controller.ViewController;
 import kck.battleship.model.clases.BattleField;
@@ -35,7 +36,7 @@ public class JPanelManage extends JPanelBG implements ActionListener {
                 .createImage(MainScreen.class.getResource("/backgroundManageShips.png")));
         this.setSize(1200, 750);
 
-        map = new JPanelMap("manager");
+        map = new JPanelMap("manage");
         this.add(map);
 
         options = new JPanelOptions();

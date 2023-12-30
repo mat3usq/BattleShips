@@ -1,7 +1,5 @@
 package kck.battleship.view.graphicView;
 
-import com.googlecode.lanterna.SGR;
-import com.googlecode.lanterna.TextColor;
 import kck.battleship.controller.Game;
 import kck.battleship.controller.GameException;
 import kck.battleship.model.clases.*;
@@ -297,15 +295,26 @@ public class GraphicView extends View {
                 try {
                     mainScreen.setVisible(false);
                     game = new Game(name);
-                    gameScreen = new GameScreen();
+                    gameScreen = new GameScreen(false);
                     game.addAllShips();
                 } catch (IOException | InterruptedException ex) {
                     throw new RuntimeException(ex);
                 }
             }
             case 1 -> {
-//                Game game = new Game();
-//                game.run();
+                gameScreen = new GameScreen(true);
+                gameScreen.setVisible(true);
+                gameScreen.battle.setVisible(true);
+                SwingUtilities.invokeLater(() -> {
+                    Game game = new Game();
+                    try {
+                        game.addAllShips();
+                        printBoards(Game.getFirstPlayer(), Game.getSecondPlayer());
+                        game.playSimulateGame();
+                    } catch (IOException | InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
             }
             case 2 -> {
                 printShop();
@@ -397,19 +406,19 @@ public class GraphicView extends View {
     public void printShot(Player player, Position position, boolean isHit) {
         if (player.getName().equals("Wróg") || player.getName().equals("Enemy2")) {
             if (isHit) {
-                gameScreen.playerBattle.shotLabelDefender.setText(position.toString(position));
-                gameScreen.playerBattle.shotImgDefender.setVisible(true);
+                gameScreen.battle.shotLabelDefender.setText(position.toString(position));
+                gameScreen.battle.shotImgDefender.setVisible(true);
             } else {
-                gameScreen.playerBattle.missLabelDefender.setText(position.toString(position));
-                gameScreen.playerBattle.missImgDefender.setVisible(true);
+                gameScreen.battle.missLabelDefender.setText(position.toString(position));
+                gameScreen.battle.missImgDefender.setVisible(true);
             }
         } else {
             if (isHit) {
-                gameScreen.playerBattle.shotLabelAttacker.setText(position.toString(position));
-                gameScreen.playerBattle.shotImgAttacker.setVisible(true);
+                gameScreen.battle.shotLabelAttacker.setText(position.toString(position));
+                gameScreen.battle.shotImgAttacker.setVisible(true);
             } else {
-                gameScreen.playerBattle.missLabelAttacker.setText(position.toString(position));
-                gameScreen.playerBattle.missImgAttacker.setVisible(true);
+                gameScreen.battle.missLabelAttacker.setText(position.toString(position));
+                gameScreen.battle.missImgAttacker.setVisible(true);
             }
         }
     }
@@ -422,7 +431,7 @@ public class GraphicView extends View {
         gameScreen.setVisible(false);
         mainScreen.results.setVisible(true);
         mainScreen.results.winnerName.setText("Zwyciezca: " + player.getName());
-        if (!player.getName().equals("Enemy2") && !player.getName().equals("Enemy") && !player.getName().equals("Wróg"))
+        if (rank != null)
             mainScreen.results.points.setText("Twoj wynik: " + rank.getPoints());
 
         Timer timer = new Timer(5000, e -> {
@@ -467,36 +476,36 @@ public class GraphicView extends View {
             else dir = 1;
 
             if (dim == 1) {
-                gameScreen.playerBattle.firstMap.jButtons[x][y].setEnabled(false);
+                gameScreen.battle.firstMap.jButtons[x][y].setEnabled(false);
                 if (dir == 0)
-                    gameScreen.playerBattle.firstMap.jButtons[x][y].setDisabledIcon(ship1_Hori);
+                    gameScreen.battle.firstMap.jButtons[x][y].setDisabledIcon(ship1_Hori);
                 else
-                    gameScreen.playerBattle.firstMap.jButtons[x][y].setDisabledIcon(ship1_Vert);
+                    gameScreen.battle.firstMap.jButtons[x][y].setDisabledIcon(ship1_Vert);
             } else {
                 if (dir == 0) {// horizontal
                     // Ship Head
-                    gameScreen.playerBattle.firstMap.jButtons[x][y].setDisabledIcon(shipHeadLeft);
-                    gameScreen.playerBattle.firstMap.jButtons[x][y].setEnabled(false);
+                    gameScreen.battle.firstMap.jButtons[x][y].setDisabledIcon(shipHeadLeft);
+                    gameScreen.battle.firstMap.jButtons[x][y].setEnabled(false);
                     // Ship Body
                     for (int i = 1; i < dim - 1; i++) {
-                        gameScreen.playerBattle.firstMap.jButtons[x][y + i].setDisabledIcon(shipBodyLeft);
-                        gameScreen.playerBattle.firstMap.jButtons[x][y + i].setEnabled(false);
+                        gameScreen.battle.firstMap.jButtons[x][y + i].setDisabledIcon(shipBodyLeft);
+                        gameScreen.battle.firstMap.jButtons[x][y + i].setEnabled(false);
                     }
                     // Ship Foot
-                    gameScreen.playerBattle.firstMap.jButtons[x][y + dim - 1].setDisabledIcon(shipFootLeft);
-                    gameScreen.playerBattle.firstMap.jButtons[x][y + dim - 1].setEnabled(false);
+                    gameScreen.battle.firstMap.jButtons[x][y + dim - 1].setDisabledIcon(shipFootLeft);
+                    gameScreen.battle.firstMap.jButtons[x][y + dim - 1].setEnabled(false);
                 } else { // vertical
                     // Ship Head
-                    gameScreen.playerBattle.firstMap.jButtons[x][y].setDisabledIcon(shipHeadTop);
-                    gameScreen.playerBattle.firstMap.jButtons[x][y].setEnabled(false);
+                    gameScreen.battle.firstMap.jButtons[x][y].setDisabledIcon(shipHeadTop);
+                    gameScreen.battle.firstMap.jButtons[x][y].setEnabled(false);
                     // Ship Body
                     for (int i = 1; i < dim - 1; i++) {
-                        gameScreen.playerBattle.firstMap.jButtons[x + i][y].setDisabledIcon(shipBodyTop);
-                        gameScreen.playerBattle.firstMap.jButtons[x + i][y].setEnabled(false);
+                        gameScreen.battle.firstMap.jButtons[x + i][y].setDisabledIcon(shipBodyTop);
+                        gameScreen.battle.firstMap.jButtons[x + i][y].setEnabled(false);
                     }
                     // Ship Foot
-                    gameScreen.playerBattle.firstMap.jButtons[x + dim - 1][y].setDisabledIcon(shipFootTop);
-                    gameScreen.playerBattle.firstMap.jButtons[x + dim - 1][y].setEnabled(false);
+                    gameScreen.battle.firstMap.jButtons[x + dim - 1][y].setDisabledIcon(shipFootTop);
+                    gameScreen.battle.firstMap.jButtons[x + dim - 1][y].setEnabled(false);
                 }
             }
         }
@@ -506,19 +515,19 @@ public class GraphicView extends View {
         for (int i = 0; i < BattleField.getLength(); i++) {
             for (int j = 0; j < BattleField.getLength(); j++) {
                 if (firstBattleField.getbattleField()[i][j] == TypesField.HIT.name) {
-                    gameScreen.playerBattle.firstMap.jButtons[i][j].setDisabledIcon(fire);
-                    gameScreen.playerBattle.firstMap.jButtons[i][j].setEnabled(false);
+                    gameScreen.battle.firstMap.jButtons[i][j].setDisabledIcon(fire);
+                    gameScreen.battle.firstMap.jButtons[i][j].setEnabled(false);
                 } else if (firstBattleField.getbattleField()[i][j] == TypesField.MISS.name) {
-                    gameScreen.playerBattle.firstMap.jButtons[i][j].setDisabledIcon(water);
-                    gameScreen.playerBattle.firstMap.jButtons[i][j].setEnabled(false);
+                    gameScreen.battle.firstMap.jButtons[i][j].setDisabledIcon(water);
+                    gameScreen.battle.firstMap.jButtons[i][j].setEnabled(false);
                 }
 
                 if (secondBattleField.getbattleField()[i][j] == TypesField.HIT.name) {
-                    gameScreen.playerBattle.secondMap.jButtons[i][j].setDisabledIcon(fire);
-                    gameScreen.playerBattle.secondMap.jButtons[i][j].setEnabled(false);
+                    gameScreen.battle.secondMap.jButtons[i][j].setDisabledIcon(fire);
+                    gameScreen.battle.secondMap.jButtons[i][j].setEnabled(false);
                 } else if (secondBattleField.getbattleField()[i][j] == TypesField.MISS.name) {
-                    gameScreen.playerBattle.secondMap.jButtons[i][j].setDisabledIcon(water);
-                    gameScreen.playerBattle.secondMap.jButtons[i][j].setEnabled(false);
+                    gameScreen.battle.secondMap.jButtons[i][j].setDisabledIcon(water);
+                    gameScreen.battle.secondMap.jButtons[i][j].setEnabled(false);
                 }
             }
         }
@@ -533,8 +542,8 @@ public class GraphicView extends View {
                     int X = direction == TypesDirection.HORIZONTAL ? startX : startX + k;
                     int Y = direction == TypesDirection.HORIZONTAL ? startY + k : startY;
 
-                    gameScreen.playerBattle.firstMap.jButtons[X][Y].setDisabledIcon(wreck);
-                    gameScreen.playerBattle.firstMap.jButtons[X][Y].setEnabled(false);
+                    gameScreen.battle.firstMap.jButtons[X][Y].setDisabledIcon(wreck);
+                    gameScreen.battle.firstMap.jButtons[X][Y].setEnabled(false);
                 }
             }
         }
@@ -549,8 +558,8 @@ public class GraphicView extends View {
                     int X = direction == TypesDirection.HORIZONTAL ? startX : startX + k;
                     int Y = direction == TypesDirection.HORIZONTAL ? startY + k : startY;
 
-                    gameScreen.playerBattle.secondMap.jButtons[X][Y].setDisabledIcon(wreck);
-                    gameScreen.playerBattle.secondMap.jButtons[X][Y].setEnabled(false);
+                    gameScreen.battle.secondMap.jButtons[X][Y].setDisabledIcon(wreck);
+                    gameScreen.battle.secondMap.jButtons[X][Y].setEnabled(false);
                 }
             }
         }
@@ -577,23 +586,23 @@ public class GraphicView extends View {
 
             if (dim == 1) {
                 if (dir == 0)
-                    gameScreen.playerBattle.secondMap.jButtons[x][y].setIcon(ship1_Hori);
+                    gameScreen.battle.secondMap.jButtons[x][y].setIcon(ship1_Hori);
                 else
-                    gameScreen.playerBattle.secondMap.jButtons[x][y].setIcon(ship1_Vert);
+                    gameScreen.battle.secondMap.jButtons[x][y].setIcon(ship1_Vert);
             } else {
                 if (dir == 0) {// horizontal
-                    gameScreen.playerBattle.secondMap.jButtons[x][y].setIcon(shipHeadLeft);
+                    gameScreen.battle.secondMap.jButtons[x][y].setIcon(shipHeadLeft);
                     for (int i = 1; i < dim - 1; i++) {
-                        gameScreen.playerBattle.secondMap.jButtons[x][y + i].setIcon(shipBodyLeft);
+                        gameScreen.battle.secondMap.jButtons[x][y + i].setIcon(shipBodyLeft);
                     }
                     // Ship Foot
-                    gameScreen.playerBattle.secondMap.jButtons[x][y + dim - 1].setIcon(shipFootLeft);
+                    gameScreen.battle.secondMap.jButtons[x][y + dim - 1].setIcon(shipFootLeft);
                 } else { // vertical
-                    gameScreen.playerBattle.secondMap.jButtons[x][y].setIcon(shipHeadTop);
+                    gameScreen.battle.secondMap.jButtons[x][y].setIcon(shipHeadTop);
                     for (int i = 1; i < dim - 1; i++) {
-                        gameScreen.playerBattle.secondMap.jButtons[x + i][y].setIcon(shipBodyTop);
+                        gameScreen.battle.secondMap.jButtons[x + i][y].setIcon(shipBodyTop);
                     }
-                    gameScreen.playerBattle.secondMap.jButtons[x + dim - 1][y].setIcon(shipFootTop);
+                    gameScreen.battle.secondMap.jButtons[x + dim - 1][y].setIcon(shipFootTop);
                 }
             }
         }
@@ -711,10 +720,10 @@ public class GraphicView extends View {
 
     @Override
     public void printBarrier(Player defender) {
-        gameScreen.playerBattle.barrier.setVisible(true);
+        gameScreen.battle.barrier.setVisible(true);
         if (defender.getDurabilityForceField() == 0)
-            gameScreen.playerBattle.countBarrier.setIcon(new ImageIcon(getClass().getResource("/ship/fireButton.gif")));
-        else gameScreen.playerBattle.countBarrier.setText(String.valueOf(defender.getDurabilityForceField()));
+            gameScreen.battle.countBarrier.setIcon(new ImageIcon(getClass().getResource("/ship/fireButton.gif")));
+        else gameScreen.battle.countBarrier.setText(String.valueOf(defender.getDurabilityForceField()));
     }
 
     private void buyItemInShop() {
@@ -757,12 +766,13 @@ public class GraphicView extends View {
         return isOkPressed.get();
     }
 
-    private void addRandomShipsListenersOK(AtomicBoolean isOkPressed){
+    private void addRandomShipsListenersOK(AtomicBoolean isOkPressed) {
         isOkPressed.set(true);
         gameScreen.setVisible(true);
         gameScreen.popup.setVisible(false);
-        gameScreen.playerBattle.setVisible(true);
+        gameScreen.battle.setVisible(true);
     }
+
     private void addRandomShipsListenersCANCEL(AtomicBoolean isOkPressed) {
         isOkPressed.set(false);
         gameScreen.popup.setVisible(false);
@@ -770,7 +780,7 @@ public class GraphicView extends View {
         gameScreen.manage.game.addActionListener(ev -> {
             gameScreen.manage.game.setVisible(false);
             gameScreen.manage.setVisible(false);
-            gameScreen.playerBattle.setVisible(true);
+            gameScreen.battle.setVisible(true);
             printBoards(Game.getFirstPlayer(), Game.getSecondPlayer());
         });
     }
@@ -786,7 +796,7 @@ public class GraphicView extends View {
 
     public Position getPositionToShot() {
         try {
-            return new Position(gameScreen.playerBattle.x, gameScreen.playerBattle.y);
+            return new Position(gameScreen.battle.x, gameScreen.battle.y);
         } catch (GameException e) {
             throw new RuntimeException(e);
         }
@@ -799,11 +809,11 @@ public class GraphicView extends View {
     @Override
     public void delayForGameplay() {
         Timer timer = new Timer(2000, e -> {
-            gameScreen.playerBattle.missImgAttacker.setVisible(false);
-            gameScreen.playerBattle.shotImgAttacker.setVisible(false);
-            gameScreen.playerBattle.missImgDefender.setVisible(false);
-            gameScreen.playerBattle.shotImgDefender.setVisible(false);
-            gameScreen.playerBattle.barrier.setVisible(false);
+            gameScreen.battle.missImgAttacker.setVisible(false);
+            gameScreen.battle.shotImgAttacker.setVisible(false);
+            gameScreen.battle.missImgDefender.setVisible(false);
+            gameScreen.battle.shotImgDefender.setVisible(false);
+            gameScreen.battle.barrier.setVisible(false);
         });
         timer.setRepeats(false);
         timer.start();

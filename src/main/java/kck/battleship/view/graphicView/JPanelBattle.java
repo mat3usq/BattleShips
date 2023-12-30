@@ -30,14 +30,19 @@ public class JPanelBattle extends JPanelBG implements ActionListener {
                 .createImage(MainScreen.class.getResource("/battle.png")));
         this.setSize(1200, 750);
 
-        firstMap = new JPanelMap("player");
-        this.add(firstMap);
+        if (type) {
+            firstMap = new JPanelMap("Computer");
+            secondMap = new JPanelMap("Computer2");
+        } else {
+            firstMap = new JPanelMap(GraphicView.name);
+            secondMap = new JPanelMap("Enemy");
+        }
 
-        secondMap = new JPanelMap("computer");
         secondMap.setBounds(550, 0, 600, 600);
         this.add(secondMap);
+        this.add(firstMap);
 
-        if (type) {
+        if (!type) {
             for (int i = 0; i < secondMap.jButtons.length; i++) {
                 for (int j = 0; j < secondMap.jButtons[i].length; j++) {
                     secondMap.jButtons[i][j].addActionListener(this);

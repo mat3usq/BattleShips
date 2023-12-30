@@ -20,10 +20,11 @@ public class JPanelMap extends JPanel {
         this.setLayout(null);
         this.setOpaque(false);
 
-        if (player.equals("player") || player.equals("manager"))
+        nameLabel = new JLabel(player);
+
+        if(player.equals("manage"))
             nameLabel = new JLabel(GraphicView.name);
-        else
-            nameLabel = new JLabel("Computer");
+
         nameLabel.setForeground(Color.BLACK);
         nameLabel.setFont(new Font("Arial", Font.BOLD, 24));
         nameLabel.setBounds(80, -5, 500, 50);
@@ -49,11 +50,13 @@ public class JPanelMap extends JPanel {
                 jButtons[i][j].setBorderPainted(false);
                 jButtons[i][j].setContentAreaFilled(false);
                 jButtons[i][j].setBounds(offX, offY, fieldDim, fieldDim);
-                if (player.equals("player")) {
+                if (player.equals("manage") || player.equals("Enemy"))
+                    jButtons[i][j].setCursor(cursorHand);
+                else {
                     jButtons[i][j].setCursor(cursorDefault);
                     jButtons[i][j].setDisabledIcon(gray);
                     jButtons[i][j].setEnabled(false);
-                } else jButtons[i][j].setCursor(cursorHand);
+                }
                 offX += fieldDim + 2;
             }
             offY += fieldDim + 2;
