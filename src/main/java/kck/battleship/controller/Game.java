@@ -102,12 +102,13 @@ public class Game {
 
     public void playRound() {
         boolean attacker = playTurn(Game.getFirstPlayer(), Game.getSecondPlayer(), false);
-        boolean defender = false;
         if (attacker) {
-            defender = playTurn(Game.getSecondPlayer(), Game.getFirstPlayer(), false);
+            Timer timer = new Timer(2000, e -> playTurn(Game.getSecondPlayer(), Game.getFirstPlayer(), false));
+            timer.setRepeats(false);
+            timer.start();
         }
 
-        if (!defender || !attacker) {
+        if (!firstPlayer.areShipsStillSailing() || !secondPlayer.areShipsStillSailing()) {
             saveRanking();
             printResultGame();
         }
