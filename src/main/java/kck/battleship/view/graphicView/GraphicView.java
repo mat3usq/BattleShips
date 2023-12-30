@@ -22,12 +22,13 @@ public class GraphicView extends View {
     private int shopSelected = 0;
     private final int sizeOptions = 6;
     private final int sizeOptionsShop = 2;
-    public static String name;
     private HomeScreen homeScreen;
     private LoginScreen loginScreen;
     private MainScreen mainScreen;
     private GameScreen gameScreen;
     private Game game;
+
+    public static String name;
 
     @Override
     public void printHomePage() {
