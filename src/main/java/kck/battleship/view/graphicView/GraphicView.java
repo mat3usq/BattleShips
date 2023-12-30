@@ -425,8 +425,10 @@ public class GraphicView extends View {
         mainScreen.results.setVisible(true);
         if(player.getName().equals("Enemy"))
             mainScreen.results.winnerName.setText("Zwyciezca: Computer 1");
-        else
+        else if(player.getName().equals("Enemy2"))
             mainScreen.results.winnerName.setText("Zwyciezca: Computer 2");
+        else
+            mainScreen.results.winnerName.setText("Zwyciezca: " + player.getName());
 
         if (rank != null)
             mainScreen.results.points.setText("Twoj wynik: " + rank.getPoints());
@@ -805,7 +807,7 @@ public class GraphicView extends View {
 
     @Override
     public void delayForGameplay() {
-        Timer timer = new Timer(1000, e -> {
+        Timer timer = new Timer(1500, e -> {
             gameScreen.battle.missImgAttacker.setVisible(false);
             gameScreen.battle.shotImgAttacker.setVisible(false);
             gameScreen.battle.missImgDefender.setVisible(false);
