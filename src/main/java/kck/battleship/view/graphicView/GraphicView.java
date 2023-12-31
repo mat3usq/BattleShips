@@ -8,6 +8,8 @@ import kck.battleship.model.types.TypesField;
 import kck.battleship.view.View;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
@@ -61,7 +63,7 @@ public class GraphicView extends View {
         });
 
         loginScreen.exit.addActionListener(e -> {
-            System.exit(0);
+            printExit();
         });
     }
 
@@ -107,7 +109,7 @@ public class GraphicView extends View {
                         option(menuSelected);
                         break;
                     case KeyEvent.VK_ESCAPE:
-                        System.exit(0);
+                        option(5);
                         break;
                     case KeyEvent.VK_DOWN:
                         if (menuSelected + 1 < sizeOptions)
@@ -257,7 +259,7 @@ public class GraphicView extends View {
                         homeScreen.setVisible(false);
                         break;
                     case KeyEvent.VK_ESCAPE:
-                        System.exit(0);
+                        printExit();
                         break;
                 }
             }
@@ -266,7 +268,19 @@ public class GraphicView extends View {
 
     @Override
     public void printExit() {
+        if (homeScreen != null)
+            homeScreen.setVisible(false);
+        if (loginScreen != null)
+            loginScreen.setVisible(false);
+        if (mainScreen != null)
+            mainScreen.setVisible(false);
+        if (gameScreen != null)
+            gameScreen.setVisible(false);
 
+        new ExitScreen().setVisible(true);
+        Timer exitTimer = new Timer(5000, ev -> System.exit(0));
+        exitTimer.setRepeats(false);
+        exitTimer.start();
     }
 
     @Override
@@ -307,7 +321,6 @@ public class GraphicView extends View {
             }
             case 5 -> {
                 printExit();
-                System.exit(0);
             }
         }
     }
@@ -403,9 +416,9 @@ public class GraphicView extends View {
         mainScreen.menuPanel.setVisible(false);
         gameScreen.setVisible(false);
         mainScreen.results.setVisible(true);
-        if(player.getName().equals("Enemy"))
+        if (player.getName().equals("Enemy"))
             mainScreen.results.winnerName.setText("Zwyciezca: Computer 1");
-        else if(player.getName().equals("Enemy2"))
+        else if (player.getName().equals("Enemy2"))
             mainScreen.results.winnerName.setText("Zwyciezca: Computer 2");
         else
             mainScreen.results.winnerName.setText("Zwyciezca: " + player.getName());
@@ -660,7 +673,7 @@ public class GraphicView extends View {
     @Override
     public void showOptionToPlay() {
         gameScreen.battle.info.setToolTipText("<html>" +
-                "<body style='width: 250px; background-color: #D3D3D3; font-size: 10px; text-align: center; margin: 20px;'>"+
+                "<body style='width: 250px; background-color: #D3D3D3; font-size: 10px; text-align: center; margin: 20px;'>" +
                 "<h2 style='color: navy;'>Witaj Piracie!</h2>" +
                 "<br><ol><li><p>W tej grze jestes podczas bitwy!</p></li>" +
                 "<br><li><p>Aby strzelic w plansze przeciwnika wystarczy kliknac na wybrane pole.</p></li>" +
@@ -674,7 +687,7 @@ public class GraphicView extends View {
     @Override
     public void showOptionToSimulatedGame() {
         gameScreen.battle.info.setToolTipText("<html>" +
-                "<body style='width: 250px; background-color: #D3D3D3; font-size: 10px; text-align: center; margin: 20px;'>"+
+                "<body style='width: 250px; background-color: #D3D3D3; font-size: 10px; text-align: center; margin: 20px;'>" +
                 "<h2 style='color: navy;'>Witaj Piracie!</h2>" +
                 "<br><ol><li><p>W tej grze nie możesz strzelać, ale możesz za to obserwować bitwę!</p></li>" +
                 "<br><li><p>Na końcu bitwy zostanie pokazany zwycięzca.</p></li>" +
