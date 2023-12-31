@@ -11,6 +11,6 @@ public class BattleShips {
         System.out.println("1. Interfejs Graficzny");
         System.out.println("2. Interfejs tekstowy");
 //        new ViewController(new Scanner(System.in).nextInt());
-        new ViewController(2);
+        new ViewController(1);
     }
 }

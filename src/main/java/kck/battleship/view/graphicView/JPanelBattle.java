@@ -21,6 +21,7 @@ public class JPanelBattle extends JPanelBG implements ActionListener {
     public JPanelBG shotImgAttacker = new JPanelBG(Toolkit.getDefaultToolkit().createImage(GameScreen.class.getResource("/shot.png")));
     public JLabel missLabelAttacker = new JLabel();
     public JLabel shotLabelAttacker = new JLabel();
+    public JButton info = new JButton(new ImageIcon(getClass().getResource("/info.png")));
 
     public int x;
     public int y;
@@ -102,6 +103,14 @@ public class JPanelBattle extends JPanelBG implements ActionListener {
         shotImgAttacker.setOpaque(false);
         shotImgAttacker.setVisible(false);
         this.add(shotImgAttacker);
+
+        ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE);
+        info.setBounds(1120, 0, 60, 60);
+        info.setContentAreaFilled(false);
+        info.setBorderPainted(false);
+        info.setOpaque(false);
+        info.setVisible(true);
+        this.add(info);
     }
 
     @Override

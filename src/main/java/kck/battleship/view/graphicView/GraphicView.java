@@ -659,12 +659,28 @@ public class GraphicView extends View {
 
     @Override
     public void showOptionToPlay() {
-
+        gameScreen.battle.info.setToolTipText("<html>" +
+                "<body style='width: 250px; background-color: #D3D3D3; font-size: 10px; text-align: center; margin: 20px;'>"+
+                "<h2 style='color: navy;'>Witaj Piracie!</h2>" +
+                "<br><ol><li><p>W tej grze jestes podczas bitwy!</p></li>" +
+                "<br><li><p>Aby strzelic w plansze przeciwnika wystarczy kliknac na wybrane pole.</p></li>" +
+                "<br><li><p>Po kliknieciu pojawi sie odpowiedni komunikat oraz zmiany na planszy.</p></li>" +
+                "<br><li><p>Na końcu bitwy zostanie pokazany zwycięzca.</p></li>" +
+                "<br><li><p><b>Po skonczonej bitwie zostaniesz przekierowany do menu.</b></p></li>" +
+                "</ol></body>" +
+                "</html>");
     }
 
     @Override
     public void showOptionToSimulatedGame() {
-
+        gameScreen.battle.info.setToolTipText("<html>" +
+                "<body style='width: 250px; background-color: #D3D3D3; font-size: 10px; text-align: center; margin: 20px;'>"+
+                "<h2 style='color: navy;'>Witaj Piracie!</h2>" +
+                "<br><ol><li><p>W tej grze nie możesz strzelać, ale możesz za to obserwować bitwę!</p></li>" +
+                "<br><li><p>Na końcu bitwy zostanie pokazany zwycięzca.</p></li>" +
+                "<br><li><p><b>Symulacja skończy się po odpowiednim komunikacie.</b></p></li>" +
+                "</ol></body>" +
+                "</html>");
     }
 
     @Override
@@ -735,6 +751,7 @@ public class GraphicView extends View {
         gameScreen.setVisible(true);
         gameScreen.popup.setVisible(false);
         gameScreen.battle.setVisible(true);
+        showOptionToPlay();
     }
 
     private void addRandomShipsListenersCANCEL(AtomicBoolean isOkPressed) {
@@ -746,6 +763,7 @@ public class GraphicView extends View {
             gameScreen.manage.setVisible(false);
             gameScreen.battle.setVisible(true);
             printBoards(Game.getFirstPlayer(), Game.getSecondPlayer());
+            showOptionToPlay();
         });
     }
 
