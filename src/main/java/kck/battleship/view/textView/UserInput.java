@@ -18,7 +18,7 @@ import kck.battleship.view.View;
 import java.io.IOException;
 
 public class UserInput {
-    private static final View view = ViewController.getInstance();
+    private static final TextView view = (TextView) ViewController.getInstance();
     private static final Screen screen = TextView.getScreen();
     private static final Terminal terminal = TextView.getTerminal();
 

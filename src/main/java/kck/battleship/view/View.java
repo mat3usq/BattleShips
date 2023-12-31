@@ -9,12 +9,6 @@ import java.util.ArrayList;
 public abstract class View {
     public abstract void printHomePage();
 
-    public abstract void printShipImage();
-
-    public abstract void printTitle();
-
-    public abstract void printMenu();
-
     public abstract void waitForKeyHomePage() throws IOException;
 
     public abstract void printLoginPage();
@@ -28,8 +22,6 @@ public abstract class View {
     public abstract void option(int selected) throws IOException, GameException, InterruptedException;
 
     public abstract void printRules() throws IOException, GameException, InterruptedException;
-
-    public abstract void printInfoRules(int x);
 
     public abstract void printError(String message);
 
@@ -49,15 +41,9 @@ public abstract class View {
 
     public abstract void showOptionToSimulatedGame();
 
-    public abstract void printBoardWithFutureShip(BattleField battleField, Ship ship) throws IOException;
-
-    public abstract void printAim(Position shoot, BattleField battleField);
-
     public abstract void printRanking(int page) throws IOException, GameException, InterruptedException;
 
     public abstract void printShop() throws IOException, GameException, InterruptedException;
-
-    public abstract void printItemsInShop(int x);
 
     public abstract void printBarrier(Player defender);
 

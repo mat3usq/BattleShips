@@ -48,7 +48,6 @@ public class TextView extends View {
         }
     }
 
-    @Override
     public void printShipImage() {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.BLUE_BRIGHT);
@@ -68,7 +67,6 @@ public class TextView extends View {
         tg.putString(0, 18, "                                           oo\n", SGR.BOLD);
     }
 
-    @Override
     public void printTitle() {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
@@ -83,7 +81,6 @@ public class TextView extends View {
         tg.putString(3, 8, "                                                                         ", SGR.CROSSED_OUT);
     }
 
-    @Override
     public void printMenu() {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.CYAN_BRIGHT);
@@ -122,10 +119,10 @@ public class TextView extends View {
 
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.CYAN);
-        tg.putString(2,10," ___  _  _  ____  ___  ___     _  _  __  __  _ _   _  _   __   __  __  ___ \n", SGR.BOLD);
-        tg.putString(2,11,"(  _)( \\( )(_  _)(  _)(  ,)   ( \\( )(  )/ _)( ) ) ( \\( ) (  ) (  \\/  )(  _)\n", SGR.BOLD);
-        tg.putString(2,12," ) _) )  (   )(   ) _) )  \\    )  (  )(( (_  )  \\  )  (  /__\\  )    (  ) _)\n", SGR.BOLD);
-        tg.putString(2,13,"(___)(_)\\_) (__) (___)(_)\\_)  (_)\\_)(__)\\__)(_)\\_)(_)\\_)(_)(_)(_/\\/\\_)(___)", SGR.BOLD);
+        tg.putString(2, 10, " ___  _  _  ____  ___  ___     _  _  __  __  _ _   _  _   __   __  __  ___ \n", SGR.BOLD);
+        tg.putString(2, 11, "(  _)( \\( )(_  _)(  _)(  ,)   ( \\( )(  )/ _)( ) ) ( \\( ) (  ) (  \\/  )(  _)\n", SGR.BOLD);
+        tg.putString(2, 12, " ) _) )  (   )(   ) _) )  \\    )  (  )(( (_  )  \\  )  (  /__\\  )    (  ) _)\n", SGR.BOLD);
+        tg.putString(2, 13, "(___)(_)\\_) (__) (___)(_)\\_)  (_)\\_)(__)\\__)(_)\\_)(_)\\_)(_)(_)(_/\\/\\_)(___)", SGR.BOLD);
 
         try {
             name = UserInput.getUserInput("Wprowadź swoj NICK i naciśnij Enter:");
@@ -274,7 +271,6 @@ public class TextView extends View {
         }
     }
 
-    @Override
     public void printInfoRules(int x) {
         TextGraphics tg = screen.newTextGraphics();
         screen.clear();
@@ -662,7 +658,6 @@ public class TextView extends View {
         }
     }
 
-    @Override
     public void printBoardWithFutureShip(BattleField battleField, Ship ship) throws IOException {
         TextGraphics tg = screen.newTextGraphics();
 
@@ -690,7 +685,6 @@ public class TextView extends View {
         screen.refresh();
     }
 
-    @Override
     public void printAim(Position shoot, BattleField battleField) {
         TextGraphics tg = screen.newTextGraphics();
 
@@ -825,27 +819,24 @@ public class TextView extends View {
                     }
                     case Enter -> {
                         TextGraphics tg = screen.newTextGraphics();
-                        for (int i = 8; i <21; i++)
+                        for (int i = 8; i < 21; i++)
                             tg.putString(1, i, " ".repeat(100), SGR.BOLD);
 
                         String s;
 
                         if (selected == 0)
-                            s = Ranking.enoughPoints(name, 500, selected,UserInput.question("Czy chcesz napewno to kupic(y/n)?"));
+                            s = Ranking.enoughPoints(name, 500, selected, UserInput.question("Czy chcesz napewno to kupic(y/n)?"));
                         else
-                            s = Ranking.enoughPoints(name, 300, selected,UserInput.question("Czy chcesz napewno to kupic(y/n)?"));
+                            s = Ranking.enoughPoints(name, 300, selected, UserInput.question("Czy chcesz napewno to kupic(y/n)?"));
 
                         if (s == null) {
                             tg.setForegroundColor(TextColor.ANSI.GREEN_BRIGHT);
                             tg.putString(20, 15, "Pomyslnie zakupiono wybrana rzecz!", SGR.BOLD);
                         } else {
-                            if(s.length() < 28)
-                            {
+                            if (s.length() < 28) {
                                 tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
                                 tg.putString(25, 15, s, SGR.BOLD);
-                            }
-                            else
-                            {
+                            } else {
                                 tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
                                 tg.putString(20, 15, s, SGR.BOLD);
                             }
@@ -860,7 +851,6 @@ public class TextView extends View {
         }
     }
 
-    @Override
     public void printItemsInShop(int x) {
         screen.clear();
 

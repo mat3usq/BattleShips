@@ -265,20 +265,6 @@ public class GraphicView extends View {
     }
 
     @Override
-    public void printShipImage() {
-    }
-
-    @Override
-    public void printTitle() {
-
-    }
-
-    @Override
-    public void printMenu() {
-
-    }
-
-    @Override
     public void printExit() {
 
     }
@@ -385,11 +371,6 @@ public class GraphicView extends View {
     }
 
     @Override
-    public void printInfoRules(int x) {
-
-    }
-
-    @Override
     public void printError(String message) {
         gameScreen.manage.errorPage.setVisible(true);
         gameScreen.manage.label.setText(message);
@@ -415,7 +396,6 @@ public class GraphicView extends View {
             }
         }
     }
-
 
     @Override
     public void printWinner(Player player, Ranking rank) {
@@ -688,16 +668,6 @@ public class GraphicView extends View {
     }
 
     @Override
-    public void printBoardWithFutureShip(BattleField battleField, Ship ship) {
-
-    }
-
-    @Override
-    public void printAim(Position shoot, BattleField battleField) {
-
-    }
-
-    @Override
     public void printRanking(int page) {
         mainScreen.ranking.updateRanking();
         mainScreen.ranking.setVisible(true);
@@ -710,11 +680,6 @@ public class GraphicView extends View {
         mainScreen.shopPanel.setVisible(true);
         mainScreen.menuPanel.setVisible(false);
         mainScreen.shopPanel.requestFocusInWindow();
-    }
-
-    @Override
-    public void printItemsInShop(int x) {
-
     }
 
     @Override
