@@ -77,7 +77,6 @@ public class Game {
                 isHit = defender.getBattleField().at(shoot) == TypesField.HIT.name;
 
                 if (isHit) {
-//                    System.out.println(attacker.getName() + " game:" + shoot.getColumn() + " " + shoot.getRow());
                     attacker.registerShoot(shoot);
                     updatePlayerPoints(attacker);
                 }
@@ -129,12 +128,12 @@ public class Game {
 
     private void playSimulateGame() throws InterruptedException {
         boolean attacker = playTurn(firstPlayer, secondPlayer, false);
-        Thread.sleep(1000);
+        Thread.sleep(1500);
 
         if (attacker)
             playTurn(secondPlayer, firstPlayer, true);
 
-        Thread.sleep(1000);
+        Thread.sleep(1500);
 
         if (!firstPlayer.areShipsStillSailing() || !secondPlayer.areShipsStillSailing()) {
             saveRanking();
