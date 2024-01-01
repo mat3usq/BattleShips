@@ -135,10 +135,9 @@ public class Game {
 
         Thread.sleep(1500);
 
-        if (!firstPlayer.areShipsStillSailing() || !secondPlayer.areShipsStillSailing()) {
-            saveRanking();
+        if (!firstPlayer.areShipsStillSailing() || !secondPlayer.areShipsStillSailing())
             printResultGame();
-        } else playSimulateGame();
+        else playSimulateGame();
     }
 
     private void updatePlayerPoints(Player player) {

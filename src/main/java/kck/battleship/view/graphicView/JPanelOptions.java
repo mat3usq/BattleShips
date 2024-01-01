@@ -48,13 +48,13 @@ public class JPanelOptions extends JPanelBG {
         }
 
         ButtonGroup radioButtonDirection = new ButtonGroup();
-        directions[0] = new JRadioButton("Horyzontalnie");
+        directions[0] = new JRadioButton("Vertykalnie");
         directions[0].setBounds(200, 470, 150, 20);
         directions[0].setSelected(true);
         directions[0].setOpaque(false);
         radioButtonDirection.add(directions[0]);
 
-        directions[1] = new JRadioButton("Vertykalnie");
+        directions[1] = new JRadioButton("Horyzontalnie");
         directions[1].setBounds(360, 470, 150, 20);
         directions[1].setOpaque(false);
         radioButtonDirection.add(directions[1]);

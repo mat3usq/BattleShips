@@ -423,8 +423,10 @@ public class GraphicView extends View {
         else
             mainScreen.results.winnerName.setText("Zwyciezca: " + player.getName());
 
-        if (rank != null)
+        if (!player.isAI())
             mainScreen.results.points.setText("Twoj wynik: " + rank.getPoints());
+        else
+            mainScreen.results.points.setText("");
 
         Timer timer = new Timer(5000, e -> {
             mainScreen.results.setVisible(false);

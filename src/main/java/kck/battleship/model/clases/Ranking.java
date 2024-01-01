@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Ranking {
     public Player player;
-    private int points = 0;
+    private int points;
 
     public Ranking(Player player, int points) {
         this.player = player;
