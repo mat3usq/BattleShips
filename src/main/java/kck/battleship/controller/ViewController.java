@@ -9,6 +9,7 @@ import kck.battleship.model.clases.BattleField;
 import kck.battleship.model.clases.Player;
 import kck.battleship.model.clases.Position;
 import kck.battleship.model.clases.Ship;
+import kck.battleship.model.types.TypesDirection;
 import kck.battleship.view.graphicView.GraphicView;
 import kck.battleship.view.textView.TextView;
 import kck.battleship.view.View;
@@ -71,6 +72,19 @@ public class ViewController {
         }
     }
 
+    public static boolean addShipGraphic(Ship currentShip, Position position, TypesDirection type, BattleField battleField) {
+        boolean isAdded = false;
+        currentShip.setPosition(position);
+        currentShip.setDirection(type);
+
+        try {
+            isAdded = battleField.addShip(currentShip);
+        } catch (GameException exception) {
+            getInstance().printError(exception.getMessage());
+        }
+        return isAdded;
+    }
+
     private static void addShipText(BattleField battleField, Ship ship, ArrayList<Ship> ships) {
         boolean isAdded;
         do {
@@ -116,12 +130,11 @@ public class ViewController {
         } else if (choice == 2) {
             boolean isAddHit;
             do {
-                
                 try {
                     shoot = attacker.shoot(defender.getBattleField().getbattleFieldHideShips());
                     isAddHit = defender.addShoot(shoot);
                 } catch (GameException e) {
-                    if (!attacker.isAI()) textView.printError(e.getMessage());
+                    if (!attacker.isAI()) getInstance().printError(e.getMessage());
                     isAddHit = false;
                 }
             } while (!isAddHit);

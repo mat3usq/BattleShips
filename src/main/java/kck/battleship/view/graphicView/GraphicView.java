@@ -8,8 +8,6 @@ import kck.battleship.model.types.TypesField;
 import kck.battleship.view.View;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
@@ -62,9 +60,7 @@ public class GraphicView extends View {
             }
         });
 
-        loginScreen.exit.addActionListener(e -> {
-            printExit();
-        });
+        loginScreen.exit.addActionListener(e -> printExit());
     }
 
     private void addMenuActionsListeners() {
@@ -313,15 +309,9 @@ public class GraphicView extends View {
                 printShop();
                 printShopPage(0);
             }
-            case 3 -> {
-                printRules();
-            }
-            case 4 -> {
-                printRanking(0);
-            }
-            case 5 -> {
-                printExit();
-            }
+            case 3 -> printRules();
+            case 4 -> printRanking(0);
+            case 5 -> printExit();
         }
     }
 
@@ -386,7 +376,13 @@ public class GraphicView extends View {
     @Override
     public void printError(String message) {
         gameScreen.manage.errorPage.setVisible(true);
-        gameScreen.manage.label.setText(message);
+        gameScreen.manage.errorLabel.setText(message);
+        Timer timer = new Timer(2000, e1 -> {
+            gameScreen.manage.errorPage.setVisible(false);
+            gameScreen.manage.errorLabel.setText("");
+        });
+        timer.setRepeats(false);
+        timer.start();
     }
 
     @Override
@@ -439,7 +435,8 @@ public class GraphicView extends View {
 
     @Override
     public void printShip(Ship ship) {
-
+        gameScreen.manage.shipLabel.setText("→ " + ship.getName() + ": ");
+        gameScreen.manage.imgShip.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/ship/ship" + ship.getLength() + ".png"))));
     }
 
     @Override
@@ -448,17 +445,17 @@ public class GraphicView extends View {
         ArrayList<Ship> secondPlayerShips = secondPlayer.getShips();
         BattleField firstBattleField = firstPlayer.getBattleField();
         BattleField secondBattleField = secondPlayer.getBattleField();
-        ImageIcon wreck = new ImageIcon(getClass().getResource("/ship/wreck.gif"));
-        ImageIcon fire = new ImageIcon(getClass().getResource("/ship/fireButton.gif"));
-        ImageIcon water = new ImageIcon(getClass().getResource("/ship/grayButton.gif"));
-        ImageIcon ship1_Hori = new ImageIcon(getClass().getResource("/ship/ship1_hori.png"));
-        ImageIcon ship1_Vert = new ImageIcon(getClass().getResource("/ship/ship1_vert.png"));
-        ImageIcon shipHeadLeft = new ImageIcon(getClass().getResource("/ship/shipHeadLeft.png"));
-        ImageIcon shipHeadTop = new ImageIcon(getClass().getResource("/ship/shipHeadTop.png"));
-        ImageIcon shipBodyLeft = new ImageIcon(getClass().getResource("/ship/shipBodyLeft.png"));
-        ImageIcon shipBodyTop = new ImageIcon(getClass().getResource("/ship/shipBodyTop.png"));
-        ImageIcon shipFootLeft = new ImageIcon(getClass().getResource("/ship/shipFootLeft.png"));
-        ImageIcon shipFootTop = new ImageIcon(getClass().getResource("/ship/shipFootTop.png"));
+        ImageIcon wreck = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ship/wreck.gif")));
+        ImageIcon fire = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ship/fireButton.gif")));
+        ImageIcon water = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ship/grayButton.gif")));
+        ImageIcon ship1_Hori = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ship/ship1_hori.png")));
+        ImageIcon ship1_Vert = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ship/ship1_vert.png")));
+        ImageIcon shipHeadLeft = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ship/shipHeadLeft.png")));
+        ImageIcon shipHeadTop = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ship/shipHeadTop.png")));
+        ImageIcon shipBodyLeft = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ship/shipBodyLeft.png")));
+        ImageIcon shipBodyTop = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ship/shipBodyTop.png")));
+        ImageIcon shipFootLeft = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ship/shipFootLeft.png")));
+        ImageIcon shipFootTop = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ship/shipFootTop.png")));
 
         for (Ship ship : firstPlayerShips) {
             int x = ship.getPosition().getRow();
@@ -560,14 +557,14 @@ public class GraphicView extends View {
     }
 
     private void showEnemyShips(ArrayList<Ship> secondPlayerShips) {
-        ImageIcon ship1_Hori = new ImageIcon(getClass().getResource("/ship/ship1_hori.png"));
-        ImageIcon ship1_Vert = new ImageIcon(getClass().getResource("/ship/ship1_vert.png"));
-        ImageIcon shipHeadLeft = new ImageIcon(getClass().getResource("/ship/shipHeadLeft.png"));
-        ImageIcon shipHeadTop = new ImageIcon(getClass().getResource("/ship/shipHeadTop.png"));
-        ImageIcon shipBodyLeft = new ImageIcon(getClass().getResource("/ship/shipBodyLeft.png"));
-        ImageIcon shipBodyTop = new ImageIcon(getClass().getResource("/ship/shipBodyTop.png"));
-        ImageIcon shipFootLeft = new ImageIcon(getClass().getResource("/ship/shipFootLeft.png"));
-        ImageIcon shipFootTop = new ImageIcon(getClass().getResource("/ship/shipFootTop.png"));
+        ImageIcon ship1_Hori = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ship/ship1_hori.png")));
+        ImageIcon ship1_Vert = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ship/ship1_vert.png")));
+        ImageIcon shipHeadLeft = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ship/shipHeadLeft.png")));
+        ImageIcon shipHeadTop = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ship/shipHeadTop.png")));
+        ImageIcon shipBodyLeft = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ship/shipBodyLeft.png")));
+        ImageIcon shipBodyTop = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ship/shipBodyTop.png")));
+        ImageIcon shipFootLeft = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ship/shipFootLeft.png")));
+        ImageIcon shipFootTop = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ship/shipFootTop.png")));
 
         for (Ship ship : secondPlayerShips) {
             int x = ship.getPosition().getRow();
@@ -622,22 +619,22 @@ public class GraphicView extends View {
             gameScreen.manage.map.jButtons[x][y].setEnabled(false);
             if (dir == 0)
                 gameScreen.manage.map.jButtons[x][y].setDisabledIcon(new ImageIcon(
-                        getClass().getResource("/ship/ship1_hori.png")));
+                        Objects.requireNonNull(getClass().getResource("/ship/ship1_hori.png"))));
             else
-                gameScreen.manage.map.jButtons[x][y].setDisabledIcon(new ImageIcon(getClass().getResource("/ship/ship1_vert.png")));
+                gameScreen.manage.map.jButtons[x][y].setDisabledIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/ship/ship1_vert.png"))));
         } else {
             ImageIcon shipHeadLeft = new ImageIcon(
-                    getClass().getResource("/ship/shipHeadLeft.png"));
+                    Objects.requireNonNull(getClass().getResource("/ship/shipHeadLeft.png")));
             ImageIcon shipHeadTop = new ImageIcon(
-                    getClass().getResource("/ship/shipHeadTop.png"));
+                    Objects.requireNonNull(getClass().getResource("/ship/shipHeadTop.png")));
             ImageIcon shipBodyLeft = new ImageIcon(
-                    getClass().getResource("/ship/shipBodyLeft.png"));
+                    Objects.requireNonNull(getClass().getResource("/ship/shipBodyLeft.png")));
             ImageIcon shipBodyTop = new ImageIcon(
-                    getClass().getResource("/ship/shipBodyTop.png"));
+                    Objects.requireNonNull(getClass().getResource("/ship/shipBodyTop.png")));
             ImageIcon shipFootLeft = new ImageIcon(
-                    getClass().getResource("/ship/shipFootLeft.png"));
+                    Objects.requireNonNull(getClass().getResource("/ship/shipFootLeft.png")));
             ImageIcon shipFootTop = new ImageIcon(
-                    getClass().getResource("/ship/shipFootTop.png"));
+                    Objects.requireNonNull(getClass().getResource("/ship/shipFootTop.png")));
             if (dir == 0) {// horizontal
                 // Ship Head
                 gameScreen.manage.map.jButtons[x][y].setDisabledIcon(shipHeadLeft);
@@ -717,7 +714,7 @@ public class GraphicView extends View {
     public void printBarrier(Player defender) {
         gameScreen.battle.barrier.setVisible(true);
         if (defender.getDurabilityForceField() == 0)
-            gameScreen.battle.countBarrier.setIcon(new ImageIcon(getClass().getResource("/ship/fireButton.gif")));
+            gameScreen.battle.countBarrier.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/ship/fireButton.gif"))));
         else gameScreen.battle.countBarrier.setText(String.valueOf(defender.getDurabilityForceField()));
     }
 
@@ -748,13 +745,9 @@ public class GraphicView extends View {
     public boolean isRandomShipsArranged() {
         AtomicBoolean isOkPressed = new AtomicBoolean();
 
-        gameScreen.popup.okButton.addActionListener(e -> {
-            addRandomShipsListenersOK(isOkPressed);
-        });
+        gameScreen.popup.okButton.addActionListener(e -> addRandomShipsListenersOK(isOkPressed));
 
-        gameScreen.popup.cancelButton.addActionListener(e -> {
-            addRandomShipsListenersCANCEL(isOkPressed);
-        });
+        gameScreen.popup.cancelButton.addActionListener(e -> addRandomShipsListenersCANCEL(isOkPressed));
 
         gameScreen.popup.setVisible(true);
 

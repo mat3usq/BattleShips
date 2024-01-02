@@ -1,6 +1,5 @@
 package kck.battleship.view.graphicView;
 
-import kck.battleship.controller.Game;
 import kck.battleship.controller.GameException;
 import kck.battleship.controller.ViewController;
 import kck.battleship.model.clases.BattleField;
@@ -12,8 +11,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.StringTokenizer;
@@ -27,8 +24,11 @@ public class JPanelManage extends JPanelBG implements ActionListener {
     public ArrayList<Ship> ships;
     public BattleField battleField;
     private boolean noAdd = true;
-    public JLabel label = new JLabel();
+    public JLabel errorLabel = new JLabel();
     public JPanelBG errorPage = new JPanelBG(Toolkit.getDefaultToolkit().createImage(GameScreen.class.getResource("/errorPage.png")));
+    public JLabel shipLabel = new JLabel();
+    public JLabel imgShip = new JLabel();
+
     public JButton game;
 
     public JPanelManage() {
@@ -49,17 +49,27 @@ public class JPanelManage extends JPanelBG implements ActionListener {
             }
         }
 
-        label = new JLabel();
-        label.setFont(new Font("SansSerif", Font.BOLD, 18));
-        label.setForeground(Color.BLACK);
-        label.setBounds(290, 40, 660, 40);
+        errorLabel = new JLabel();
+        errorLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
+        errorLabel.setForeground(Color.BLACK);
+        errorLabel.setBounds(290, 40, 660, 40);
 
         errorPage.setBounds(-120, 600, 900, 120);
         errorPage.setOpaque(false);
         errorPage.setLayout(null);
-        errorPage.add(label);
+        errorPage.add(errorLabel);
         errorPage.setVisible(false);
         this.add(errorPage);
+
+        shipLabel = new JLabel();
+        shipLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
+        shipLabel.setForeground(Color.ORANGE);
+        shipLabel.setBounds(100, 620, 400, 40);
+        this.add(shipLabel);
+
+        imgShip = new JLabel();
+        imgShip.setBounds(140, 650, 200, 50);
+        this.add(imgShip);
 
         ImageIcon playGameImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("/bitwa.png")));
 //        ImageIcon playViewImgHover = new ImageIcon(Objects.requireNonNull(getClass().getResource("/menu.png")));
@@ -80,7 +90,7 @@ public class JPanelManage extends JPanelBG implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (noAdd) {
-            boolean isAdded = false;
+            boolean isAdded;
             JButton source = (JButton) e.getSource();
             StringTokenizer st = new StringTokenizer(source.getActionCommand(), " ");
             int x = Integer.parseInt(st.nextToken());
@@ -91,22 +101,9 @@ public class JPanelManage extends JPanelBG implements ActionListener {
             else type = TypesDirection.HORIZONTAL;
 
             try {
-                currentShip.setPosition(new Position(x, y));
+                isAdded = ViewController.addShipGraphic(currentShip, new Position(x, y), type, battleField);
             } catch (GameException ex) {
                 throw new RuntimeException(ex);
-            }
-            currentShip.setDirection(type);
-
-            try {
-                isAdded = battleField.addShip(currentShip);
-            } catch (GameException exception) {
-                ViewController.getInstance().printError(exception.getMessage());
-                Timer timer = new Timer(2000, e1 -> {
-                    errorPage.setVisible(false);
-                    label.setText("");
-                });
-                timer.setRepeats(false);
-                timer.start();
             }
 
             if (isAdded) {
@@ -114,6 +111,8 @@ public class JPanelManage extends JPanelBG implements ActionListener {
                     counter++;
                 else {
                     noAdd = false;
+                    shipLabel.setVisible(false);
+                    imgShip.setVisible(false);
                     options.directions[0].setEnabled(false);
                     options.directions[1].setEnabled(false);
                     options.ships[counter].setEnabled(false);
@@ -121,7 +120,6 @@ public class JPanelManage extends JPanelBG implements ActionListener {
                 }
 
                 options.ships[counter - 1].setEnabled(false);
-
                 ViewController.getInstance().addShipsVisually(battleField, ships.get(counter), ships);
             }
         }

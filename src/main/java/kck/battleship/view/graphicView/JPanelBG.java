@@ -23,14 +23,4 @@ public class JPanelBG extends JPanel {
         super.paintComponent(g);
         g.drawImage(image, 0, 0, this);
     }
-
-    public static ImageIcon createImageIcon(final String path) {
-        try {
-            return new ImageIcon(new File(path).toURI().toURL());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
 }

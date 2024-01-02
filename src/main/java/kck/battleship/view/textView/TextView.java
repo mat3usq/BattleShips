@@ -320,7 +320,7 @@ public class TextView extends View {
                 tg.setForegroundColor(TextColor.ANSI.YELLOW_BRIGHT);
                 tg.putString(6, 3 + i, (TypesField.SHIP.name + " ").repeat(type.getShipLength()), SGR.BOLD);
                 tg.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
-                tg.putString(6 + type.getShipLength() * 2, 3 + i, " ) : " + TypesShips.toPolishName(type));
+                tg.putString(6 + type.getShipLength() * 2, 3 + i, " ) : " + TypesShips.getShipName(type));
                 i++;
             }
 

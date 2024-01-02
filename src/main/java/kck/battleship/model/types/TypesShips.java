@@ -37,7 +37,14 @@ public enum TypesShips {
         return sum;
     }
 
-    public static String toPolishName(TypesShips type) {
+    public static String getShipName(TypesShips type){
+        if (ViewController.getInstance() instanceof GraphicView)
+            return toPirateName(type);
+        else
+            return toMilitaryName(type);
+    }
+
+    private static String toMilitaryName(TypesShips type) {
         return switch (type) {
             case BATTLESHIP -> "OKRĘT WOJENNY";
             case DESTROYER -> "NISZCZYCIEL";
@@ -46,7 +53,7 @@ public enum TypesShips {
         };
     }
 
-    public static String toPirateName(TypesShips type) {
+    private static String toPirateName(TypesShips type) {
         return switch (type) {
             case BATTLESHIP -> "MORSKI REKIN";
             case DESTROYER -> "SZTORMOWY ŁOWCA";
@@ -60,6 +67,5 @@ public enum TypesShips {
             return "CZARNA PERŁA";
         else
             return "LOTNISKOWIEC";
-
     }
 }

@@ -115,7 +115,7 @@ public class Player {
         ArrayList<Ship> ships = new ArrayList<>();
         for (TypesShips type : TypesShips.values())
             for (int i = 0; i < type.getNumberShips(); i++)
-                ships.add(new Ship(TypesShips.toPolishName(type), type.getShipLength()));
+                ships.add(new Ship(TypesShips.getShipName(type), type.getShipLength()));
         return ships;
     }
 
