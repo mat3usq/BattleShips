@@ -787,7 +787,7 @@ public class TextView extends View {
                             printRanking(--page);
                     }
                     case ArrowDown -> {
-                        if (page < rankings.size() / itemsPerPage && rankings.size() % 10 != 0)
+                        if (page < (rankings.size() - 1) / itemsPerPage)
                             printRanking(++page);
                     }
                 }
