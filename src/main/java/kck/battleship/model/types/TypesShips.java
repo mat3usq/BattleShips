@@ -1,5 +1,8 @@
 package kck.battleship.model.types;
 
+import kck.battleship.controller.ViewController;
+import kck.battleship.view.graphicView.GraphicView;
+
 public enum TypesShips {
     SUBMARINE(1, 1),
     CRUISER(2, 2),
@@ -41,5 +44,22 @@ public enum TypesShips {
             case CRUISER -> "KRĄŻOWNIK";
             case SUBMARINE -> "ŁÓDŹ PODWODNA";
         };
+    }
+
+    public static String toPirateName(TypesShips type) {
+        return switch (type) {
+            case BATTLESHIP -> "MORSKI REKIN";
+            case DESTROYER -> "SZTORMOWY ŁOWCA";
+            case CRUISER -> "PŁYWAJĄCY FORT";
+            case SUBMARINE -> "GŁĘBINOWY DUCH";
+        };
+    }
+
+    public static String getNameExtraShip() {
+        if (ViewController.getInstance() instanceof GraphicView)
+            return "CZARNA PERŁA";
+        else
+            return "LOTNISKOWIEC";
+
     }
 }

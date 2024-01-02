@@ -66,7 +66,7 @@ public class Player {
     public void addShips() throws IOException {
         if (!isAI) {
             if (hasAirCrafter)
-                ships.add(new Ship("LOTNISKOWIEC", 5));
+                ships.add(new Ship(TypesShips.getNameExtraShip(), 5));
 
             addShipManually();
         } else randAddShips();
@@ -80,11 +80,10 @@ public class Player {
     public void randAddShips() {
         Random random = new Random();
         if (hasAirCrafter)
-            ships.add(new Ship("LOTNISKOWIEC", 5));
+            ships.add(new Ship(TypesShips.getNameExtraShip(), 5));
 
         for (Ship ship : ships)
             addShipRandomly(random, ship);
-
     }
 
     private void addShipRandomly(Random random, Ship ship) {
