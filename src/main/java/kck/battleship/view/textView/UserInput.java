@@ -13,6 +13,7 @@ import kck.battleship.model.clases.BattleField;
 import kck.battleship.model.clases.Ship;
 import kck.battleship.model.types.TypesDirection;
 import kck.battleship.model.clases.Position;
+import kck.battleship.model.types.TypesField;
 import kck.battleship.view.View;
 
 import java.io.IOException;
@@ -135,7 +136,7 @@ public class UserInput {
 
     public static boolean question(String message) throws IOException, InterruptedException {
         TextGraphics tg = screen.newTextGraphics();
-        for (int i = 9; i <22; i++)
+        for (int i = 9; i < 22; i++)
             tg.putString(1, i, " ".repeat(100), SGR.BOLD);
 
         char userResponse = '\0';
@@ -210,7 +211,10 @@ public class UserInput {
                         shoot.setColumn(shoot.getColumn() - 1);
                     }
                 } else if (keyStroke.getKeyType() == KeyType.Enter) {
-                    canSubmit = false;
+                    if (defenderBattleField.at(shoot) == TypesField.HIT.name || defenderBattleField.at(shoot) == TypesField.MISS.name)
+                        view.printError("Strzelałes juz w tą pozycje!");
+                    else
+                        canSubmit = false;
                 }
             }
         }

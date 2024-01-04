@@ -90,7 +90,7 @@ public class JPanelManage extends JPanelBG implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (noAdd) {
-            boolean isAdded;
+            boolean isAdded = false;
             JButton source = (JButton) e.getSource();
             StringTokenizer st = new StringTokenizer(source.getActionCommand(), " ");
             int x = Integer.parseInt(st.nextToken());
@@ -101,9 +101,11 @@ public class JPanelManage extends JPanelBG implements ActionListener {
             else type = TypesDirection.HORIZONTAL;
 
             try {
-                isAdded = ViewController.addShipGraphic(currentShip, new Position(x, y), type, battleField);
-            } catch (GameException ex) {
-                throw new RuntimeException(ex);
+                currentShip.setPosition(new Position(x, y));
+                currentShip.setDirection(type);
+                isAdded = battleField.addShip(currentShip);
+            } catch (GameException exception) {
+                ViewController.getInstance().printError(exception.getMessage());
             }
 
             if (isAdded) {

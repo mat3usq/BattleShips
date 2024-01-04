@@ -59,7 +59,7 @@ public class Game {
     }
 
     public boolean playTurn(Player attacker, Player defender, Boolean reverse) {
-        Position shoot;
+        Position shoot = null;
         boolean isHit;
 
         if (attacker.isAI() && defender.isAI())
@@ -72,7 +72,22 @@ public class Game {
                 defender.setDurabilityForceField(defender.getDurabilityForceField() - 1);
                 view.printBarrier(defender);
             } else {
-                shoot = ViewController.getPositionToShot(defender, attacker);
+                if (attacker.isAI()) {
+                    boolean isAddHit;
+                    do {
+                        try {
+                            shoot = attacker.shoot(defender.getBattleField().getbattleFieldHideShips());
+                            isAddHit = defender.addShoot(shoot);
+                        } catch (GameException e) {
+                            isAddHit = false;
+                        }
+                    } while (!isAddHit);
+                } else try {
+                    shoot = view.getPositionToShot(defender, attacker);
+                    defender.addShoot(shoot);
+                } catch (GameException e) {
+                    throw new RuntimeException(e);
+                }
 
                 isHit = defender.getBattleField().at(shoot) == TypesField.HIT.name;
 

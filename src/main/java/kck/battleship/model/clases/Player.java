@@ -74,7 +74,7 @@ public class Player {
 
     private void addShipManually() throws IOException {
         view.showOptionToManuallyAddShip();
-        ViewController.addShipManually(battleField, ships);
+        view.addShipsVisually(battleField, ships.get(0), ships);
     }
 
     public void randAddShips() {
@@ -146,8 +146,7 @@ public class Player {
     }
 
     public Position shoot(BattleField defenderBattleField) throws GameException {
-        if (isAI) return ComputerShoot(defenderBattleField);
-        else return UserInput.readPositionToShot(defenderBattleField);
+        return ComputerShoot(defenderBattleField);
     }
 
     public void registerShoot(Position position) {

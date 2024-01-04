@@ -784,12 +784,15 @@ public class GraphicView extends View {
         printShip(ship);
     }
 
-    public Position getPositionToShot() {
+    @Override
+    public Position getPositionToShot(Player defender, Player attacker) {
+        Position shoot = null;
         try {
-            return new Position(gameScreen.battle.x, gameScreen.battle.y);
+            shoot = new Position(gameScreen.battle.x, gameScreen.battle.y);
         } catch (GameException e) {
-            throw new RuntimeException(e);
+            printError(e.getMessage());
         }
+        return shoot;
     }
 
     public void playTurn() {

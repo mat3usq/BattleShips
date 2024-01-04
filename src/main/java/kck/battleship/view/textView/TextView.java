@@ -954,6 +954,26 @@ public class TextView extends View {
     }
 
     public void addShipsVisually(BattleField battleField, Ship ship, ArrayList<Ship> ships) {
+        for (Ship currentShip : ships) {
+            boolean isAdded;
+            do {
+                printAndRefresh(battleField, currentShip, ships);
+                try {
+                    isAdded = battleField.addShip(currentShip);
+                } catch (GameException e) {
+                    printError(e.getMessage());
+                    isAdded = false;
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+            } while (!isAdded);
+        }
+    }
+
+    private void printAndRefresh(BattleField battleField, Ship ship, ArrayList<Ship> ships) {
         try {
             printBoard(battleField, ships);
             printShip(ship);
@@ -961,6 +981,17 @@ public class TextView extends View {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public Position getPositionToShot(Player defender, Player attacker) {
+        Position shoot;
+        try {
+            shoot = UserInput.readPositionToShot(defender.getBattleField().getbattleFieldHideShips());
+        } catch (GameException e) {
+            throw new RuntimeException(e);
+        }
+        return shoot;
     }
 
     @Override
