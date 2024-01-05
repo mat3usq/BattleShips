@@ -48,7 +48,7 @@ public class TextView extends View {
         }
     }
 
-    public void printShipImage() {
+    private void printShipImage() {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.BLUE_BRIGHT);
         tg.putString(0, 14, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~o~~o~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", SGR.BOLD);
@@ -67,7 +67,7 @@ public class TextView extends View {
         tg.putString(0, 18, "                                           oo\n", SGR.BOLD);
     }
 
-    public void printTitle() {
+    private void printTitle() {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
         tg.putString(3, 1, "                                                                         ", SGR.UNDERLINE);
@@ -81,7 +81,7 @@ public class TextView extends View {
         tg.putString(3, 8, "                                                                         ", SGR.CROSSED_OUT);
     }
 
-    public void printMenu() {
+    private void printMenu() {
         TextGraphics tg = screen.newTextGraphics();
         tg.setForegroundColor(TextColor.ANSI.CYAN_BRIGHT);
         tg.putString(24, 10, " __  __  ____  _  _  __  __ \n", SGR.BOLD);
@@ -271,7 +271,7 @@ public class TextView extends View {
         }
     }
 
-    public void printInfoRules(int x) {
+    private void printInfoRules(int x) {
         TextGraphics tg = screen.newTextGraphics();
         screen.clear();
 
@@ -851,7 +851,7 @@ public class TextView extends View {
         }
     }
 
-    public void printItemsInShop(int x) {
+    private void printItemsInShop(int x) {
         screen.clear();
 
         TextGraphics tg = screen.newTextGraphics();
@@ -945,6 +945,7 @@ public class TextView extends View {
         return terminal;
     }
 
+    @Override
     public boolean isRandomShipsArranged() {
         try {
             return UserInput.question("Czy chcesz losowo rozmiescic statki (y/n)?");
@@ -953,6 +954,7 @@ public class TextView extends View {
         }
     }
 
+    @Override
     public void addShipsVisually(BattleField battleField, Ship ship, ArrayList<Ship> ships) {
         for (Ship currentShip : ships) {
             boolean isAdded;
