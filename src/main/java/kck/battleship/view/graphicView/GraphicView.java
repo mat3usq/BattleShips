@@ -521,9 +521,9 @@ public class GraphicView extends View {
             }
         }
 
-        if (firstPlayer.isAI())
-            showEnemyShipsSimulate(secondPlayerShips);
-        else showEnemyShips(secondPlayerShips);
+//        if (firstPlayer.isAI())
+//            showEnemyShipsSimulate(secondPlayerShips);
+//        else showEnemyShips(secondPlayerShips);
 
         for (Ship ship : firstPlayerShips) {
             if (firstBattleField.isShipSunk(ship)) {
@@ -580,31 +580,23 @@ public class GraphicView extends View {
             if (dim == 1) {
                 if (dir == 0) {
                     gameScreen.battle.secondMap.jButtons[x][y].setIcon(ship1_Hori);
-//                    gameScreen.battle.secondMap.jButtons[x][y].setDisabledIcon(ship1_Hori);
                 } else {
                     gameScreen.battle.secondMap.jButtons[x][y].setIcon(ship1_Vert);
-//                    gameScreen.battle.secondMap.jButtons[x][y].setDisabledIcon(ship1_Vert);
                 }
             } else {
                 if (dir == 0) {// horizontal
                     gameScreen.battle.secondMap.jButtons[x][y].setIcon(shipHeadLeft);
-//                    gameScreen.battle.secondMap.jButtons[x][y].setDisabledIcon(shipHeadLeft);
                     for (int i = 1; i < dim - 1; i++) {
                         gameScreen.battle.secondMap.jButtons[x][y + i].setIcon(shipBodyLeft);
-//                        gameScreen.battle.secondMap.jButtons[x][y + i].setDisabledIcon(shipBodyLeft);
                     }
                     // Ship Foot
                     gameScreen.battle.secondMap.jButtons[x][y + dim - 1].setIcon(shipFootLeft);
-//                    gameScreen.battle.secondMap.jButtons[x][y + dim - 1].setDisabledIcon(shipFootLeft);
                 } else { // vertical
                     gameScreen.battle.secondMap.jButtons[x][y].setIcon(shipHeadTop);
-//                    gameScreen.battle.secondMap.jButtons[x][y].setDisabledIcon(shipHeadTop);
                     for (int i = 1; i < dim - 1; i++) {
                         gameScreen.battle.secondMap.jButtons[x + i][y].setIcon(shipBodyTop);
-//                        gameScreen.battle.secondMap.jButtons[x + i][y].setDisabledIcon(shipBodyTop);
                     }
                     gameScreen.battle.secondMap.jButtons[x + dim - 1][y].setIcon(shipFootTop);
-//                    gameScreen.battle.secondMap.jButtons[x + dim - 1][y].setDisabledIcon(shipFootTop);
                 }
             }
         }
