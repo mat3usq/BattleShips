@@ -501,8 +501,6 @@ public class GraphicView extends View {
             }
         }
 
-        showEnemyShips(secondPlayerShips);
-
         for (int i = 0; i < BattleField.getLength(); i++) {
             for (int j = 0; j < BattleField.getLength(); j++) {
                 if (firstBattleField.getbattleField()[i][j] == TypesField.HIT.name) {
@@ -522,6 +520,10 @@ public class GraphicView extends View {
                 }
             }
         }
+
+        if (firstPlayer.isAI())
+            showEnemyShipsSimulate(secondPlayerShips);
+        else showEnemyShips(secondPlayerShips);
 
         for (Ship ship : firstPlayerShips) {
             if (firstBattleField.isShipSunk(ship)) {
@@ -576,24 +578,77 @@ public class GraphicView extends View {
             else dir = 1;
 
             if (dim == 1) {
-                if (dir == 0)
+                if (dir == 0) {
                     gameScreen.battle.secondMap.jButtons[x][y].setIcon(ship1_Hori);
-                else
+//                    gameScreen.battle.secondMap.jButtons[x][y].setDisabledIcon(ship1_Hori);
+                } else {
                     gameScreen.battle.secondMap.jButtons[x][y].setIcon(ship1_Vert);
+//                    gameScreen.battle.secondMap.jButtons[x][y].setDisabledIcon(ship1_Vert);
+                }
             } else {
                 if (dir == 0) {// horizontal
                     gameScreen.battle.secondMap.jButtons[x][y].setIcon(shipHeadLeft);
+//                    gameScreen.battle.secondMap.jButtons[x][y].setDisabledIcon(shipHeadLeft);
                     for (int i = 1; i < dim - 1; i++) {
                         gameScreen.battle.secondMap.jButtons[x][y + i].setIcon(shipBodyLeft);
+//                        gameScreen.battle.secondMap.jButtons[x][y + i].setDisabledIcon(shipBodyLeft);
                     }
                     // Ship Foot
                     gameScreen.battle.secondMap.jButtons[x][y + dim - 1].setIcon(shipFootLeft);
+//                    gameScreen.battle.secondMap.jButtons[x][y + dim - 1].setDisabledIcon(shipFootLeft);
                 } else { // vertical
                     gameScreen.battle.secondMap.jButtons[x][y].setIcon(shipHeadTop);
+//                    gameScreen.battle.secondMap.jButtons[x][y].setDisabledIcon(shipHeadTop);
                     for (int i = 1; i < dim - 1; i++) {
                         gameScreen.battle.secondMap.jButtons[x + i][y].setIcon(shipBodyTop);
+//                        gameScreen.battle.secondMap.jButtons[x + i][y].setDisabledIcon(shipBodyTop);
                     }
                     gameScreen.battle.secondMap.jButtons[x + dim - 1][y].setIcon(shipFootTop);
+//                    gameScreen.battle.secondMap.jButtons[x + dim - 1][y].setDisabledIcon(shipFootTop);
+                }
+            }
+        }
+    }
+
+    private void showEnemyShipsSimulate(ArrayList<Ship> secondPlayerShips) {
+        ImageIcon ship1_Hori = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ship/ship1_hori.png")));
+        ImageIcon ship1_Vert = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ship/ship1_vert.png")));
+        ImageIcon shipHeadLeft = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ship/shipHeadLeft.png")));
+        ImageIcon shipHeadTop = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ship/shipHeadTop.png")));
+        ImageIcon shipBodyLeft = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ship/shipBodyLeft.png")));
+        ImageIcon shipBodyTop = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ship/shipBodyTop.png")));
+        ImageIcon shipFootLeft = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ship/shipFootLeft.png")));
+        ImageIcon shipFootTop = new ImageIcon(Objects.requireNonNull(getClass().getResource("/ship/shipFootTop.png")));
+
+        for (Ship ship : secondPlayerShips) {
+            int x = ship.getPosition().getRow();
+            int y = ship.getPosition().getColumn();
+            int dim = ship.getLength();
+            int dir;
+            if (ship.getDirection() == TypesDirection.HORIZONTAL)
+                dir = 0;
+            else dir = 1;
+
+            if (dim == 1) {
+                if (dir == 0) {
+                    gameScreen.battle.secondMap.jButtons[x][y].setDisabledIcon(ship1_Hori);
+                } else {
+                    gameScreen.battle.secondMap.jButtons[x][y].setDisabledIcon(ship1_Vert);
+                }
+            } else {
+                if (dir == 0) {// horizontal
+                    gameScreen.battle.secondMap.jButtons[x][y].setDisabledIcon(shipHeadLeft);
+                    for (int i = 1; i < dim - 1; i++) {
+                        gameScreen.battle.secondMap.jButtons[x][y + i].setDisabledIcon(shipBodyLeft);
+                    }
+                    // Ship Foot
+                    gameScreen.battle.secondMap.jButtons[x][y + dim - 1].setDisabledIcon(shipFootLeft);
+                } else { // vertical
+                    gameScreen.battle.secondMap.jButtons[x][y].setDisabledIcon(shipHeadTop);
+                    for (int i = 1; i < dim - 1; i++) {
+                        gameScreen.battle.secondMap.jButtons[x + i][y].setDisabledIcon(shipBodyTop);
+                    }
+                    gameScreen.battle.secondMap.jButtons[x + dim - 1][y].setDisabledIcon(shipFootTop);
                 }
             }
         }
