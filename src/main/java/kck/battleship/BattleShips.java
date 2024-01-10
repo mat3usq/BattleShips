@@ -5,7 +5,6 @@ import kck.battleship.controller.ViewController;
 
 import java.util.Scanner;
 
-
 public class BattleShips {
     public static void main(String[] args) {
         System.out.println("Wybierz rodzaj wyswietlania gry:");
